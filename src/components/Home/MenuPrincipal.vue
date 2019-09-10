@@ -1,8 +1,5 @@
 <template>
-  <div class="home">
-    <NavBar></NavBar>
-    
-    <b-container v-if="home">
+    <b-container>
 		<b-row class="mt-4">
 			<b-col sm="12" lg="3">
 				<div>
@@ -59,7 +56,7 @@
 					>
 
 						<div>
-							<b-link>
+							<b-link :to="{ name: 'config' }">
 								<b-img width="250" src="https://image.flaticon.com/icons/svg/214/214342.svg" fluid></b-img>
 							</b-link>
 							
@@ -69,36 +66,10 @@
 			</b-col>
 		</b-row>
     </b-container>
-
-	<b-container v-if="!home">
-		<router-view ></router-view>
-	</b-container>
-	  
-  </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-import NavBar from '../components/Home/NavBar'
-
-export default {
-	name: 'home',
-	components: {
-		HelloWorld,
-		NavBar
-	},
-	computed:{
-		home(){
-
-			if (this.$route.name == 'home') {
-				
-				return true
-			}
-
-		}
-	},
-	mounted(){
-	}
-}
+    export default {
+                
+    }
 </script>
