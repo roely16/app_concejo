@@ -9,17 +9,22 @@ import DetalleAgenda from './views/DetalleAgenda.vue'
 import PuntosAgenda from './views/PuntosAgenda.vue'
 // import ListaAgendas from './components/Agenda/ListaAgendas.vue'
 
+//Calendario
+import Calendario from './views/Calendario.vue'
+
 // Configuracion
 import Configuracion from './views/Configuracion.vue'
 
+import store from './store';
+
 Vue.use(Router)
 
-export default new Router({
+const router =  new Router({
 
   routes: [
     {
 		path: '/',
-		name: 'home',
+		name: 'login',
 		component: Login
     },
     {
@@ -31,6 +36,11 @@ export default new Router({
 				path: '/home/agenda',
 				component: Agenda,
 				name: 'agenda',
+			},
+			{
+				path: '/home/calendario',
+				component: Calendario,
+				name: 'calendario',
 			},
 			{
 				path: '/home/configuracion',
@@ -46,7 +56,6 @@ export default new Router({
 				path: '/home/agenda/detalle/:id/puntos_agenda',
 				component: PuntosAgenda,
 				name: 'puntos_agenda',
-				props: true
 			}
 		]
 	},
@@ -56,3 +65,25 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+	
+	store.dispatch('fetchAccessToken');
+
+	if (to.name != 'login') {
+		
+		if (store.state.accessToken == null) {
+			return next('/login');
+		}
+
+	}
+	if (to.name == 'login') {
+		if (store.state.accessToken != null) {
+			
+			return next('/home');
+		}
+	}
+	next();
+});
+
+export default router

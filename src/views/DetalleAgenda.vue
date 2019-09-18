@@ -31,12 +31,12 @@
                     href: '#/home'
                 },
                 {
-                    text: 'Agendas',
+                    text: 'Actas',
                     href: '#/home/agenda'
 
                 },
                 {
-                    text: 'Detalle de Agenda ',
+                    text: 'Detalle de Acta ',
                     active: true
 
                 }],
@@ -55,7 +55,7 @@
 
                 axios({
                     method: 'GET',
-                    url: 'https://udicat.muniguate.com/apps/api_consejo/public/api/agenda/' + id_agenda,
+                    url: process.env.VUE_APP_API_URL + 'detalle_acta/' + id_agenda,
                 })
                 .then(response => {
 

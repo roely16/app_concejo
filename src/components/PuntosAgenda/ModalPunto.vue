@@ -17,7 +17,7 @@
                 label="Descripción"
             >
                 <b-form-textarea  
-                    rows="5"
+                    rows="10"
                     v-model="descripcion"
                     required
                 ></b-form-textarea>
@@ -25,10 +25,10 @@
 
             <b-row class="mt-4 text-center">
                 <b-col>
-                    <b-button size="lg" class="mr-2" variant="outline-danger">Cancelar 
+                    <b-button size="lg" class="mr-2" variant="outline-danger" @click="cerrarModal">Cancelar 
                         <font-awesome-icon icon="times-circle" />
                     </b-button>
-                    <b-button type="submit" size="lg" variant="outline-primary" :disabled="isSaving">Guardar 
+                    <b-button type="submit" size="lg" variant="outline-primary" :disabled="isSaving">{{ !modalEdit ? 'Registrar' : 'Guardar Cambios' }} 
                         <font-awesome-icon icon="save" />
                     </b-button>
                 </b-col>
@@ -45,7 +45,16 @@
     export default {
         props:{
             title: String,
-            orden: Number
+            orden: Number,
+            modalEdit: {
+                type: Boolean,
+                default: false
+            },
+            puntoAgenda: {
+                type: Object,
+                default: null,
+                required: false
+            }
         },
         data(){
             return{
@@ -58,33 +67,90 @@
 
                 let nuevo_punto = {
                     descripcion: this.descripcion,
-                    id_agenda: this.$route.params.id,
+                    id_acta: this.$route.params.id,
                     orden: this.orden
                 }
 
-                await axios({
-                    method: 'POST',
-                    url: 'https://udicat.muniguate.com/apps/api_consejo/public/api/registrar_punto_agenda',
-                    data: nuevo_punto
-                })
-                .then(response => {
+                if (!this.modalEdit) {
+
+                    await axios({
+                        method: 'POST',
+                        url: process.env.VUE_APP_API_URL + 'registrar_punto_agenda',
+                        data: nuevo_punto
+                    })
+                    .then(response => {
+                                            
+                        Swal.fire(
+                            'Excelente!',
+                            'El punto de agenda ha sido registrado exitosamente!',
+                            'success'
+                        ).then( () =>{
+
+                            this.$root.$emit('obtenerPuntos')
+                            this.$bvModal.hide('modal-punto')
+
+                        })
+
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+
+                }else{
+
+                    let data = {
+                        id: this.puntoAgenda.id,
+                        descripcion: this.descripcion
+                    }
+
+                    await axios({
+                        method: 'POST',
+                        url: process.env.VUE_APP_API_URL + 'editar_punto',
+                        data: data
+                    })
+                    .then(response => {
+                                            
+                        Swal.fire(
+                            'Excelente!',
+                            'El punto de agenda ha sido editado exitosamente!',
+                            'success'
+                        ).then( () =>{
+
+                            this.$root.$emit('obtenerPuntos')
+                            this.$bvModal.hide('modal-punto')
+
+                        })
+
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
                     
-                    console.log(response)
-                    this.$root.$emit('obtenerPuntos')
-
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-
-            }
+                }
+                
+            },
+            editarPunto(){
+            },
+            cerrarModal(){
+                this.$bvModal.hide('modal-punto')
+            },
         },
         mounted(){
 
-            this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-                this.descripcion = ''
+            this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
+
+                if (this.modalEdit) {
+
+                    this.descripcion = this.puntoAgenda.descripcion
+
+                }else{
+
+                    this.descripcion = ''
+
+                }
             })
 
-        }
+        },
+        
     }
 </script>

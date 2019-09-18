@@ -26,7 +26,7 @@
                     href: '#/home'
                 },
                 {
-                    text: 'Agendas',
+                    text: 'Actas',
                     active: true
                 }
                 ]

@@ -2,9 +2,10 @@
   <div class="home">
     <NavBar></NavBar>
     
-    <b-container v-if="home">
-		<b-row class="mt-4">
-			<b-col sm="12" lg="3">
+    <b-container v-if="home" style="padding-top: 50px;">
+
+		<b-row class="mt-4" v-if="!loadingMenu">
+			<b-col sm="12" md="6" lg="3" v-for="menu in menus" :key="menu.id">
 				<div>
 					<b-card
 						img-src=""
@@ -12,65 +13,48 @@
 						img-top
 						tag="article"
 						class="mb-2 text-center"
-						header-class="text-center"
-						header="Agenda" 
+						:title="menu.nombre"
 					>
 
 						<div>
-							<b-link :to="{ name: 'agenda' }">
-								<b-img  width="250" src="https://image.flaticon.com/icons/svg/201/201576.svg" fluid></b-img>
+							<b-link :to="{ name: menu.url }">
+								<b-img  width="250" :src="'img/icons/' + menu.icono" fluid></b-img>
 							</b-link>
 							
 						</div>
-					</b-card>
-				</div>
-			</b-col>
-			<b-col sm="12" lg="3">
-				<div>
-					<b-card
-						img-src=""
-						img-alt="Image"
-						img-top
-						tag="article"
-						class="mb-2 text-center"
-						header-class="text-center"
-						header="Calendario" 
-					>
 
-						<div>
-							<b-link>
-								<b-img width="250" src="https://image.flaticon.com/icons/svg/123/123392.svg" fluid></b-img>
-							</b-link>
-							
-						</div>
-					</b-card>
-				</div>
-			</b-col>
-			<b-col sm="12" lg="3">
-				<div>
-					<b-card
-						img-src=""
-						img-alt="Image"
-						img-top
-						tag="article"
-						class="mb-2 text-center"
-						header-class="text-center"
-						header="Configuración" 
-					>
+						<!-- <div class="mt-2 text-right">
+							<a href="#" class="card-link">Card link</a>
+						</div> -->
+						<!-- <template v-slot:footer>
+							<font-awesome-icon icon="search" />
+						</template> -->
 
-						<div>
-							<b-link>
-								<b-img width="250" src="https://image.flaticon.com/icons/svg/214/214342.svg" fluid></b-img>
-							</b-link>
-							
-						</div>
 					</b-card>
 				</div>
 			</b-col>
 		</b-row>
+
+		<b-row class="mt-4" v-if="loadingMenu">
+			<b-col>
+				<div class="text-center my-2">
+					<b-spinner class="align-middle"></b-spinner>
+					<div class="mt-2">
+						<strong>Cargando datos...</strong>
+					</div>
+				</div>
+			</b-col>
+		</b-row>
+
+		<b-alert :show="menus.length <= 0" variant="danger">
+			<h1 class="text-center">Debe solicitar acceso a los diferentes módulos 
+				<font-awesome-icon icon="exclamation-triangle" />
+			</h1>
+		</b-alert>
+
     </b-container>
 
-	<b-container v-if="!home">
+	<b-container v-if="!home" style="padding-top: 50px;">
 		<router-view ></router-view>
 	</b-container>
 	  
@@ -78,27 +62,65 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-import NavBar from '../components/Home/NavBar'
 
-export default {
-	name: 'home',
-	components: {
-		HelloWorld,
-		NavBar
-	},
-	computed:{
-		home(){
+	import NavBar from '../components/Home/NavBar'
+	import axios from 'axios'
 
-			if (this.$route.name == 'home') {
-				
-				return true
+	export default {
+		name: 'home',
+		components: {
+			NavBar
+		},
+		data(){
+			return{
+				menus: {},
+				loadingMenu: false
+			}
+		},
+		methods:{
+
+			async obtenerMenu(){
+
+				this.loadingMenu = !this.loadingMenu
+
+				let usuario = JSON.parse(localStorage.getItem('usuario'))
+				let id_persona = usuario.id_persona
+
+				await axios({
+                    method: 'GET',
+                    url:  process.env.VUE_APP_API_URL +  'menu_principal/' + id_persona,
+                })
+                .then(response => {
+
+					this.loadingMenu = !this.loadingMenu
+					this.menus = response.data
+                    console.log(response)
+
+                })
+                .catch(error => {
+
+					this.loadingMenu = !this.loadingMenu
+					console.log(error)
+					
+                })
+
 			}
 
+		},
+		computed:{
+			home(){
+
+				if (this.$route.name == 'home') {
+					
+					return true
+				}
+
+			}
+		},
+		mounted(){
+
+			this.obtenerMenu()
+
 		}
-	},
-	mounted(){
 	}
-}
 </script>

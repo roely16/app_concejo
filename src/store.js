@@ -32,7 +32,7 @@ export default new Vuex.Store({
 			
 			axios({
 				method: 'POST',
-				url: 'https://udicat.muniguate.com/apps/api_ave_personalizado/public/login',
+				url: process.env.VUE_APP_API_URL + 'login',
 				data: loginData
 			})
 			.then(response => {
@@ -44,7 +44,7 @@ export default new Vuex.Store({
 
 				}else{
 
-					localStorage.setItem('accessToken', 125);
+					localStorage.setItem('usuario', JSON.stringify(response.data.data[0]));
 					commit('loginStop', null);
 					commit('updateAccessToken', 125);
 					router.push('/home');
@@ -59,10 +59,10 @@ export default new Vuex.Store({
 			
 		},
 		fetchAccessToken({ commit }) {
-			commit('updateAccessToken', localStorage.getItem('accessToken'));
+			commit('updateAccessToken', localStorage.getItem('usuario'));
 		},
 		logout({ commit }) {
-			localStorage.removeItem('accessToken');
+			localStorage.removeItem('usuario');
 			commit('logout');
 			router.push('/');
 		}

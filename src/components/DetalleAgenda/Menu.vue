@@ -11,7 +11,7 @@
             >
 
                 <div>
-                    <b-link :to="{ name: 'puntos_agenda', params: {id: this.id_agenda, no_agenda: this.no_agenda} }">
+                    <b-link :to="{ name: 'puntos_agenda', params: {id: this.id_agenda} }">
                         <b-img  width="100" src="https://image.flaticon.com/icons/svg/235/235252.svg" fluid></b-img>
                     </b-link>
                     
@@ -75,6 +75,26 @@
                 </div>
             </b-card>
         </b-col>
+
+        <b-col sm="12" lg="3">
+            <b-card
+                img-src=""
+                img-alt="Image"
+                img-top
+                tag="article"
+                class="mb-2 text-center"
+                title="Bitacora"
+            >
+
+                <div>
+                    <b-link :to="{ name: 'agenda' }">
+                        <b-img  width="100" src="https://image.flaticon.com/icons/svg/138/138295.svg" fluid></b-img>
+                    </b-link>
+                    
+                </div>
+            </b-card>
+        </b-col>
+
     </b-row>
 </template>
 

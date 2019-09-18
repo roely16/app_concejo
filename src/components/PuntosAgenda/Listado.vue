@@ -5,7 +5,7 @@
         <b-row class="mb-3">
             <b-col cols="4">
                <b-input-group>
-                    <b-form-input></b-form-input>
+                    <b-form-input v-model="busqueda"></b-form-input>
 
                     <b-input-group-append>
 						<b-button variant="outline-secondary" disabled>
@@ -17,9 +17,19 @@
                 </b-input-group> 
             </b-col>
             <b-col cols="8" class="text-right">
-                <b-button class="mr-2" variant="outline-success" v-on:click="orderLista()">Ordenar
+
+                <b-button v-if="!ordenando" :disabled="puntos_agenda.length <= 0" class="mr-2" variant="outline-success" v-on:click="orderLista()">Ordenar
                     <font-awesome-icon icon="sort" />
                 </b-button>
+
+                <b-button-group v-if="ordenando" class="mr-2">
+                    <b-button v-on:click="orderLista()" variant="outline-success">Guardar
+                        <font-awesome-icon icon="save" />
+                    </b-button>
+                    <b-button variant="outline-secondary" @click="cancelarOrdenar">Cancelar
+                        <font-awesome-icon icon="times-circle" />
+                    </b-button>
+                </b-button-group>
 
                 <b-button variant="outline-primary" v-on:click="crearPunto()">Crear Punto
                     <font-awesome-icon icon="plus-circle" />
@@ -27,29 +37,45 @@
             </b-col>
         </b-row>
 
-        <b-list-group id="items">
-            <b-list-group-item class="mb-2" v-for="punto in puntos_agenda" :key="punto.id" :variant="list_variant">
-                <b-row>
-                    <b-col cols="1">
-                        {{ punto.orden }}. 
-                    </b-col>
-                    <b-col cols="9">
-                        <p class="lead text-justify">{{ punto.descripcion }}</p>
-                    </b-col>
-                    <b-col cols="2" class="text-right">
-                        <b-button size="sm" class="mr-1" variant="outline-primary" v-b-modal.modal-1>
-                            <font-awesome-icon icon="edit" />
-                        </b-button>
+        <div v-if="!isLoading">
+            <b-list-group id="items" v-if="puntos_agenda.length > 0">
+                <b-list-group-item class="mb-2" v-for="(punto, key) in puntosFiltrados" :key="punto.id" :variant="list_variant">
+                    <b-row>
+                        <b-col cols="1">
+                            <p class="lead text-justify">{{ ++key }}. </p>
+                        </b-col>
+                        <b-col cols="9">
+                            <p class="lead text-justify">{{ punto.descripcion }}</p>
+                        </b-col>
+                        <b-col cols="2" class="text-right">
+                            <b-button size="sm" class="mr-1" variant="outline-primary" @click="modalEditarPunto(punto)">
+                                <font-awesome-icon icon="edit" />
+                            </b-button>
 
-                        <b-button size="sm" variant="outline-danger">
-                            <font-awesome-icon icon="trash-alt" />
-                        </b-button>
-                    </b-col>
-                </b-row>
-            </b-list-group-item>
-        </b-list-group>
+                            <b-button size="sm" variant="outline-danger" @click="eliminarPunto(punto.id)">
+                                <font-awesome-icon icon="trash-alt" />
+                            </b-button>
+                        </b-col>
+                    </b-row>
+                </b-list-group-item>
+            </b-list-group>
 
-        <ModalPunto :title="title_modal" :orden="ultimo_punto"></ModalPunto>
+            <div class="mt-4 text-center text-danger" v-if="puntos_agenda.length <= 0">
+                <h3>Aún no se han registrado puntos de agenda.</h3>
+            </div>
+        </div>
+        
+        <div v-if="isLoading" class="text-center mt-4">
+
+            <b-spinner class="align-middle"></b-spinner>
+            <div class="mt-2">
+                <strong>Cargando datos...</strong>
+            </div>
+
+        </div>
+
+
+        <ModalPunto :title="title_modal" :modalEdit="modalEdit" :orden="ultimo_punto" :puntoAgenda="punto_agenda" ></ModalPunto>
     </div>
 
 </template>
@@ -66,37 +92,41 @@
         },
         data() {
             return {
-                items: [
-                    { age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
-                    { age: 21, first_name: 'Larsen', last_name: 'Shaw' },
-                    { age: 89, first_name: 'Geneva', last_name: 'Wilson' },
-                    { age: 38, first_name: 'Jami', last_name: 'Carney' }
-                ],
                 title_modal: null,
                 puntos_agenda: [],
                 ultimo_punto: null,
                 list_variant: null,
-                ordenando: false
+                ordenando: false,
+                lista_ordenada: null,
+                isLoading: false,
+                modalEdit: false,
+                punto_agenda: null,
+                isLoading: false,
+                backupLista: null,
+                busqueda: ''
             }
         },
         methods:{
             crearPunto(){
 
                 this.title_modal = "Crear Punto de Agenda"
+                this.ultimo_punto = this.puntos_agenda.length + 1
+                this.modalEdit = false
+                this.punto_agenda = null
                 this.$bvModal.show('modal-punto')                
             },
             getData(){
 
+                this.isLoading = !this.isLoading
+
                 axios({
                     method: 'GET',
-                    url: 'https://udicat.muniguate.com/apps/api_consejo/public/api/puntos_agenda/' + this.$route.params.id,
+                    url: process.env.VUE_APP_API_URL + 'puntos_agenda/' + this.$route.params.id,
                 })
                 .then(response => {
-
-                    console.log(response)
-                    this.puntos_agenda = response.data
+                    this.isLoading = !this.isLoading
+                    this.puntos_agenda = response.data.puntos
                     this.ultimo_punto = this.puntos_agenda.length + 1
-                
                 })
                 .catch(error => {
                     console.log(error)
@@ -105,15 +135,141 @@
             },
             orderLista(){
 
-                var el = document.getElementById('items');
-                
-                new Sortable(el, {
-                    // handle: '.handle',
-                    animation: 150,
-                    ghostClass: 'blue-background-class'
-                });
+                this.backupLista = JSON.parse(JSON.stringify(this.puntos_agenda)) 
 
-                this.list_variant = 'secondary'
+                if (!this.ordenando) {
+                    
+                    this.ordenando = !this.ordenando
+                
+                    this.list_variant = 'secondary'
+
+                    var el = document.getElementById('items');
+                    var self = this
+
+                    this.lista_ordenada = new Sortable(el, {
+                        // handle: '.handle',
+                        animation: 150,
+                        ghostClass: 'blue-background-class',
+
+                        onEnd: function (evt) {
+            
+                            var f = self.puntos_agenda.splice(evt.oldIndex, 1)[0];
+                            self.puntos_agenda.splice(evt.newIndex, 0, f);
+
+                        },
+
+                    });
+
+                }else{
+
+                    axios({
+                        method: 'POST',
+                        url: process.env.VUE_APP_API_URL + 'reordenar',
+                        data: this.puntos_agenda
+                    })
+                    .then(response => {
+                                                
+                        if (response.data.code == 200) {
+                            
+                            Swal.fire(
+
+                                'Excelente!',
+                                'Se ha registrado el nuevo orden de los puntos de la agenda.',
+                                'success'
+
+                            ).then(() =>{
+
+                                this.getData()
+                                this.ordenando = false
+                                this.list_variant = ''
+                                this.lista_ordenada.destroy()
+
+                            })
+                            
+                        }
+                        
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+
+
+                }
+
+            },
+            cancelarOrdenar(){
+
+                this.puntos_agenda = this.backupLista
+            
+                this.ordenando = false
+                this.list_variant = ''
+                this.lista_ordenada.destroy()
+
+            },
+            modalEditarPunto(punto){
+
+                this.title_modal = "Editar Punto de Agenda"
+                this.modalEdit = true
+                this.punto_agenda = punto
+                this.ultimo_punto = parseInt(punto.orden)
+                this.$bvModal.show('modal-punto')   
+                  
+            },
+            eliminarPunto(id){
+
+                Swal.fire({
+
+                    title: '¿Está seguro?',
+                    text: "Una vez eliminado no se podrá recuperar!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, eliminar!',
+                    cancelButtonText: 'Cancelar'
+
+                }).then((result) => {
+
+                    if (result.value) {
+
+                        axios({
+                            method: 'DELETE',
+                            url: process.env.VUE_APP_API_URL + 'eliminar_punto/' + id,
+                        })
+                        .then(response => {
+
+                            if (response.data.code == 200) {
+
+                                Swal.fire(
+
+                                    'Excelente!',
+                                    'El punto de agenda ha sido eliminado exitosamente.',
+                                    'success'
+
+                                ).then(() =>{
+
+                                    this.getData()
+
+                                })
+
+                            }else{
+
+                                Swal.fire({
+                                    type: 'error',
+                                    title: 'Error ' + response.data.code,
+                                    text: response.data.message,
+                                })
+
+                            }
+
+                        })
+                        .catch(error => {
+                        })
+
+
+                    }
+
+                })
 
             }
         },
@@ -123,8 +279,18 @@
             this.$root.$on('obtenerPuntos', () => {
 				this.getData()
             })
-            
+
             console.log(this.$route.params.id)
+        },
+        computed: {
+            puntosFiltrados: function(){
+
+                return this.puntos_agenda.filter(punto => {
+                   
+                    return punto.descripcion.toLowerCase().includes(this.busqueda.toLowerCase()) 
+                })
+
+            }
         }
     }
 </script>

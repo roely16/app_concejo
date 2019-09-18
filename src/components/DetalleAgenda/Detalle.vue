@@ -1,15 +1,27 @@
 <template>
     <b-card>
         <b-row v-if="!isLoading">
-            <b-col cols="4">
+            <b-col cols="2">
                 <b-form-group
-                    label="Número de Agenda"
+                    label="Número de Acta"
                 >
                     <b-form-input
-                        v-model="agenda.no_agenda"
-                        type="text"
+                        v-model="agenda.numero_acta"
+                        type="number"
                         required
-                        disabled
+                        :disabled="!isEditing"
+                    ></b-form-input>
+                </b-form-group>
+            </b-col>
+            <b-col cols="2">
+                <b-form-group
+                    label="Año"
+                >
+                    <b-form-input
+                        v-model="agenda.year"
+                        type="number"
+                        required
+                        :disabled="!isEditing"
                     ></b-form-input>
                 </b-form-group>
             </b-col>
@@ -17,25 +29,46 @@
                 <b-form-group
                     label="Fecha"
                 >
-                    <date-picker v-model="agenda.fecha" :config="options_date" required disabled></date-picker>
+                    <date-picker v-model="agenda.fecha" :config="options_date" required :disabled="!isEditing"></date-picker>
                 </b-form-group>
             </b-col>
             <b-col cols="4">
                 <b-form-group
-                    label="Tipo"
+                    label="Tipo de Sesión"
                 >
-                    <b-form-select v-model="agenda.id_tipo" :options="tipos_agenda" disabled></b-form-select>
+                    <b-form-select v-model="agenda.id_tipo" :options="tipos_agenda" :disabled="!isEditing"></b-form-select>
                 </b-form-group>
             </b-col>
         </b-row>
 
-        <b-row>
+        <b-row class="mt-4">
             <b-col>
-                <b-button variant="outline-primary">
+
+                <b-button-group class="mr-2" v-if="isEditing || isSaving">
+                    <b-button variant="outline-success" :disabled="isSaving" @click="editarActa">
+                        Guardar
+                        <font-awesome-icon icon="save" />
+                        <b-spinner v-if="isSaving" small class="ml-2"></b-spinner>
+                    </b-button>
+                    <b-button variant="outline-secondary" @click="cancelarEditar">
+                        Cancelar
+                        <font-awesome-icon icon="times-circle" />
+                    </b-button>
+                </b-button-group>
+
+                <b-button variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving">Editar 
                     <font-awesome-icon icon="edit" />
                 </b-button>
-                <b-button variant="outline-success" class="ml-2">
+
+                <b-button @click="sendMail" variant="outline-info" class="ml-2">
+                    Enviar por Correo
                     <font-awesome-icon icon="envelope" />
+                </b-button>
+            </b-col>
+            <b-col class="text-right">
+                <b-button @click="sendMail" variant="outline-success" class="ml-2">
+                    Enviar a Revisión
+                    <font-awesome-icon icon="check" />
                 </b-button>
             </b-col>
         </b-row>
@@ -65,7 +98,7 @@
         data(){
             return{
                 tipos_agenda: [
-                    { value: null, text: 'Please select an option' },
+                    { value: null, text: '-- Seleccione un tipo de agenda --' },
                     { value: 1, text: 'Ordinaria' },
                     { value: 2, text: 'Extraordinaria' },
                 ],
@@ -75,7 +108,9 @@
                     format: 'DD/MM/YYYY',
                     useCurrent: true,
                     locale: 'es'
-                } 
+                },
+                isEditing: false,
+                isSaving: false 
             }
         },
         props: {
@@ -83,17 +118,77 @@
             isLoading: Boolean
         },
         methods: {
-            async obtenerDetalle(){
-
+            editarActa(){
                 
+                this.isEditing = !this.isEditing
 
+                if (!this.isEditing) {
+                    
+                    this.isSaving = !this.isSaving
+
+                    axios({
+                        method: 'POST',
+                        url: process.env.VUE_APP_API_URL + 'editar_acta',
+                        data: this.agenda
+                    })
+                    .then(response => {
+
+                        this.isSaving = !this.isSaving
+
+                        if (response.data.code) {
+                            
+                            this.isEditing = true
+
+                            Swal.fire({
+                                type: 'error',
+                                title: 'Error ' + response.data.codigo_error,
+                                text: response.data.message,
+                            })
+
+                        }else{
+
+                            Swal.fire(
+                                'Excelente!',
+                                'Los datos del acta han sido editados exitosamente!',
+                                'success'
+                            )
+                        }
+
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+
+                }
+
+            },
+            cancelarEditar(){
+                this.isEditing = false
+            },
+            sendMail(){
+
+                axios({
+                    method: 'GET',
+                    url: process.env.VUE_APP_API_URL + 'enviar_correos',
+                })
+                .then(response => {
+
+                    console.log(response.data)
+
+                    // const blob = new Blob([response.data], { type: 'application/pdf' })
+                    // let link = document.createElement('a')
+                    // link.href = window.URL.createObjectURL(blob)
+                    // link.download = 'Download.pdf'
+                    // link.click()
+
+                })
             }
         },
         mounted(){
             
             console.log(this.agenda)
 
-            this.obtenerDetalle()
+            // this.obtenerDetalle()
 
         }
     }

@@ -6,7 +6,7 @@
         <b-row class="mb-3">
             <b-col cols="4">
                 <b-input-group>
-                    <b-form-input></b-form-input>
+                    <b-form-input v-model="busqueda"></b-form-input>
 
                     <b-input-group-append>
 						<b-button variant="outline-secondary" disabled>
@@ -19,13 +19,13 @@
             </b-col>
 
             <b-col cols="8" class="text-right">
-                <b-button variant="outline-primary" v-b-modal.modal-1>Nueva Agenda
+                <b-button variant="outline-primary" @click="nuevaActa">Nueva Agenda
                     <font-awesome-icon icon="plus-circle" />
                 </b-button>
             </b-col>
         </b-row>
 
-        <b-table head-variant="dark" hover :items="items" :fields="fields" :busy="isLoading" show-empty	empty-text="Aún no se han registrado agendas">
+        <b-table :filter="busqueda" small head-variant="dark" hover :items="items" :fields="fields" :busy="isLoading" show-empty	empty-text="Aún no se han registrado agendas" id="my-table" :per-page="perPage" :current-page="currentPage" @filtered="onFiltered">
 
             <div slot="table-busy" class="text-center my-2">
                 <b-spinner class="align-middle"></b-spinner>
@@ -33,6 +33,10 @@
                     <strong>Cargando datos...</strong>
                 </div>
             </div>
+
+            <template slot="[no_acta]" slot-scope="data">
+                {{ data.item.numero_acta }} - {{ data.item.year }}
+            </template>
 
             <template slot="[id_tipo]" slot-scope="data">
                 <b-badge v-if="data.item.id_tipo == 1" variant="primary">Ordinaria</b-badge>
@@ -50,7 +54,27 @@
                     </b-button>
                 </div>
             </template>
+            
         </b-table>
+
+        <b-row v-if="rows > 0">
+            <b-col>
+                <h5>Total de registros: {{ rows }}</h5>
+            </b-col>
+            <b-col>
+                <b-pagination
+                    v-model="currentPage"
+                    :total-rows="rows"
+                    :per-page="perPage"
+                    aria-controls="my-table"
+                    v-if="items.length > perPage"
+                    align="center"
+                ></b-pagination>
+            </b-col>
+            <b-col></b-col>
+        </b-row>
+        
+        
 
         <NuevaAgenda></NuevaAgenda>
 
@@ -70,7 +94,11 @@
             return {
                 items: [],
                 fields: [],
-                isLoading: false
+                isLoading: false,
+                currentPage: 1,
+                perPage: 10,
+                busqueda: '',
+                rows: null
             }
         },
         methods: {
@@ -80,7 +108,7 @@
 
                 axios({
                     method: 'GET',
-                    url:  process.env.VUE_APP_API_URL +  'agenda',
+                    url:  process.env.VUE_APP_API_URL +  'obtener_actas',
                 })
                 .then(response => {
 
@@ -89,15 +117,25 @@
                     this.isLoading = !this.isLoading
                     this.items = response.data.items
                     this.fields = response.data.fields
+                    this.rows = this.items.length
                 })
                 .catch(error => {
                     console.log(error)
                 })
                 
             },
+            nuevaActa(){
+
+                this.$bvModal.show('modal-nueva-acta')
+
+            },
             eliminarAgenda(id){
                 console.log(id)
-            }
+            },
+            onFiltered(filteredItems) {
+                this.rows = filteredItems.length
+                this.currentPage = 1
+			}
         },
         mounted(){
             this.getData()
