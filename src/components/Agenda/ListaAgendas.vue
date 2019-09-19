@@ -25,7 +25,7 @@
             </b-col>
         </b-row>
 
-        <b-table :filter="busqueda" small head-variant="dark" hover :items="items" :fields="fields" :busy="isLoading" show-empty	empty-text="Aún no se han registrado agendas" id="my-table" :per-page="perPage" :current-page="currentPage" @filtered="onFiltered">
+        <b-table :filter="busqueda" small head-variant="dark" hover :items="items" :fields="fields" :busy="isLoading" show-empty	empty-text="Aún no se han registrado agendas" id="my-table" :per-page="perPage" :current-page="currentPage" @filtered="onFiltered" empty-filtered-text="No se han encontrado agendas que coincida con su criterio de búsqueda">
 
             <div slot="table-busy" class="text-center my-2">
                 <b-spinner class="align-middle"></b-spinner>

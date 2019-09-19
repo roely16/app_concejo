@@ -15,6 +15,10 @@ import Calendario from './views/Calendario.vue'
 // Configuracion
 import Configuracion from './views/Configuracion.vue'
 
+// Personas
+import Personas from './views/Personas.vue'
+import DetallePersona from './views/DetallePersona.vue'
+
 import store from './store';
 
 Vue.use(Router)
@@ -46,6 +50,16 @@ const router =  new Router({
 				path: '/home/configuracion',
 				component: Configuracion,
 				name: 'config',
+			},
+			{
+				path: '/home/configuracion/personas',
+				component: Personas,
+				name: 'personas',
+			},
+			{
+				path: '/home/configuracion/personas/detalle/:id',
+				component: DetallePersona,
+				name: 'detalle_persona'
 			},
 			{
 				path: '/home/agenda/detalle/:id',

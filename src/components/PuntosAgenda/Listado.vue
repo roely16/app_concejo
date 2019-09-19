@@ -16,7 +16,14 @@
                     
                 </b-input-group> 
             </b-col>
-            <b-col cols="8" class="text-right">
+            
+            <b-col class="text-center">
+                <b-button variant="outline-secondary">Vista Previa
+                    <font-awesome-icon icon="file-pdf" />
+                </b-button>
+            </b-col>
+
+            <b-col class="text-right">
 
                 <b-button v-if="!ordenando" :disabled="puntos_agenda.length <= 0" class="mr-2" variant="outline-success" v-on:click="orderLista()">Ordenar
                     <font-awesome-icon icon="sort" />

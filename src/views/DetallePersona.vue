@@ -3,20 +3,23 @@
         <div class="mt-4">
             <b-breadcrumb :items="items"></b-breadcrumb>
         </div>
-        
-        <ListaPersonas />
+
+        <Detalle />
+
+        <Tabs />
 
     </div>
-    
-</template> 
+</template>
 
 <script>
 
-    import ListaPersonas from '../components/Personas/ListaPersonas'
+    import Detalle from '../components/DetallePersona/Detalle'
+    import Tabs from '../components/DetallePersona/Tabs'
 
     export default {
         components: {
-            ListaPersonas
+            Detalle,
+            Tabs
         },
         data() {
             return {
@@ -31,9 +34,12 @@
                 },
                 {
                     text: 'Personas',
+                    href: '#/home/configuracion/personas'
+                },
+                {
+                    text: 'Detalle',
                     active: true
-                }
-                ]
+                }]
             }
         }
     }
