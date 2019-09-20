@@ -17,13 +17,18 @@
                 </b-input-group> 
             </b-col>
             
-            <b-col class="text-center">
-                <b-button variant="outline-secondary">Vista Previa
+            <b-col cols="5" class="text-center">
+                <b-button class="mr-2" variant="outline-secondary">Vista Previa
                     <font-awesome-icon icon="file-pdf" />
                 </b-button>
+
+                 <b-button variant="outline-info" @click="sendMail">Enviar para Aprobación
+                    <font-awesome-icon icon="envelope" />
+                </b-button>
+
             </b-col>
 
-            <b-col class="text-right">
+            <b-col cols="3" class="text-right">
 
                 <b-button v-if="!ordenando" :disabled="puntos_agenda.length <= 0" class="mr-2" variant="outline-success" v-on:click="orderLista()">Ordenar
                     <font-awesome-icon icon="sort" />
@@ -83,6 +88,9 @@
 
 
         <ModalPunto :title="title_modal" :modalEdit="modalEdit" :orden="ultimo_punto" :puntoAgenda="punto_agenda" ></ModalPunto>
+
+        <ModalCorreo :destinos="destinos" />
+
     </div>
 
 </template>
@@ -92,10 +100,12 @@
     import Sortable from 'sortablejs/modular/sortable.complete.esm.js';
     import ModalPunto from '../PuntosAgenda/ModalPunto'
     import axios from 'axios'
+    import ModalCorreo from '../DetalleAgenda/ModalCorreo'
 
     export default {
         components: {
-            ModalPunto
+            ModalPunto,
+            ModalCorreo
         },
         data() {
             return {
@@ -110,7 +120,8 @@
                 punto_agenda: null,
                 isLoading: false,
                 backupLista: null,
-                busqueda: ''
+                busqueda: '',
+                destinos: [] 
             }
         },
         methods:{
@@ -275,6 +286,22 @@
 
 
                     }
+
+                })
+
+            },
+            sendMail(){
+
+                axios({
+                    method: 'GET',
+                    url: process.env.VUE_APP_API_URL + 'personas_correo',
+                })
+                .then(response => {
+
+                    this.destinos = response.data
+                    this.$bvModal.show('modal-correo')
+
+                    console.log(response.data)
 
                 })
 

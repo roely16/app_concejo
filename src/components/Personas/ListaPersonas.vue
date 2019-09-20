@@ -35,6 +35,11 @@
                 {{ data.item.nombre }} {{ data.item.apellido }}
             </template>
 
+            <template slot="[rol]" slot-scope="data">
+                
+                <b-badge :variant="data.item.rol.color">{{ data.item.rol.nombre }}</b-badge>
+            </template>
+
             <template slot="[actions]" slot-scope="data">
                 <div class="text-right">
                      <b-button :to="{ name: 'detalle_persona', params: { id: data.item.id } }" class="mr-2" variant="outline-success">

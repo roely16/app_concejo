@@ -19,9 +19,9 @@ Vue.use(VueAxios, axios)
 
 // FontAwesome 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faEdit, faTrashAlt, faEye, faSearch, faPlusCircle, faTimesCircle, faSave, faGripLinesVertical, faArrowsAlt, faSort, faEnvelope, faBell, faEyeSlash, faExclamationTriangle, faSignInAlt, faCheck, faFilePdf } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faTrashAlt, faEye, faSearch, faPlusCircle, faTimesCircle, faSave, faGripLinesVertical, faArrowsAlt, faSort, faEnvelope, faBell, faEyeSlash, faExclamationTriangle, faSignInAlt, faCheck, faFilePdf, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-library.add(faEdit, faTrashAlt, faEye, faSearch, faPlusCircle, faTimesCircle, faSave, faGripLinesVertical, faArrowsAlt, faSort, faEnvelope, faBell, faEyeSlash, faExclamationTriangle, faSignInAlt, faCheck, faFilePdf)
+library.add(faEdit, faTrashAlt, faEye, faSearch, faPlusCircle, faTimesCircle, faSave, faGripLinesVertical, faArrowsAlt, faSort, faEnvelope, faBell, faEyeSlash, faExclamationTriangle, faSignInAlt, faCheck, faFilePdf, faPaperPlane)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

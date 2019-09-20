@@ -60,10 +60,10 @@
                     <font-awesome-icon icon="edit" />
                 </b-button>
 
-                <b-button @click="sendMail" variant="outline-info" class="ml-2">
+                <!-- <b-button @click="sendMail" variant="outline-info" class="ml-2">
                     Enviar por Correo
                     <font-awesome-icon icon="envelope" />
-                </b-button>
+                </b-button> -->
             </b-col>
             <b-col class="text-right">
                 <b-button @click="sendMail" variant="outline-success" class="ml-2">
@@ -82,6 +82,8 @@
             </b-col>
         </b-row>
         
+        <ModalCorreo :destinos="destinos" />
+
     </b-card>    
 </template>
 
@@ -90,10 +92,12 @@
     import axios from 'axios'
     import datePicker from 'vue-bootstrap-datetimepicker';
     import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
+    import ModalCorreo from '../DetalleAgenda/ModalCorreo'
 
     export default {
         components: {
-            datePicker
+            datePicker,
+            ModalCorreo
         },
         data(){
             return{
@@ -110,7 +114,8 @@
                     locale: 'es'
                 },
                 isEditing: false,
-                isSaving: false 
+                isSaving: false,
+                destinos: [] 
             }
         },
         props: {
@@ -169,19 +174,17 @@
 
                 axios({
                     method: 'GET',
-                    url: process.env.VUE_APP_API_URL + 'enviar_correos',
+                    url: process.env.VUE_APP_API_URL + 'personas_correo',
                 })
                 .then(response => {
 
+                    this.destinos = response.data
+                    this.$bvModal.show('modal-correo')
+
                     console.log(response.data)
 
-                    // const blob = new Blob([response.data], { type: 'application/pdf' })
-                    // let link = document.createElement('a')
-                    // link.href = window.URL.createObjectURL(blob)
-                    // link.download = 'Download.pdf'
-                    // link.click()
-
                 })
+
             }
         },
         mounted(){

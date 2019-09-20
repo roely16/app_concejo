@@ -75,7 +75,19 @@
                 this.$bvModal.hide('modal-persona')
             },
             registrarPersona(){
-                console.log(this.persona)
+                
+                axios({
+                    method: 'POST',
+                    url: process.env.VUE_APP_API_URL + 'registrar_persona',
+                    data: this.persona
+                })
+                .then(response => {
+                    console.log(response.data)
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+
             },
             resetModal(){
                 this.persona = {

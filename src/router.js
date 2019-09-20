@@ -19,6 +19,9 @@ import Configuracion from './views/Configuracion.vue'
 import Personas from './views/Personas.vue'
 import DetallePersona from './views/DetallePersona.vue'
 
+// Bitacora
+import Bitacora from './views/Bitacora.vue'
+
 import store from './store';
 
 Vue.use(Router)
@@ -70,6 +73,11 @@ const router =  new Router({
 				path: '/home/agenda/detalle/:id/puntos_agenda',
 				component: PuntosAgenda,
 				name: 'puntos_agenda',
+			},
+			{
+				path: '/home/agenda/detalle/:id/bitacora',
+				component: Bitacora,
+				name: 'bitacora',
 			}
 		]
 	},

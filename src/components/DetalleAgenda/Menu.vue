@@ -7,7 +7,7 @@
                 img-top
                 tag="article"
                 class="mb-2 text-center"
-                title="Puntos de Agenda"
+                title="Agenda"
             >
 
                 <div>
@@ -87,7 +87,7 @@
             >
 
                 <div>
-                    <b-link :to="{ name: 'agenda' }">
+                    <b-link :to="{ name: 'bitacora' }">
                         <b-img  width="100" src="https://image.flaticon.com/icons/svg/138/138295.svg" fluid></b-img>
                     </b-link>
                     
