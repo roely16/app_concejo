@@ -60,6 +60,11 @@
                             <p class="lead text-justify">{{ punto.descripcion }}</p>
                         </b-col>
                         <b-col cols="2" class="text-right">
+                            
+                            <b-button size="sm" class="mr-1" variant="outline-secondary" @click="modalInfo(punto)">
+                                <font-awesome-icon icon="info-circle" />
+                            </b-button>
+
                             <b-button size="sm" class="mr-1" variant="outline-primary" @click="modalEditarPunto(punto)">
                                 <font-awesome-icon icon="edit" />
                             </b-button>
@@ -69,6 +74,13 @@
                             </b-button>
                         </b-col>
                     </b-row>
+
+                    <!-- <b-row>
+                        <b-col class="text-right">
+                            info
+                        </b-col>
+                    </b-row> -->
+
                 </b-list-group-item>
             </b-list-group>
 
@@ -91,6 +103,8 @@
 
         <ModalCorreo :destinos="destinos" />
 
+        <ModalDetalle :data="detallePunto" />
+
     </div>
 
 </template>
@@ -101,11 +115,13 @@
     import ModalPunto from '../PuntosAgenda/ModalPunto'
     import axios from 'axios'
     import ModalCorreo from '../DetalleAgenda/ModalCorreo'
+    import ModalDetalle from '../PuntosAgenda/ModalDetalle'
 
     export default {
         components: {
             ModalPunto,
-            ModalCorreo
+            ModalCorreo,
+            ModalDetalle
         },
         data() {
             return {
@@ -121,7 +137,8 @@
                 isLoading: false,
                 backupLista: null,
                 busqueda: '',
-                destinos: [] 
+                destinos: [],
+                detallePunto: [] 
             }
         },
         methods:{
@@ -304,6 +321,11 @@
                     console.log(response.data)
 
                 })
+
+            },
+            modalInfo(punto){
+
+                this.$bvModal.show('modal-detalle')
 
             }
         },

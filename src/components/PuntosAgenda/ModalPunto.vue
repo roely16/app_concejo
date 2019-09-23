@@ -68,7 +68,8 @@
                 let nuevo_punto = {
                     descripcion: this.descripcion,
                     id_acta: this.$route.params.id,
-                    orden: this.orden
+                    orden: this.orden,
+                    
                 }
 
                 if (!this.modalEdit) {
@@ -79,7 +80,9 @@
                         data: nuevo_punto
                     })
                     .then(response => {
-                                            
+
+                        console.log(response.data)
+
                         Swal.fire(
                             'Excelente!',
                             'El punto de agenda ha sido registrado exitosamente!',
