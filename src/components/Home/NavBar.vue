@@ -3,7 +3,7 @@
         <b-navbar toggleable="lg" type="dark" variant="dark" fixed="top">
             <b-navbar-brand href="#">
                 <img src="img/brand.png" class="d-inline-block align-top" alt="Kitten">
-                Secretaria General - Control de Actas
+                Secretaría General - Control de Actas
             </b-navbar-brand>
 
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>

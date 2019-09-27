@@ -17,18 +17,18 @@
                 </b-input-group> 
             </b-col>
             
-            <b-col cols="5" class="text-center">
-                <b-button class="mr-2" variant="outline-secondary">Vista Previa
+            <b-col cols="4" class="text-center">
+                <b-button class="mr-2" variant="outline-secondary" @click="modalPDF" :disabled="puntos_agenda.length <= 0">Vista Previa
                     <font-awesome-icon icon="file-pdf" />
                 </b-button>
 
-                 <b-button variant="outline-info" @click="sendMail">Enviar para Aprobación
+                 <b-button variant="outline-info" @click="sendMail" :disabled="puntos_agenda.length <= 0">Aprobación
                     <font-awesome-icon icon="envelope" />
                 </b-button>
 
             </b-col>
 
-            <b-col cols="3" class="text-right">
+            <b-col cols="4" class="text-right">
 
                 <b-button v-if="!ordenando" :disabled="puntos_agenda.length <= 0" class="mr-2" variant="outline-success" v-on:click="orderLista()">Ordenar
                     <font-awesome-icon icon="sort" />
@@ -98,12 +98,43 @@
 
         </div>
 
+        <b-row class="mt-4 mb-4" v-if="puntos_eliminados.length > 0">
+            <b-col>
+                <b-button v-b-toggle.collapse-1 variant="danger">
+                    Mostrar Eliminados <b-badge variant="light">{{ puntos_eliminados.length }}</b-badge>
+                </b-button>
+
+                <b-collapse id="collapse-1" class="mt-2">
+                    <b-card
+                        border-variant="danger"
+                    >
+                        <b-list-group>
+                            <b-list-group-item variant="danger" class="mb-2" v-for="punto_eliminado in puntos_eliminados" :key="punto_eliminado.id">
+                                <b-row>
+                                    <b-col cols="10">
+                                        {{ punto_eliminado.descripcion }}
+                                    </b-col>
+                                    <b-col cols="2" class="text-right">
+                                        <b-button size="sm" variant="outline-ligth" @click="modalInfo(punto_eliminado)">
+                                            <font-awesome-icon icon="info-circle" />
+                                        </b-button>
+                                    </b-col>
+                                </b-row>
+                            </b-list-group-item>
+                        </b-list-group>
+                        
+                    </b-card>
+                </b-collapse>
+            </b-col>
+        </b-row>
 
         <ModalPunto :title="title_modal" :modalEdit="modalEdit" :orden="ultimo_punto" :puntoAgenda="punto_agenda" ></ModalPunto>
 
         <ModalCorreo :destinos="destinos" />
 
-        <ModalDetalle :data="detallePunto" />
+        <ModalDetalle :data="detallePunto" :punto="no_punto" />
+
+        <ModalPDF />
 
     </div>
 
@@ -116,12 +147,14 @@
     import axios from 'axios'
     import ModalCorreo from '../DetalleAgenda/ModalCorreo'
     import ModalDetalle from '../PuntosAgenda/ModalDetalle'
+    import ModalPDF from '../PuntosAgenda/ModalPDF'
 
     export default {
         components: {
             ModalPunto,
             ModalCorreo,
-            ModalDetalle
+            ModalDetalle,
+            ModalPDF
         },
         data() {
             return {
@@ -138,7 +171,9 @@
                 backupLista: null,
                 busqueda: '',
                 destinos: [],
-                detallePunto: [] 
+                detallePunto: {},
+                no_punto: '',
+                puntos_eliminados: {}
             }
         },
         methods:{
@@ -161,6 +196,7 @@
                 .then(response => {
                     this.isLoading = !this.isLoading
                     this.puntos_agenda = response.data.puntos
+                    this.puntos_eliminados = response.data.puntos_eliminados
                     this.ultimo_punto = this.puntos_agenda.length + 1
                 })
                 .catch(error => {
@@ -256,6 +292,8 @@
 
                     title: '¿Está seguro?',
                     text: "Una vez eliminado no se podrá recuperar!",
+                    input: 'textarea',
+                    inputPlaceholder: 'Motivo de la eliminación',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -263,13 +301,20 @@
                     confirmButtonText: 'Si, eliminar!',
                     cancelButtonText: 'Cancelar'
 
-                }).then((result) => {
+                })
+                .then((result) => {
 
-                    if (result.value) {
+                    if (result.value != '') {
+
+                        let data = {
+                            id_punto: id,
+                            motivo: result.value
+                        }
 
                         axios({
-                            method: 'DELETE',
-                            url: process.env.VUE_APP_API_URL + 'eliminar_punto/' + id,
+                            method: 'POST',
+                            url: process.env.VUE_APP_API_URL + 'eliminar_punto',
+                            data: data
                         })
                         .then(response => {
 
@@ -301,6 +346,13 @@
                         .catch(error => {
                         })
 
+                    }else{
+
+                        Swal.fire({
+                            type: 'error',
+                            title: 'Error',
+                            text: 'Debe ingresar el motivo de la eliminación!',
+                        })
 
                     }
 
@@ -324,9 +376,25 @@
 
             },
             modalInfo(punto){
+                
+                axios({
+                    method: 'GET',
+                    url: process.env.VUE_APP_API_URL + 'bitacora_punto/' + punto.id,
+                })
+                .then(response => {
 
-                this.$bvModal.show('modal-detalle')
+                    console.log(punto)
+                    this.detallePunto = response.data
+                    this.no_punto = punto.orden
+                    this.$bvModal.show('modal-detalle')
+                    
+                })
+                .catch(error => {
+                })
 
+            },
+            modalPDF(){
+                this.$bvModal.show('modal-pdf')
             }
         },
         mounted(){
@@ -336,8 +404,7 @@
 				this.getData()
             })
 
-            console.log(this.$route.params.id)
-        },
+},
         computed: {
             puntosFiltrados: function(){
 

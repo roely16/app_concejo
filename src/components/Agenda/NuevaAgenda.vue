@@ -1,10 +1,10 @@
 <template>
 
-    <b-modal id="modal-nueva-acta" title="Nueva Acta" hide-footer>
+    <b-modal id="modal-nueva-acta" title="Nueva Agenda" hide-footer>
 
         <b-form @submit.prevent="guardarAgenda" v-if="!isLoading">
             <b-row>
-                <b-col cols="6">
+                <!-- <b-col cols="6">
                     <b-form-group label="No. de Acta">
                         <b-input-group>
                             <template v-slot:append>
@@ -28,7 +28,7 @@
                             <b-form-input type="text" v-model="nueva_agenda.year" autocomplete="off" :disabled="!editYearActa" required></b-form-input>
                         </b-input-group>
                     </b-form-group>
-                </b-col>
+                </b-col> -->
 
                 <b-col cols="12">
                     <b-form-group label="Fecha">
@@ -42,6 +42,13 @@
                         <b-form-select v-model="nueva_agenda.id_tipo" :options="tipos_agenda" required></b-form-select>
                     </b-form-group>
                 </b-col>
+
+                <b-col cols="12">
+                    <b-form-group label="Descripción">
+                        <b-form-textarea v-model="nueva_agenda.descripcion" rows="6" max-rows="6"></b-form-textarea>
+                    </b-form-group>
+                </b-col>
+
             </b-row>
 
             <b-row class="mt-4 text-center">
@@ -89,7 +96,8 @@
                     no_agenda: null,
                     year: null,
                     fecha: null,
-                    id_tipo: null
+                    id_tipo: null,
+                    descripcion: null
                 },
                 isSaving: false,
                 options_date: {
@@ -141,6 +149,7 @@
                 this.nueva_agenda.year = null
                 this.nueva_agenda.fecha = null
                 this.nueva_agenda.id_tipo = null
+                this.nueva_agenda.descripcion = null
             }
         },
         mounted(){
@@ -148,24 +157,24 @@
             this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
 
                 this.resetModal()
-                this.isLoading = !this.isLoading
+                // this.isLoading = !this.isLoading
 
                 // Realiza la petición para obtener los tipos de actas y el correlativo correspondiente
 
-                axios({
-                    method: 'GET',
-                    url: process.env.VUE_APP_API_URL + 'datos_modal_acta',
-                })
-                .then(response => {
+                // axios({
+                //     method: 'GET',
+                //     url: process.env.VUE_APP_API_URL + 'datos_modal_acta',
+                // })
+                // .then(response => {
                     
-                    this.isLoading = !this.isLoading
-                    this.nueva_agenda.no_agenda = response.data.numero_acta.numero
-                    this.nueva_agenda.year = response.data.numero_acta.year
+                //     this.isLoading = !this.isLoading
+                //     this.nueva_agenda.no_agenda = response.data.numero_acta.numero
+                //     this.nueva_agenda.year = response.data.numero_acta.year
                     
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+                // })
+                // .catch(error => {
+                //     console.log(error)
+                // })
 
             })
             

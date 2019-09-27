@@ -35,7 +35,7 @@
                 {{ data.item.nombre }} {{ data.item.apellido }}
             </template>
 
-            <template slot="[rol]" slot-scope="data">
+            <template slot="[rol]" slot-scope="data" v-if="data.item.rol != null">
                 
                 <b-badge :variant="data.item.rol.color">{{ data.item.rol.nombre }}</b-badge>
             </template>
@@ -128,6 +128,10 @@
         },
         mounted(){
             this.obtenerPersonas()
+
+            this.$root.$on('obtenerAsistencia', () => {
+				this.obtenerPersonas()
+			})
         }
     }
 </script>

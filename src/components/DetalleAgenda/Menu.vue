@@ -7,7 +7,7 @@
                 img-top
                 tag="article"
                 class="mb-2 text-center"
-                title="Agenda"
+                title="Puntos"
             >
 
                 <div>
@@ -30,7 +30,7 @@
             >
 
                 <div>
-                    <b-link :to="{ name: 'agenda' }">
+                    <b-link :to="{ name: 'asistencia', params: {id: this.id_agenda} }">
                         <b-img  width="100" src="https://image.flaticon.com/icons/svg/1083/1083518.svg" fluid></b-img>
                     </b-link>
                     
@@ -76,7 +76,7 @@
             </b-card>
         </b-col>
 
-        <b-col sm="12" lg="3">
+        <!-- <b-col sm="12" lg="3">
             <b-card
                 img-src=""
                 img-alt="Image"
@@ -93,7 +93,7 @@
                     
                 </div>
             </b-card>
-        </b-col>
+        </b-col> -->
 
     </b-row>
 </template>

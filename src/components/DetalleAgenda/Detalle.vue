@@ -1,7 +1,7 @@
 <template>
     <b-card>
         <b-row v-if="!isLoading">
-            <b-col cols="2">
+            <!-- <b-col cols="2">
                 <b-form-group
                     label="Número de Acta"
                 >
@@ -24,7 +24,7 @@
                         :disabled="!isEditing"
                     ></b-form-input>
                 </b-form-group>
-            </b-col>
+            </b-col> -->
             <b-col cols="4">
                 <b-form-group
                     label="Fecha"
@@ -37,6 +37,11 @@
                     label="Tipo de Sesión"
                 >
                     <b-form-select v-model="agenda.id_tipo" :options="tipos_agenda" :disabled="!isEditing"></b-form-select>
+                </b-form-group>
+            </b-col>
+            <b-col cols="4">
+                <b-form-group label="Descripción">
+                    <b-form-textarea v-model="agenda.descripcion" rows="3" max-rows="6" :disabled="!isEditing"></b-form-textarea>
                 </b-form-group>
             </b-col>
         </b-row>
@@ -56,8 +61,12 @@
                     </b-button>
                 </b-button-group>
 
-                <b-button variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving">Editar 
+                <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving">Editar 
                     <font-awesome-icon icon="edit" />
+                </b-button>
+
+                <b-button variant="outline-info">Bitácora 
+                    <font-awesome-icon icon="list-alt" />
                 </b-button>
 
                 <!-- <b-button @click="sendMail" variant="outline-info" class="ml-2">
@@ -65,12 +74,20 @@
                     <font-awesome-icon icon="envelope" />
                 </b-button> -->
             </b-col>
+            
             <b-col class="text-right">
-                <b-button @click="sendMail" variant="outline-success" class="ml-2">
-                    Enviar a Revisión
-                    <font-awesome-icon icon="check" />
-                </b-button>
+                
+                <b-form-group
+                    id="fieldset-1"
+                    label="Estado"
+                    label-for="input-1"
+                >
+                    <b-badge :variant="agenda.estado.color" style="font-size: 0.9rem">{{ agenda.estado.nombre }} <font-awesome-icon :icon="agenda.estado.icono" /></b-badge>    
+                </b-form-group>
+
+                
             </b-col>
+
         </b-row>
 
         <b-row class="text-center" v-if="isLoading">
@@ -185,6 +202,9 @@
 
                 })
 
+            },
+            mostrarBitacora(){
+                
             }
         },
         mounted(){

@@ -39,9 +39,13 @@
             </template>
 
             <template slot="[id_tipo]" slot-scope="data">
-                <b-badge v-if="data.item.id_tipo == 1" variant="primary">Ordinaria</b-badge>
+                <b-badge v-if="data.item.id_tipo == 1" variant="primary" style="font-size: 0.9rem">Ordinaria </b-badge>
 
-                <b-badge v-if="data.item.id_tipo == 2" variant="danger">Extraordinaria</b-badge>
+                <b-badge v-if="data.item.id_tipo == 2" variant="danger" style="font-size: 0.9rem">Extraordinaria</b-badge>
+            </template>
+
+            <template slot="[estado]" slot-scope="data">
+                <b-badge :variant="data.item.estado.color" style="font-size: 0.9rem">{{ data.item.estado.nombre }} <font-awesome-icon :icon="data.item.estado.icono" /></b-badge>
             </template>
 
             <template slot="[actions]" slot-scope="data">
@@ -142,6 +146,7 @@
 
             // Emit para refrescar los datos
             this.$root.$on('obtenerAgendas', () => {
+                
 				this.getData()
 			})
         }     

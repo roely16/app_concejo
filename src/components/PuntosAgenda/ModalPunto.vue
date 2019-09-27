@@ -28,7 +28,7 @@
                     <b-button size="lg" class="mr-2" variant="outline-danger" @click="cerrarModal">Cancelar 
                         <font-awesome-icon icon="times-circle" />
                     </b-button>
-                    <b-button type="submit" size="lg" variant="outline-primary" :disabled="isSaving">{{ !modalEdit ? 'Registrar' : 'Guardar Cambios' }} 
+                    <b-button type="submit" size="lg" variant="outline-primary" :disabled="isSaving || notChanged">{{ !modalEdit ? 'Registrar' : 'Guardar Cambios' }} 
                         <font-awesome-icon icon="save" />
                     </b-button>
                 </b-col>
@@ -60,6 +60,7 @@
             return{
                 isSaving: false,
                 descripcion: '',
+                backup_descripcion: ''
             }
         },
         methods: {
@@ -103,8 +104,11 @@
 
                     let data = {
                         id: this.puntoAgenda.id,
-                        descripcion: this.descripcion
+                        descripcion: this.descripcion,
+                        original: this.backup_descripcion
                     }
+
+                    console.log(data)
 
                     await axios({
                         method: 'POST',
@@ -145,6 +149,7 @@
                 if (this.modalEdit) {
 
                     this.descripcion = this.puntoAgenda.descripcion
+                    this.backup_descripcion = this.puntoAgenda.descripcion
 
                 }else{
 
@@ -154,6 +159,21 @@
             })
 
         },
+        computed: {
+            notChanged: function(){
+               
+                if (this.descripcion == this.backup_descripcion) {
+                    
+                    return true
+
+                }else{
+
+                    return false
+
+                }
+
+            }
+        }
         
     }
 </script>

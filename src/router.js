@@ -7,6 +7,7 @@ import Login from './views/Login.vue'
 import Agenda from './views/Agenda.vue'
 import DetalleAgenda from './views/DetalleAgenda.vue'
 import PuntosAgenda from './views/PuntosAgenda.vue'
+import Asistencia from './views/Asistencia.vue'
 // import ListaAgendas from './components/Agenda/ListaAgendas.vue'
 
 //Calendario
@@ -78,6 +79,11 @@ const router =  new Router({
 				path: '/home/agenda/detalle/:id/bitacora',
 				component: Bitacora,
 				name: 'bitacora',
+			},
+			{
+				path: '/home/agenda/detalle/:id/asistencia',
+				component: Asistencia,
+				name: 'asistencia',
 			}
 		]
 	},

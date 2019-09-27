@@ -1,6 +1,6 @@
 {
-  "name": "app_consejo",
-  "short_name": "app_consejo",
+  "name": "Control de Actas",
+  "short_name": "Control de Actas",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

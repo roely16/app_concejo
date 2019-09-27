@@ -31,12 +31,12 @@
                     href: '#/home'
                 },
                 {
-                    text: 'Actas',
+                    text: 'Agendas',
                     href: '#/home/agenda'
 
                 },
                 {
-                    text: 'Detalle de Acta ',
+                    text: 'Detalle de Agenda ',
                     active: true
 
                 }],

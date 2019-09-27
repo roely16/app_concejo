@@ -1,20 +1,21 @@
 <template>
     <div>
         <div class="mt-4">
-            <b-breadcrumb :items="items" v-if="!isLoading"></b-breadcrumb>
+            <b-breadcrumb :items="items"></b-breadcrumb>
         </div>
-        <Listado></Listado>
+
+        <ListaAsistencia />
+
     </div>
 </template>
 
 <script>
 
-    import Listado from '../components/PuntosAgenda/Listado'
-    import axios from 'axios'
+    import ListaAsistencia from '../components/Asistencia/ListaAsistencia'
 
     export default {
         components: {
-            Listado
+            ListaAsistencia
         },
         data() {
             return {
@@ -33,39 +34,18 @@
                         href: '#/home/agenda/detalle/' + this.$route.params.id
                     },
                     {
-                        text: 'Puntos de Agenda',
+                        text: 'Asistecia',
                         active: true
                     }
                 ],
                 isLoading: false
             }
         },
-        mounted(){
-            this.getData()
-        },
         methods: {
-            getData(){
 
-                this.isLoading = !this.isLoading
-
-                axios({
-
-                    method: 'GET',
-                    url: process.env.VUE_APP_API_URL + 'detalle_acta/' + this.$route.params.id,
-
-                })
-                .then(response => {
-
-                    // this.items[2].text = "Detalle de Acta " + response.data.numero_acta + ' - ' + response.data.year
-
-                    this.isLoading = !this.isLoading
-
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-
-            }
+        },
+        mounted(){
+            
         }
     }
 </script>
