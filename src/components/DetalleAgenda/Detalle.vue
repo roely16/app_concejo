@@ -1,107 +1,121 @@
 <template>
-    <b-card>
-        <b-row v-if="!isLoading">
-            <!-- <b-col cols="2">
-                <b-form-group
-                    label="Número de Acta"
-                >
-                    <b-form-input
-                        v-model="agenda.numero_acta"
-                        type="number"
-                        required
-                        :disabled="!isEditing"
-                    ></b-form-input>
-                </b-form-group>
-            </b-col>
-            <b-col cols="2">
-                <b-form-group
-                    label="Año"
-                >
-                    <b-form-input
-                        v-model="agenda.year"
-                        type="number"
-                        required
-                        :disabled="!isEditing"
-                    ></b-form-input>
-                </b-form-group>
-            </b-col> -->
-            <b-col cols="4">
-                <b-form-group
-                    label="Fecha"
-                >
-                    <date-picker v-model="agenda.fecha" :config="options_date" required :disabled="!isEditing"></date-picker>
-                </b-form-group>
-            </b-col>
-            <b-col cols="4">
-                <b-form-group
-                    label="Tipo de Sesión"
-                >
-                    <b-form-select v-model="agenda.id_tipo" :options="tipos_agenda" :disabled="!isEditing"></b-form-select>
-                </b-form-group>
-            </b-col>
-            <b-col cols="4">
-                <b-form-group label="Descripción">
-                    <b-form-textarea v-model="agenda.descripcion" rows="3" max-rows="6" :disabled="!isEditing"></b-form-textarea>
-                </b-form-group>
-            </b-col>
-        </b-row>
 
-        <b-row class="mt-4">
-            <b-col>
+    <div>
+        <!-- <b-alert :variant="estado.color" show>Estado: {{ estado.nombre }}</b-alert> -->
+        <b-card>
+            <b-row v-if="!isLoading">
+                <!-- <b-col cols="2">
+                    <b-form-group
+                        label="Número de Acta"
+                    >
+                        <b-form-input
+                            v-model="agenda.numero_acta"
+                            type="number"
+                            required
+                            :disabled="!isEditing"
+                        ></b-form-input>
+                    </b-form-group>
+                </b-col>
+                <b-col cols="2">
+                    <b-form-group
+                        label="Año"
+                    >
+                        <b-form-input
+                            v-model="agenda.year"
+                            type="number"
+                            required
+                            :disabled="!isEditing"
+                        ></b-form-input>
+                    </b-form-group>
+                </b-col> -->
+                <b-col cols="4">
+                    <b-form-group label="Fecha" label-class="font-weight-bold">
+                        <date-picker v-model="agenda.fecha" :config="options_date" required :disabled="!isEditing"></date-picker>
+                    </b-form-group>
+                </b-col>
+                <b-col cols="4">
+                    <b-form-group label="Tipo de Sesión" label-class="font-weight-bold">
+                        <b-form-select v-model="agenda.id_tipo" :options="tipos_agenda" :disabled="!isEditing"></b-form-select>
+                    </b-form-group>
+                </b-col>
+                <b-col cols="4">
+                    <b-form-group label="Descripción" label-class="font-weight-bold">
+                        <b-form-textarea v-model="agenda.descripcion" rows="3" max-rows="6" :disabled="!isEditing"></b-form-textarea>
+                    </b-form-group>
+                </b-col>
+            </b-row>
 
-                <b-button-group class="mr-2" v-if="isEditing || isSaving">
-                    <b-button variant="outline-success" :disabled="isSaving" @click="editarActa">
-                        Guardar
-                        <font-awesome-icon icon="save" />
-                        <b-spinner v-if="isSaving" small class="ml-2"></b-spinner>
+            <b-row class="mt-4" v-if="!isLoading">
+                <b-col>
+
+                    <b-button-group class="mr-2" v-if="isEditing || isSaving">
+                        <b-button variant="outline-success" :disabled="isSaving" @click="editarActa">
+                            Guardar
+                            <font-awesome-icon icon="save" />
+                            <b-spinner v-if="isSaving" small class="ml-2"></b-spinner>
+                        </b-button>
+                        <b-button variant="outline-secondary" @click="cancelarEditar">
+                            Cancelar
+                            <font-awesome-icon icon="times-circle" />
+                        </b-button>
+                    </b-button-group>
+
+                    <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving">Editar 
+                        <font-awesome-icon icon="edit" />
                     </b-button>
-                    <b-button variant="outline-secondary" @click="cancelarEditar">
-                        Cancelar
-                        <font-awesome-icon icon="times-circle" />
+
+                    <b-button variant="outline-info">Bitácora 
+                        <font-awesome-icon icon="list-alt" />
                     </b-button>
-                </b-button-group>
 
-                <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving">Editar 
-                    <font-awesome-icon icon="edit" />
-                </b-button>
+                    <!-- <b-button @click="sendMail" variant="outline-info" class="ml-2">
+                        Enviar por Correo
+                        <font-awesome-icon icon="envelope" />
+                    </b-button> -->
+                </b-col>
+                
+                <!-- <b-col class="text-right">
+                    
+                    <b-form-group
+                        id="fieldset-1"
+                        label="Estado"
+                        label-for="input-1"
+                    >
+                        <b-badge :variant="estado.color" style="font-size: 0.9rem">{{ estado.nombre }} <font-awesome-icon :icon="icono" /></b-badge>    
+                    </b-form-group>
 
-                <b-button variant="outline-info">Bitácora 
-                    <font-awesome-icon icon="list-alt" />
-                </b-button>
+                    
+                </b-col> -->
 
-                <!-- <b-button @click="sendMail" variant="outline-info" class="ml-2">
-                    Enviar por Correo
-                    <font-awesome-icon icon="envelope" />
-                </b-button> -->
-            </b-col>
+                <b-col cols="4">
+                    <b-alert :variant="estado.color" show>
+                        <b-row>
+                            <b-col cols="10">
+                                <strong>Estado: </strong>{{ estado.nombre }}
+                            </b-col>
+                            <b-col cols="2">
+                                <font-awesome-icon :icon="estado.icono ? estado.icono : 'check'" />
+                            </b-col>
+                        </b-row>
+                    </b-alert>
+                </b-col>
+
+            </b-row>
+
+            <b-row class="text-center" v-if="isLoading">
+                <b-col>
+                    <b-spinner class="align-middle"></b-spinner>
+                    <div class="mt-2">
+                        <strong>Cargando datos...</strong>
+                    </div>
+                </b-col>
+            </b-row>
             
-            <b-col class="text-right">
-                
-                <b-form-group
-                    id="fieldset-1"
-                    label="Estado"
-                    label-for="input-1"
-                >
-                    <b-badge :variant="agenda.estado.color" style="font-size: 0.9rem">{{ agenda.estado.nombre }} <font-awesome-icon :icon="agenda.estado.icono" /></b-badge>    
-                </b-form-group>
+            <ModalCorreo :destinos="destinos" />
 
-                
-            </b-col>
+        </b-card>   
+    </div>
 
-        </b-row>
-
-        <b-row class="text-center" v-if="isLoading">
-            <b-col>
-                <b-spinner class="align-middle"></b-spinner>
-                <div class="mt-2">
-                    <strong>Cargando datos...</strong>
-                </div>
-            </b-col>
-        </b-row>
-        
-        <ModalCorreo :destinos="destinos" />
-
-    </b-card>    
 </template>
 
 <script>
@@ -132,12 +146,19 @@
                 },
                 isEditing: false,
                 isSaving: false,
-                destinos: [] 
+                destinos: [],
+                agenda: {},
+                estado: {},
+                isLoading: false,
+                icono: '' 
             }
         },
         props: {
-            agenda: Object,
-            isLoading: Boolean
+            // agenda: {
+            //     type: Object,
+            //     default: {}
+            // },
+            // isLoading: Boolean
         },
         methods: {
             editarActa(){
@@ -150,7 +171,7 @@
 
                     axios({
                         method: 'POST',
-                        url: process.env.VUE_APP_API_URL + 'editar_acta',
+                        url: process.env.VUE_APP_API_URL + 'editar_agenda',
                         data: this.agenda
                     })
                     .then(response => {
@@ -207,11 +228,38 @@
                 
             }
         },
-        mounted(){
+        async mounted(){
             
             console.log(this.agenda)
 
             // this.obtenerDetalle()
+
+            let id_agenda = this.$route.params.id
+
+            this.isLoading = !this.isLoading
+
+            await axios({
+                method: 'GET',
+                url: process.env.VUE_APP_API_URL + 'detalle_agenda/' + id_agenda,
+            })
+            .then(response => {
+
+                this.icono = response.data.estado.icono
+                this.agenda = response.data
+                this.estado = response.data.estado
+                
+                
+                console.log(response.data.estado.icono)
+
+                this.no_agenda = this.agenda.no_agenda
+                this.isLoading = !this.isLoading
+                
+            })
+            .catch(error => {
+                console.log(error)
+            })
+
+            
 
         }
     }

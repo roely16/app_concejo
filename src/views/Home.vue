@@ -94,7 +94,6 @@
 
 					this.loadingMenu = !this.loadingMenu
 					this.menus = response.data
-                    console.log(response)
 
                 })
                 .catch(error => {

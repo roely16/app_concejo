@@ -11,7 +11,7 @@
             >
 
                 <div>
-                    <b-link :to="{ name: 'puntos_agenda', params: {id: this.id_agenda} }">
+                    <b-link :to="{ name: 'puntos_agenda', params: {id: this.$route.params.id} }">
                         <b-img  width="100" src="https://image.flaticon.com/icons/svg/235/235252.svg" fluid></b-img>
                     </b-link>
                     
@@ -30,7 +30,7 @@
             >
 
                 <div>
-                    <b-link :to="{ name: 'asistencia', params: {id: this.id_agenda} }">
+                    <b-link :to="{ name: 'asistencia', params: {id: this.$route.params.id} }">
                         <b-img  width="100" src="https://image.flaticon.com/icons/svg/1083/1083518.svg" fluid></b-img>
                     </b-link>
                     
@@ -106,7 +106,7 @@
             isLoading: Boolean
         },
         mounted(){
-            console.log(this.no_agenda)
+            
         }
     }
 </script>

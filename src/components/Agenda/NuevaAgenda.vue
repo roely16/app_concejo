@@ -115,7 +115,7 @@
 
                 axios({
                     method: 'POST',
-                    url: process.env.VUE_APP_API_URL + 'registrar_acta',
+                    url: process.env.VUE_APP_API_URL + 'registrar_agenda',
                     data: this.nueva_agenda
                 })
                 .then(response => {

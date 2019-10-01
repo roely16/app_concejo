@@ -3,69 +3,66 @@
         <div class="mt-4">
             <b-breadcrumb :items="items" v-if="!isLoading"></b-breadcrumb>
         </div>
-        <Listado></Listado>
+        <Listado />
     </div>
 </template>
 
 <script>
 
-    import Listado from '../components/PuntosAgenda/Listado'
+    import Listado from '../components/PuntosActa/Listado'
     import axios from 'axios'
 
     export default {
         components: {
             Listado
         },
-        data() {
-            return {
+        data(){
+            return{
                 items: [
                     {
                         text: 'Inicio',
                         href: '#/home'
                     },
                     {
-                        text: 'Agendas',
-                        href: '#/home/agenda'
+                        text: 'Actas',
+                        href: '#/home/actas'
                     },
                     {
                         // text: 'Detalle de ' + this.no_acta,
-                        text: 'Detalle de Agenda',
-                        href: '#/home/agenda/detalle/' + this.$route.params.id
+                        text: 'Detalle de Acta No. ',
+                        href: '#/home/actas/detalle/' + this.$route.params.id
                     },
                     {
-                        text: 'Puntos de Agenda',
+                        text: 'Puntos de Acta',
                         active: true
                     }
                 ],
-                isLoading: false
+                isLoading: false,
+                acta: {}
             }
         },
-        mounted(){
-            this.getData()
-        },
         methods: {
-            getData(){
+            detalleActa(){
 
                 this.isLoading = !this.isLoading
 
                 axios({
-
                     method: 'GET',
-                    url: process.env.VUE_APP_API_URL + 'detalle_agenda/' + this.$route.params.id,
-
+                    url: process.env.VUE_APP_API_URL + 'detalle_acta/' + this.$route.params.id,
                 })
                 .then(response => {
-
-                    // this.items[2].text = "Detalle de Acta " + response.data.numero_acta + ' - ' + response.data.year
-
-                    this.isLoading = !this.isLoading
-
+                   this.isLoading = !this.isLoading
+                   this.items[2].text = "Detalle de Acta No. " + response.data.acta.no_acta + '-' + response.data.acta.year
                 })
                 .catch(error => {
                     console.log(error)
                 })
-
             }
+        },
+        mounted(){
+
+            this.detalleActa()
+
         }
     }
 </script>

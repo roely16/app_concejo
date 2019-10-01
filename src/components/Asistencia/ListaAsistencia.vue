@@ -16,11 +16,11 @@
             </b-col>
             <b-col class="text-right">
 
-                <b-button class="mr-2" variant="outline-danger" :disabled="asistencia_congelada" @click="congelarAsistencia">{{ asistencia_congelada ? 'Congelada' : 'Congelar' }}
+                <b-button class="mr-2" variant="outline-danger" :disabled="asistencia_congelada == 'S' ? true : false" @click="congelarAsistencia">{{ asistencia_congelada ? 'Congelada' : 'Congelar' }}
                     <font-awesome-icon icon="lock" />
                 </b-button>
 
-                <b-button variant="outline-primary" :disabled="asistencia_congelada" @click="marcarTodos">Marcar Todos
+                <b-button variant="outline-primary" :disabled="asistencia_congelada == 'S' ? true : false" @click="marcarTodos">{{ todosMarcados ? 'Desmarcar Todos' : 'Marcar Todos' }}
                     <font-awesome-icon icon="tasks" />
                 </b-button>
             </b-col>
@@ -164,7 +164,7 @@
                 })
                 .then(response => {
 
-                    console.log(response.data)
+                    // console.log(response.data)
 
                     this.personas = response.data.personas
                     this.fecha_agenda = response.data.detalle_agenda.fecha
@@ -232,6 +232,59 @@
             },
             marcarTodos(){
 
+                if (!this.todosMarcados) {
+
+                    this.personas.forEach(element => {
+                        
+                        if (!element.asistencia) {
+                                                        
+                            let data = {
+                                id_persona: element.persona[0].id,
+                                id_agenda: this.$route.params.id
+                            } 
+
+                            axios({
+                                method: 'POST',
+                                url: process.env.VUE_APP_API_URL + 'registrar_asistencia',
+                                data: data
+                            })
+                            .then(response => {                                
+                            })
+                            .catch(error => {
+                                console.log(error)
+                            })
+                        }
+
+                    });
+
+                }else{
+
+                     this.personas.forEach(element => {
+                        
+                        if (element.asistencia) {
+                                                        
+                            let data = {
+                                id_persona: element.persona[0].id,
+                                id_agenda: this.$route.params.id
+                            } 
+
+                            axios({
+                                method: 'POST',
+                                url: process.env.VUE_APP_API_URL + 'eliminar_asistencia',
+                                data: data
+                            })
+                            .then(response => {                                
+                            })
+                            .catch(error => {
+                                console.log(error)
+                            })
+                        }
+
+                    });
+
+                }
+
+                this.obtenerDatos()
             },
             congelarAsistencia(){
 
@@ -261,7 +314,13 @@
                         })
                         .then(response => {
 
-                            console.log(response.data)
+                            Swal.fire(
+                                'Excelente!',
+                                'La asistencia ha sido congelada exitosamente!',
+                                'success'
+                            )
+
+                            this.obtenerDatos()
 
                         })
                         .catch(error => {
@@ -291,13 +350,27 @@
                 console.log('obtener asistencia')
 
 				this.obtenerDatos()
-			})
+            })
+            
+            console.log(this.personas.filter(value => !value.asistencia))
 
         },
         computed:{
             asistenciaTomada: function(){
 
                 return true
+
+            },
+            todosMarcados: function(){
+
+                if (this.personas.length > this.personas.filter(value => value.asistencia).length) {
+                    
+                    return false
+
+                }else{
+
+                    return true
+                }
 
             }
         }

@@ -4,8 +4,8 @@
             <b-breadcrumb :items="items"></b-breadcrumb>
         </div>
         
-        <Detalle :agenda="agenda" :isLoading="isLoading"></Detalle>
         <div v-if="!isLoading">
+            <Detalle ></Detalle>
             <Menu :id_agenda="id_agenda" :isLoading="isLoading" :no_agenda="no_agenda" ></Menu>
         </div>
        
@@ -59,11 +59,10 @@
                 })
                 .then(response => {
 
-                    this.isLoading = !this.isLoading
                     this.agenda = response.data
                     this.no_agenda = this.agenda.no_agenda
-
-                    console.log(response)
+                    this.isLoading = !this.isLoading
+                    console.log(this.agenda)
 
                 })
                 .catch(error => {
@@ -74,8 +73,7 @@
         },
         mounted(){
             
-            this.getData()
-            this.id_agenda = parseInt(this.$route.params.id)
+            // this.getData()
             
         }
     }

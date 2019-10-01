@@ -10,6 +10,12 @@ import PuntosAgenda from './views/PuntosAgenda.vue'
 import Asistencia from './views/Asistencia.vue'
 // import ListaAgendas from './components/Agenda/ListaAgendas.vue'
 
+// Actas
+import Actas from './views/Actas.vue'
+import DetalleActa from './views/DetalleActa.vue'
+import PuntosActa from './views/PuntosActa.vue'
+import DetallePuntoActa from './views/DetallePuntoActa.vue'
+
 //Calendario
 import Calendario from './views/Calendario.vue'
 
@@ -22,6 +28,12 @@ import DetallePersona from './views/DetallePersona.vue'
 
 // Bitacora
 import Bitacora from './views/Bitacora.vue'
+
+// Busqueda
+import Busqueda from './views/Busqueda.vue'
+
+// Dashboard 
+import Dashboard from './views/Dashboard.vue'
 
 import store from './store';
 
@@ -46,9 +58,39 @@ const router =  new Router({
 				name: 'agenda',
 			},
 			{
+				path: '/home/actas',
+				component: Actas,
+				name: 'actas',
+			},
+			{
+				path: '/home/actas/detalle/:id',
+				component: DetalleActa,
+				name: 'detalle_acta'
+			},
+			{
+				path: '/home/actas/detalle/:id/puntos_acta',
+				component: PuntosActa,
+				name: 'puntos_acta'
+			},
+			{
+				path: '/home/actas/detalle/:id/puntos_acta/detalle_punto/:id_punto',
+				component: DetallePuntoActa,
+				name: 'detalle_punto_acta'
+			},
+			{
 				path: '/home/calendario',
 				component: Calendario,
 				name: 'calendario',
+			},
+			{
+				path: '/home/busqueda',
+				component: Busqueda,
+				name: 'busqueda',
+			},
+			{
+				path: '/home/dashboard',
+				component: Dashboard,
+				name: 'dashboard',
 			},
 			{
 				path: '/home/configuracion',
