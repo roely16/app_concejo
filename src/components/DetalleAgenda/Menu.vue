@@ -49,7 +49,7 @@
             >
 
                 <div>
-                    <b-link :to="{ name: 'agenda' }">
+                    <b-link :to="{ name: 'documentos', params: {id: this.$route.params.id} }">
                         <b-img  width="100" src="https://image.flaticon.com/icons/svg/1355/1355236.svg" fluid></b-img>
                     </b-link>
                     
@@ -68,7 +68,7 @@
             >
 
                 <div>
-                    <b-link :to="{ name: 'agenda' }">
+                    <b-link :to="{ name: 'audios', params: {id: this.$route.params.id} }">
                         <b-img  width="100" src="https://image.flaticon.com/icons/svg/148/148755.svg" fluid></b-img>
                     </b-link>
                     

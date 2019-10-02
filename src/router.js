@@ -8,6 +8,8 @@ import Agenda from './views/Agenda.vue'
 import DetalleAgenda from './views/DetalleAgenda.vue'
 import PuntosAgenda from './views/PuntosAgenda.vue'
 import Asistencia from './views/Asistencia.vue'
+import Documentos from './views/Documentos.vue'
+import Audios from './views/Audios.vue'
 // import ListaAgendas from './components/Agenda/ListaAgendas.vue'
 
 // Actas
@@ -126,7 +128,17 @@ const router =  new Router({
 				path: '/home/agenda/detalle/:id/asistencia',
 				component: Asistencia,
 				name: 'asistencia',
-			}
+			},
+			{
+				path: '/home/agenda/detalle/:id/documentos',
+				component: Documentos,
+				name: 'documentos'
+			},
+			{
+				path: '/home/agenda/detalle/:id/audios',
+				component: Audios,
+				name: 'audios'
+			},
 		]
 	},
     {

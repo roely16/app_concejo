@@ -23,7 +23,12 @@
         </b-row>
         
         <div>
-            <b-table striped :items="actas" :fields="fields" :filter="busqueda" small head-variant="dark" hover>
+            <b-table striped :items="actas" :fields="fields" :filter="busqueda" small head-variant="dark" empty-filtered-text="No se han encontrado actas que coincida con su criterio de búsqueda" hover>
+
+                <template slot="[agenda]" slot-scope="data">
+                    <strong>{{ data.item.agenda.fecha }} </strong> <b-badge :variant="data.item.agenda.tipo_agenda.color">{{ data.item.agenda.tipo_agenda.nombre }}</b-badge> 
+                </template>
+
                 <template slot="[actions]" slot-scope="data">
                     <div class="text-right">
                     <b-button

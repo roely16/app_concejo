@@ -99,6 +99,8 @@
                    
                     console.log(response.data)
                     this.$root.$emit('obtenerActas')
+
+                    this.$bvModal.hide('modal-nueva')
                   
                 })
                 .catch(error => {

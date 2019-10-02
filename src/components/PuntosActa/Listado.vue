@@ -1,37 +1,61 @@
 <template>
 
-    <div v-if="!isLoading">
+    <div>
+        <div v-if="!isLoading">
 
-        <b-card class="mb-4"></b-card>
-
-        <b-list-group>
-            <b-list-group-item :to="{ name: 'detalle_punto_acta', params: {id_punto: punto.id}}" class="mb-2" v-for="(punto, key) in puntos" :key="punto.id" variant="secondary">
+            <b-card class="mb-3">
                 <b-row>
-                    <b-col cols="1">
-                        <p class="lead text-justify"><strong>{{ ++key }}.</strong> </p>
+                    <b-col>
+                        <b-form-group
+                            label="Agenda de Fecha"
+                        >
+                            <h5>{{ agenda.fecha ? agenda.fecha : 'Cargando...' }}</h5>
+                        </b-form-group>
                     </b-col>
-                    <b-col cols="11">
-                        <p class="lead text-justify">{{ punto.descripcion }}</p>
+                    <b-col>
+                        <b-form-group
+                            label="Tipo de Sesión"
+                        >
+                            <h5>{{ agenda.tipo_agenda ? agenda.tipo_agenda.nombre : 'Cargando...' }}</h5>
+                        </b-form-group>
                     </b-col>
-                    <!-- <b-col cols="2" class="text-right">
-                        
-                        <b-button size="sm" class="mr-1" variant="outline-secondary" @click="modalInfo(punto)">
-                            <font-awesome-icon icon="info-circle" />
-                        </b-button>
-
-                        <b-button size="sm" class="mr-1" variant="outline-primary" @click="modalEditarPunto(punto)">
-                            <font-awesome-icon icon="edit" />
-                        </b-button>
-
-                        <b-button size="sm" variant="outline-danger" @click="eliminarPunto(punto.id)">
-                            <font-awesome-icon icon="trash-alt" />
-                        </b-button>
-                    </b-col> -->
                 </b-row>
+            </b-card>
 
-            </b-list-group-item>
-        </b-list-group>
+            <b-row class="mb-3">
+                <b-col>
+                    <h3>Puntos de Agenda</h3>
+                </b-col>
+            </b-row>
+
+            <b-list-group>
+                <b-list-group-item :to="{ name: 'detalle_punto_acta', params: {id_punto: punto.id}}" class="mb-2" v-for="(punto, key) in puntos" :key="punto.id" variant="secondary">
+                    <b-row>
+                        <b-col cols="1">
+                            <p class="lead text-justify"><strong>{{ ++key }}.</strong> </p>
+                        </b-col>
+                        <b-col cols="11">
+                            <p class="lead text-justify">{{ punto.descripcion }}</p>
+                        </b-col>
+                    </b-row>
+
+                </b-list-group-item>
+            </b-list-group>
         </div>
+
+        <div v-if="isLoading">
+            <b-row>
+                <b-col>
+                    <div class="text-center my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <div class="mt-2">
+                        <strong>Cargando datos...</strong>
+                        </div>
+                    </div>
+                </b-col>
+            </b-row>
+        </div>
+    </div>
 
 </template>
 
@@ -44,6 +68,7 @@
 
             return{
                 puntos: [],
+                agenda: {},
                 isLoading: false
             }
 
@@ -51,13 +76,16 @@
         methods: {
             obtenerPuntos(){
 
+                this.isLoading = !this.isLoading
+
                 axios({
                     method: 'GET',
                     url: process.env.VUE_APP_API_URL + 'puntos_agenda_acta/' + this.$route.params.id,
                 })
                 .then(response => {
-                   console.log(response.data)
                    this.puntos = response.data.agenda.puntos_agenda
+                   this.agenda = response.data.agenda
+                   this.isLoading = !this.isLoading
                 })
                 .catch(error => {
                     console.log(error)
