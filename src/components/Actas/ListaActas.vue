@@ -99,8 +99,8 @@
 
             this.$root.$on("obtenerActas", () => {
 				this.obtenerActas();
-			});
-
+            });
+            
         }
     }
 </script>

@@ -219,8 +219,6 @@
                     this.destinos = response.data
                     this.$bvModal.show('modal-correo')
 
-                    console.log(response.data)
-
                 })
 
             },
@@ -230,8 +228,6 @@
         },
         async mounted(){
             
-            console.log(this.agenda)
-
             // this.obtenerDetalle()
 
             let id_agenda = this.$route.params.id
@@ -248,9 +244,6 @@
                 this.agenda = response.data
                 this.estado = response.data.estado
                 
-                
-                console.log(response.data.estado.icono)
-
                 this.no_agenda = this.agenda.no_agenda
                 this.isLoading = !this.isLoading
                 
@@ -258,8 +251,6 @@
             .catch(error => {
                 console.log(error)
             })
-
-            
 
         }
     }
