@@ -33,7 +33,11 @@
                 <b-col cols="12">
                     <b-form-group label="Agenda" label-class="font-weight-bold">
                         <!-- <b-form-input></b-form-input> -->
-                        <b-form-select v-model="nueva_acta.id_agenda" :options="agendas" text-field="fecha" value-field="id" required></b-form-select>
+                        <b-form-select v-model="nueva_acta.id_agenda" :options="agendas" text-field="fecha" value-field="id" required>
+                            <template v-slot:first>
+                                <option :value="null" disabled>-- Seleccione una opción --</option>
+                            </template>
+                        </b-form-select>
                     </b-form-group>
                 </b-col>
 
@@ -76,6 +80,7 @@
                 ],
                 isSaving: false,
                 nueva_acta: {
+                    id_agenda: null
                 },
                 editNoActa: false,
                 editYearActa: false,
@@ -110,6 +115,8 @@
             },
             obtenerDatos(){
 
+                this.nueva_acta.id_agenda = null
+
                 axios({
                     method: 'GET',
                     url: process.env.VUE_APP_API_URL + 'datos_modal_acta'
@@ -127,10 +134,12 @@
 
             },
             editarNoActa(){
-
             },
             editarYearActa(){
-
+            },
+            show(){
+                this.nueva_acta.id_agenda = null
+                console.log('mostrar modal')
             }
         }
     }

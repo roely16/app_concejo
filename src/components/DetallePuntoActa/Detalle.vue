@@ -105,10 +105,10 @@
                 <b-card no-body>
                     <b-tabs card>
                     <b-tab title="Documentos" active>
-                        <b-card-text>Documentos</b-card-text>
+                        <Documentos :id_agenda="detalle_punto.agenda ? detalle_punto.agenda.id : null"/>
                     </b-tab>
                     <b-tab title="Audios">
-                        <b-card-text>Audios</b-card-text>
+                        <Audios :id_agenda="detalle_punto.agenda ? detalle_punto.agenda.id : null"/>
                     </b-tab>
                     </b-tabs>
                 </b-card>
@@ -124,7 +124,7 @@
                     <div class="text-center my-2">
                         <b-spinner class="align-middle"></b-spinner>
                         <div class="mt-2">
-                        <strong>Cargando datos...</strong>
+                            <strong>Cargando datos...</strong>
                         </div>
                     </div>
                 </b-col>
@@ -138,10 +138,14 @@
 
     import axios from 'axios'
     import ModalBitacora from './ModalBitacora'
+    import Documentos from './Documentos'
+    import Audios from './Audios'
 
     export default {
         components: {
-            ModalBitacora
+            ModalBitacora,
+            Documentos,
+            Audios
         },
         data(){
             return{
@@ -152,7 +156,8 @@
                 isEditing: false,
                 isSaving: false,
                 isLoading: false,
-                backup_punto_acta: ''
+                backup_punto_acta: '',
+                id_agenda: null
             }
         },
         methods: {
@@ -171,10 +176,12 @@
                     data: data
                 })
                 .then(response => {
+
                    console.log(response.data)
                    this.detalle_punto = response.data.punto_agenda
                    this.detalle_punto_acta = response.data.punto_acta
                    this.isLoading = !this.isLoading
+
                 })
                 .catch(error => {
                     console.log(error)

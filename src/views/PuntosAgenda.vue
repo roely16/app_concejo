@@ -3,9 +3,41 @@
         <div class="mt-4">
             <b-breadcrumb :items="items" v-if="!isLoading"></b-breadcrumb>
         </div>
-        <Listado></Listado>
+
+        <Listado>
+            <template v-slot>
+                <b-row class="mb-3">
+                    <b-col>
+                        <b-card>
+                            <b-row>
+                                <b-col>
+                                    <b-form-group
+                                        label="Fecha"
+                                    >
+                                        <h5>{{ detalle_agenda.fecha }}</h5>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col>
+                                    <b-form-group
+                                        label="Tipo de Sesión"
+                                    >
+                                        <h5>{{ detalle_agenda.tipo_agenda ? detalle_agenda.tipo_agenda.nombre : 'Cargando...' }}</h5>
+                                    </b-form-group>
+                                </b-col>
+                            </b-row>
+                        </b-card>
+                    </b-col>
+                </b-row>
+            </template>
+        </Listado>
     </div>
 </template>
+
+<style scoped>
+    .card-body{
+        padding-bottom: 0.1rem 
+    }
+</style>
 
 <script>
 
@@ -37,7 +69,8 @@
                         active: true
                     }
                 ],
-                isLoading: false
+                isLoading: false,
+                detalle_agenda: {}
             }
         },
         mounted(){
@@ -56,9 +89,12 @@
                 })
                 .then(response => {
 
+                    console.log(response.data)
+
                     // this.items[2].text = "Detalle de Acta " + response.data.numero_acta + ' - ' + response.data.year
 
                     this.isLoading = !this.isLoading
+                    this.detalle_agenda = response.data
 
                 })
                 .catch(error => {

@@ -35,7 +35,7 @@
 
                 <b-col cols="12">
                     <b-form-group label="Autor" label-class="font-weight-bold" description="Se refiere al profesional que lo elaboró.">
-                        <b-form-input v-model="documento.autor" required></b-form-input>
+                        <b-form-input v-model="documento.autor" autocomplete="off" required></b-form-input>
                     </b-form-group>
                 </b-col>
 
@@ -151,12 +151,15 @@
             },
             registrarDocumento(){
 
+                let usuario = JSON.parse(localStorage.getItem('usuario'))
+
                 let formData = new FormData()
-                formData.append('file', this.documento.archivo);
-                formData.append('tipo', this.documento.tipo);
-                formData.append('autor', this.documento.autor);
-                formData.append('descripcion', this.documento.descripcion);
+                formData.append('file', this.documento.archivo)
+                formData.append('tipo', this.documento.tipo)
+                formData.append('autor', this.documento.autor)
+                formData.append('descripcion', this.documento.descripcion)
                 formData.append('id_agenda', this.$route.params.id)
+                formData.append('id_usuario', usuario.id_persona)
 
                 axios({
                     method: 'POST',

@@ -49,6 +49,8 @@
             </b-col>
         </b-row>
 
+        <slot></slot>
+
         <div v-if="!isLoading">
             <b-list-group id="items" v-if="puntos_agenda.length > 0">
                 <b-list-group-item class="mb-2" v-for="(punto, key) in puntosFiltrados" :key="punto.id" :variant="list_variant">

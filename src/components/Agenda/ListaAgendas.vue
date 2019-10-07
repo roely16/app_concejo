@@ -36,7 +36,7 @@
       :per-page="perPage"
       :current-page="currentPage"
       @filtered="onFiltered"
-      empty-filtered-text="No se han encontrado agendas que coincida con su criterio de búsqueda"
+      empty-filtered-text="No se han encontrado agendas que coincidan con su criterio de búsqueda"
     >
       <div slot="table-busy" class="text-center my-2">
         <b-spinner class="align-middle"></b-spinner>
