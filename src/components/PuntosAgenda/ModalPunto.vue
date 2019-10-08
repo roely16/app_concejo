@@ -102,6 +102,8 @@
 
                 }else{
 
+                    
+
                     let data = {
                         id: this.puntoAgenda.id,
                         descripcion: this.descripcion,

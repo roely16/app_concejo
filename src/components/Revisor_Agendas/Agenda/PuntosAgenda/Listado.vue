@@ -3,7 +3,7 @@
     <div>
 
         <b-row class="mb-3">
-            <b-col cols="3">
+            <b-col cols="4">
                <b-input-group>
                     <b-form-input v-model="busqueda"></b-form-input>
 
@@ -17,22 +17,18 @@
                 </b-input-group> 
             </b-col>
             
-            <b-col cols="6" class="text-center">
+            <b-col cols="4" class="text-center">
                 <b-button class="mr-2" variant="outline-secondary" @click="modalPDF" :disabled="puntos_agenda.length <= 0">Vista Previa
                     <font-awesome-icon icon="file-pdf" />
                 </b-button>
 
-                <b-button class="mr-2" variant="outline-info" @click="sendMail" :disabled="puntos_agenda.length <= 0">Aprobación
+                <!-- <b-button variant="outline-info" @click="sendMail" :disabled="puntos_agenda.length <= 0">Aprobación
                     <font-awesome-icon icon="envelope" />
-                </b-button>
-
-                <b-button variant="outline-info" @click="sendMail" :disabled="puntos_agenda.length <= 0">Enviar Concejo
-                    <font-awesome-icon icon="envelope" />
-                </b-button>
+                </b-button> -->
 
             </b-col>
 
-            <b-col cols="3" class="text-right">
+            <!-- <b-col cols="4" class="text-right">
 
                 <b-button v-if="!ordenando" :disabled="puntos_agenda.length <= 0" class="mr-2" variant="outline-success" v-on:click="orderLista()">Ordenar
                     <font-awesome-icon icon="sort" />
@@ -49,6 +45,16 @@
 
                 <b-button variant="outline-primary" v-on:click="crearPunto()">Crear Punto
                     <font-awesome-icon icon="plus-circle" />
+                </b-button>
+            </b-col> -->
+
+            <b-col  cols="4" class="text-right">
+                <b-button class="mr-2" variant="outline-success">Aprobar
+                    <font-awesome-icon icon="check" />
+                </b-button>
+
+                <b-button variant="outline-danger">Solicitar Cambios
+                    <font-awesome-icon icon="times-circle" />
                 </b-button>
             </b-col>
         </b-row>
@@ -75,9 +81,9 @@
                                 <font-awesome-icon icon="edit" />
                             </b-button>
 
-                            <b-button size="sm" variant="outline-danger" @click="eliminarPunto(punto.id)">
+                            <!-- <b-button size="sm" variant="outline-danger" @click="eliminarPunto(punto.id)">
                                 <font-awesome-icon icon="trash-alt" />
-                            </b-button>
+                            </b-button> -->
                         </b-col>
                     </b-row>
 
@@ -136,7 +142,7 @@
 
         <ModalPunto :title="title_modal" :modalEdit="modalEdit" :orden="ultimo_punto" :puntoAgenda="punto_agenda" ></ModalPunto>
 
-        <ModalCorreo :destinos="destinos" />
+        <!-- <ModalCorreo :destinos="destinos" /> -->
 
         <ModalDetalle :data="detallePunto" :punto="no_punto" />
 
@@ -149,16 +155,16 @@
 <script>
 
     import Sortable from 'sortablejs/modular/sortable.complete.esm.js';
-    import ModalPunto from '../PuntosAgenda/ModalPunto'
+    import ModalPunto from '@/components/PuntosAgenda/ModalPunto'
     import axios from 'axios'
-    import ModalCorreo from '../DetalleAgenda/ModalCorreo'
-    import ModalDetalle from '../PuntosAgenda/ModalDetalle'
-    import ModalPDF from '../PuntosAgenda/ModalPDF'
+    // import ModalCorreo from '../DetalleAgenda/ModalCorreo'
+    import ModalDetalle from '@/components/PuntosAgenda/ModalDetalle'
+    import ModalPDF from '@/components/PuntosAgenda/ModalPDF'
 
     export default {
         components: {
             ModalPunto,
-            ModalCorreo,
+            // ModalCorreo,
             ModalDetalle,
             ModalPDF
         },
@@ -200,9 +206,6 @@
                     url: process.env.VUE_APP_API_URL + 'puntos_agenda/' + this.$route.params.id,
                 })
                 .then(response => {
-
-                    console.log(response.data)
-
                     this.isLoading = !this.isLoading
                     this.puntos_agenda = response.data.puntos
                     this.puntos_eliminados = response.data.puntos_eliminados

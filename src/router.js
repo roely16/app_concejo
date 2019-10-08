@@ -37,6 +37,12 @@ import Busqueda from './views/Busqueda.vue'
 // Dashboard 
 import Dashboard from './views/Dashboard.vue'
 
+
+// Revisor de Agendas
+import Agendas_Analisis from './views/Revisor_Agendas/Agendas.vue'
+import Agenda_Analisis from './views/Revisor_Agendas/DetalleAgenda.vue'
+import PuntosAgendaAnalisis from './views/Revisor_Agendas/PuntosAgenda.vue'
+
 import store from './store';
 
 Vue.use(Router)
@@ -138,6 +144,22 @@ const router =  new Router({
 				path: '/home/agenda/detalle/:id/audios',
 				component: Audios,
 				name: 'audios'
+			},
+			// Revisor de Agendas
+			{
+				path: '/home/agendas_analisis',
+				component: Agendas_Analisis,
+				name: 'agendas_analisis',
+			},
+			{
+				path: '/home/agendas_analisis/detalle/:id',
+				component: Agenda_Analisis,
+				name: 'detalle_agenda_analisis'
+			},
+			{
+				path: '/home/agendas_analisis/detalle/:id/puntos_agenda',
+				component: PuntosAgendaAnalisis,
+				name: 'puntos_agenda_analisis',
 			},
 		]
 	},

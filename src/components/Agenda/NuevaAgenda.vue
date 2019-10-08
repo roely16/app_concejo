@@ -113,6 +113,9 @@
         methods: {
             guardarAgenda(){
 
+                let usuario = JSON.parse(localStorage.getItem('usuario'))
+                this.nueva_agenda.id_usuario = usuario.id_persona
+
                 axios({
                     method: 'POST',
                     url: process.env.VUE_APP_API_URL + 'registrar_agenda',
@@ -120,6 +123,8 @@
                 })
                 .then(response => {
                    
+                    console.log(response.data)
+
                     Swal.fire(
                         'Excelente!',
                         'La agenda ha sido creada exitosamente!',

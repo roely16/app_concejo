@@ -4,7 +4,30 @@
         <!-- <b-alert :variant="estado.color" show>Estado: {{ estado.nombre }}</b-alert> -->
         <b-card>
             <b-row v-if="!isLoading">
-               
+                <!-- <b-col cols="2">
+                    <b-form-group
+                        label="Número de Acta"
+                    >
+                        <b-form-input
+                            v-model="agenda.numero_acta"
+                            type="number"
+                            required
+                            :disabled="!isEditing"
+                        ></b-form-input>
+                    </b-form-group>
+                </b-col>
+                <b-col cols="2">
+                    <b-form-group
+                        label="Año"
+                    >
+                        <b-form-input
+                            v-model="agenda.year"
+                            type="number"
+                            required
+                            :disabled="!isEditing"
+                        ></b-form-input>
+                    </b-form-group>
+                </b-col> -->
                 <b-col cols="4">
                     <b-form-group label="Fecha" label-class="font-weight-bold">
                         <date-picker v-model="agenda.fecha" :config="options_date" required :disabled="!isEditing"></date-picker>
@@ -37,13 +60,13 @@
                         </b-button>
                     </b-button-group>
 
-                    <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving">Editar 
+                    <!-- <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving">Editar 
                         <font-awesome-icon icon="edit" />
-                    </b-button>
+                    </b-button> -->
 
-                    <b-button variant="outline-info" v-b-modal.modal-bitacora>Historial 
+                    <!-- <b-button variant="outline-info" v-b-modal.modal-bitacora>Historial 
                         <font-awesome-icon icon="list-alt" />
-                    </b-button>
+                    </b-button> -->
 
                     <!-- <b-button @click="sendMail" variant="outline-info" class="ml-2">
                         Enviar por Correo
@@ -89,7 +112,7 @@
             </b-row>
             
             <!-- <ModalCorreo :destinos="destinos" /> -->
-            <ModalBitacora />
+            <!-- <ModalBitacora /> -->
 
         </b-card>   
     </div>
@@ -101,14 +124,14 @@
     import axios from 'axios'
     import datePicker from 'vue-bootstrap-datetimepicker';
     import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
-    import ModalCorreo from '../DetalleAgenda/ModalCorreo'
-    import ModalBitacora from './ModalBitacora'
+    // import ModalCorreo from '../DetalleAgenda/ModalCorreo'
+    // import ModalBitacora from './ModalBitacora'
 
     export default {
         components: {
             datePicker,
-            ModalCorreo,
-            ModalBitacora
+            // ModalCorreo,
+            // ModalBitacora
         },
         data(){
             return{
@@ -141,50 +164,50 @@
             // isLoading: Boolean
         },
         methods: {
-            editarActa(){
+            // editarActa(){
                 
-                this.isEditing = !this.isEditing
+            //     this.isEditing = !this.isEditing
 
-                if (!this.isEditing) {
+            //     if (!this.isEditing) {
                     
-                    this.isSaving = !this.isSaving
+            //         this.isSaving = !this.isSaving
 
-                    axios({
-                        method: 'POST',
-                        url: process.env.VUE_APP_API_URL + 'editar_agenda',
-                        data: this.agenda
-                    })
-                    .then(response => {
+            //         axios({
+            //             method: 'POST',
+            //             url: process.env.VUE_APP_API_URL + 'editar_agenda',
+            //             data: this.agenda
+            //         })
+            //         .then(response => {
 
-                        this.isSaving = !this.isSaving
+            //             this.isSaving = !this.isSaving
 
-                        if (response.data.code) {
+            //             if (response.data.code) {
                             
-                            this.isEditing = true
+            //                 this.isEditing = true
 
-                            Swal.fire({
-                                type: 'error',
-                                title: 'Error ' + response.data.codigo_error,
-                                text: response.data.message,
-                            })
+            //                 Swal.fire({
+            //                     type: 'error',
+            //                     title: 'Error ' + response.data.codigo_error,
+            //                     text: response.data.message,
+            //                 })
 
-                        }else{
+            //             }else{
 
-                            Swal.fire(
-                                'Excelente!',
-                                'Los datos del acta han sido editados exitosamente!',
-                                'success'
-                            )
-                        }
+            //                 Swal.fire(
+            //                     'Excelente!',
+            //                     'Los datos del acta han sido editados exitosamente!',
+            //                     'success'
+            //                 )
+            //             }
 
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
+            //         })
+            //         .catch(error => {
+            //             console.log(error)
+            //         })
 
-                }
+            //     }
 
-            },
+            // },
             cancelarEditar(){
                 this.isEditing = false
             },

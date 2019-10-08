@@ -33,7 +33,7 @@
                 <b-col cols="12">
                     <b-form-group label="Agenda" label-class="font-weight-bold">
                         <!-- <b-form-input></b-form-input> -->
-                        <b-form-select v-model="nueva_acta.id_agenda" :options="agendas" text-field="fecha" value-field="id" required>
+                        <b-form-select v-model="nueva_acta.id_agenda" :options="agendas" required>
                             <template v-slot:first>
                                 <option :value="null" disabled>-- Seleccione una opción --</option>
                             </template>
@@ -71,13 +71,7 @@
         data() {
             return {
                 selected: null,
-                options: [
-                    { value: null, text: 'Please select an option' },
-                    { value: 'a', text: 'This is First option' },
-                    { value: 'b', text: 'Selected Option' },
-                    { value: { C: '3PO' }, text: 'This is an option with object value' },
-                    { value: 'd', text: 'This one is disabled', disabled: true }
-                ],
+                options: [],
                 isSaving: false,
                 nueva_acta: {
                     id_agenda: null
@@ -115,7 +109,7 @@
             },
             obtenerDatos(){
 
-                this.nueva_acta.id_agenda = null
+                // this.nueva_acta.id_agenda = null
 
                 axios({
                     method: 'GET',
@@ -124,7 +118,8 @@
                 .then(response => {
                    
                     console.log(response.data)
-                    this.nueva_acta = response.data.numero_acta
+                    this.nueva_acta.numero = response.data.numero_acta.numero
+                    this.nueva_acta.year = response.data.numero_acta.year
                     this.agendas = response.data.agendas
                   
                 })
@@ -138,7 +133,7 @@
             editarYearActa(){
             },
             show(){
-                this.nueva_acta.id_agenda = null
+                // this.nueva_acta.id_agenda = null
                 console.log('mostrar modal')
             }
         }

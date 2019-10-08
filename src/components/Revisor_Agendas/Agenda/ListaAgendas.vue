@@ -14,12 +14,7 @@
         </b-input-group>
       </b-col>
 
-      <b-col cols="8" class="text-right">
-        <b-button variant="outline-primary" @click="nuevaActa">
-          Nueva Agenda
-          <font-awesome-icon icon="plus-circle" />
-        </b-button>
-      </b-col>
+      
     </b-row>
 
     <b-table
@@ -70,15 +65,13 @@
       <template slot="[actions]" slot-scope="data">
         <div class="text-right">
           <b-button
-            :to="{ name: 'detalle_agenda', params: { id: data.item.id } }"
+            :to="{ name: 'detalle_agenda_analisis', params: { id: data.item.id } }"
             class="mr-2"
             variant="outline-success"
           >
             <font-awesome-icon icon="eye" />
           </b-button>
-          <b-button variant="outline-danger" v-on:click="eliminarAgenda(data.item.id)">
-            <font-awesome-icon icon="trash-alt" />
-          </b-button>
+         
         </div>
       </template>
     </b-table>
@@ -100,17 +93,15 @@
       <b-col></b-col>
     </b-row>
 
-    <NuevaAgenda></NuevaAgenda>
   </div>
 </template>
 
 <script>
     import axios from "axios";
-    import NuevaAgenda from "../Agenda/NuevaAgenda";
 
 	export default {
 		components: {
-			NuevaAgenda
+			
 		},
 		data() {
 			return {
@@ -129,7 +120,7 @@
 
 				axios({
 					method: "GET",
-					url: process.env.VUE_APP_API_URL + "obtener_agendas"
+					url: process.env.VUE_APP_API_URL + "obtener_agendas_analisis"
 				})
 				.then(response => {
 					this.isLoading = !this.isLoading;
