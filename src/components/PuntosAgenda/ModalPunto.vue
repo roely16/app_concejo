@@ -66,11 +66,13 @@
         methods: {
             async registrarPunto(){
 
+                let usuario = JSON.parse(localStorage.getItem('usuario'))
+
                 let nuevo_punto = {
                     descripcion: this.descripcion,
                     id_acta: this.$route.params.id,
                     orden: this.orden,
-                    
+                    id_persona: usuario.id_persona
                 }
 
                 if (!this.modalEdit) {
@@ -102,15 +104,14 @@
 
                 }else{
 
-                    
+                    let usuario = JSON.parse(localStorage.getItem('usuario'))
 
                     let data = {
                         id: this.puntoAgenda.id,
                         descripcion: this.descripcion,
-                        original: this.backup_descripcion
+                        original: this.backup_descripcion,
+                        id_persona: usuario.id_persona
                     }
-
-                    console.log(data)
 
                     await axios({
                         method: 'POST',
@@ -118,7 +119,9 @@
                         data: data
                     })
                     .then(response => {
-                                            
+                        
+                        console.log(response.data)
+                                
                         Swal.fire(
                             'Excelente!',
                             'El punto de agenda ha sido editado exitosamente!',

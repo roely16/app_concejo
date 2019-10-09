@@ -49,7 +49,7 @@
             </b-col> -->
 
             <b-col  cols="4" class="text-right">
-                <b-button class="mr-2" variant="outline-success">Aprobar
+                <b-button class="mr-2" variant="outline-success" @click="aprobarAgenda">Aprobar
                     <font-awesome-icon icon="check" />
                 </b-button>
 
@@ -407,6 +407,11 @@
             },
             modalPDF(){
                 this.$bvModal.show('modal-pdf')
+            },
+            aprobarAgenda(){
+
+                console.log(this.$route.params.id)
+
             }
         },
         mounted(){

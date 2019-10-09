@@ -315,9 +315,12 @@
 
                     if (result.value != '') {
 
+                        let usuario = JSON.parse(localStorage.getItem('usuario'))
+
                         let data = {
                             id_punto: id,
-                            motivo: result.value
+                            motivo: result.value,
+                            id_persona: usuario.id_persona
                         }
 
                         axios({
