@@ -22,11 +22,10 @@
                     <font-awesome-icon icon="file-pdf" />
                 </b-button>
 
-                <b-button class="mr-2" variant="outline-info" @click="sendMail" :disabled="puntos_agenda.length <= 0">Aprobación
-                    <font-awesome-icon icon="envelope" />
+                <b-button class="mr-2" variant="outline-info" @click="sendMail" :disabled="puntos_agenda.length <= 0 || data.bitacora.id_estado == 5">Aprobación                    <font-awesome-icon icon="envelope" />
                 </b-button>
 
-                <b-button variant="outline-info" @click="sendMail" :disabled="puntos_agenda.length <= 0">Enviar Concejo
+                <b-button v-if="data.bitacora.id_estado > 2" variant="outline-info" v-b-modal.modal-concejo :disabled="data.bitacora.id_estado == 5">Enviar Concejo
                     <font-awesome-icon icon="envelope" />
                 </b-button>
 
@@ -34,7 +33,7 @@
 
             <b-col cols="3" class="text-right">
 
-                <b-button v-if="!ordenando" :disabled="puntos_agenda.length <= 0" class="mr-2" variant="outline-success" v-on:click="orderLista()">Ordenar
+                <b-button v-if="!ordenando" :disabled="puntos_agenda.length <= 0 || data.bitacora.id_estado == 5" class="mr-2" variant="outline-success" v-on:click="orderLista()">Ordenar
                     <font-awesome-icon icon="sort" />
                 </b-button>
 
@@ -47,7 +46,7 @@
                     </b-button>
                 </b-button-group>
 
-                <b-button variant="outline-primary" v-on:click="crearPunto()">Crear Punto
+                <b-button variant="outline-primary" v-on:click="crearPunto()" :disabled="data.bitacora.id_estado == 5">Crear Punto
                     <font-awesome-icon icon="plus-circle" />
                 </b-button>
             </b-col>
@@ -71,11 +70,11 @@
                                 <font-awesome-icon icon="info-circle" />
                             </b-button>
 
-                            <b-button size="sm" class="mr-1" variant="outline-primary" @click="modalEditarPunto(punto)">
+                            <b-button size="sm" class="mr-1" variant="outline-primary" @click="modalEditarPunto(punto)" :disabled="data.bitacora.id_estado == 5">
                                 <font-awesome-icon icon="edit" />
                             </b-button>
 
-                            <b-button size="sm" variant="outline-danger" @click="eliminarPunto(punto.id)">
+                            <b-button size="sm" variant="outline-danger" @click="eliminarPunto(punto.id)" :disabled="data.bitacora.id_estado == 5">
                                 <font-awesome-icon icon="trash-alt" />
                             </b-button>
                         </b-col>
@@ -142,6 +141,8 @@
 
         <ModalPDF />
 
+        <ModalConcejo />
+
     </div>
 
 </template>
@@ -154,13 +155,21 @@
     import ModalCorreo from '../DetalleAgenda/ModalCorreo'
     import ModalDetalle from '../PuntosAgenda/ModalDetalle'
     import ModalPDF from '../PuntosAgenda/ModalPDF'
+    import ModalConcejo from '../PuntosAgenda/ModalConcejo'
 
     export default {
+        props: {
+            data: {
+                type: Object,
+                default: {}
+            }
+        },
         components: {
             ModalPunto,
             ModalCorreo,
             ModalDetalle,
-            ModalPDF
+            ModalPDF,
+            ModalConcejo
         },
         data() {
             return {
@@ -407,6 +416,11 @@
             },
             modalPDF(){
                 this.$bvModal.show('modal-pdf')
+            },
+            sendConcejo(){
+
+
+
             }
         },
         mounted(){

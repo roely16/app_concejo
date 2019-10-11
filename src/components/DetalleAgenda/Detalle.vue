@@ -37,12 +37,16 @@
                         </b-button>
                     </b-button-group>
 
-                    <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving">Editar 
+                    <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving" :disabled="agenda.bitacora.id_estado == 5">Editar 
                         <font-awesome-icon icon="edit" />
                     </b-button>
 
-                    <b-button variant="outline-info" v-b-modal.modal-bitacora>Historial 
+                    <b-button class="mr-2" variant="outline-info" v-b-modal.modal-bitacora>Historial 
                         <font-awesome-icon icon="list-alt" />
+                    </b-button>
+
+                    <b-button variant="outline-danger" v-if="agenda.asistencia_congelada == 'S' && agenda.bitacora.id_estado > 3" @click="finalizarAgenda" :disabled="agenda.bitacora.id_estado == 5">Finalizar 
+                        <font-awesome-icon icon="calendar-check" />
                     </b-button>
 
                     <!-- <b-button @click="sendMail" variant="outline-info" class="ml-2">
@@ -141,6 +145,31 @@
             // isLoading: Boolean
         },
         methods: {
+            obtenerDetalle(){
+                let id_agenda = this.$route.params.id
+
+                this.isLoading = !this.isLoading
+
+                axios({
+                    method: 'GET',
+                    url: process.env.VUE_APP_API_URL + 'detalle_agenda/' + id_agenda,
+                })
+                .then(response => {
+
+                    console.log(response.data)
+
+                    // this.icono = response.data.estado.icono
+                    this.agenda = response.data
+                    // this.estado = response.data.estado
+                    
+                    this.no_agenda = this.agenda.no_agenda
+                    this.isLoading = !this.isLoading
+                    
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+            },
             editarActa(){
                 
                 this.isEditing = !this.isEditing
@@ -204,35 +233,54 @@
             },
             mostrarBitacora(){
                 
+            },
+            finalizarAgenda(){
+
+                Swal.fire({
+
+                    title: '¿Está seguro?',
+                    text: "Esto no se podrá revertir, una vez finalizada no se podrá editar ningun dato de la agenda!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, FINALIZAR',
+                    cancelButtonText: 'Cancelar'
+
+                }).then((result) => {
+
+                    if (result.value) {
+
+                        let data = {
+                            id_agenda: this.$route.params.id,
+                            id_usuario: 1
+                        }
+
+                        axios
+                        .post( process.env.VUE_APP_API_URL + 'finalizar_agenda', data)
+                        .then(response => {
+                            console.log(response.data)
+
+                            Swal.fire(
+                                'Excelente!',
+                                'La agenda ha sido finalizada exitosamente.',
+                                'success'
+                            ).then(() =>{
+                                this.obtenerDetalle()
+                            })
+
+                        })
+                        
+                    }
+
+                })
+
             }
+
         },
-        async mounted(){
+        mounted(){
             
-            // this.obtenerDetalle()
-
-            let id_agenda = this.$route.params.id
-
-            this.isLoading = !this.isLoading
-
-            await axios({
-                method: 'GET',
-                url: process.env.VUE_APP_API_URL + 'detalle_agenda/' + id_agenda,
-            })
-            .then(response => {
-
-                console.log(response.data)
-
-                // this.icono = response.data.estado.icono
-                this.agenda = response.data
-                // this.estado = response.data.estado
-                
-                this.no_agenda = this.agenda.no_agenda
-                this.isLoading = !this.isLoading
-                
-            })
-            .catch(error => {
-                console.log(error)
-            })
+            this.obtenerDetalle()
 
         }
     }

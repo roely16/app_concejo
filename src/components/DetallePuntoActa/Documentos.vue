@@ -12,7 +12,7 @@
                             <font-awesome-icon icon="info-circle" />
                         </b-button>
 
-                        <b-button size="sm" class="mr-2" variant="outline-secondary" :href="row.item.link_descarga " >
+                        <b-button class="mr-2" variant="outline-secondary" :href="row.item.link_descarga " >
                             <font-awesome-icon icon="cloud-download-alt" />
                         </b-button>
 

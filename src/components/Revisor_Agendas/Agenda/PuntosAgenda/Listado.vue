@@ -49,7 +49,7 @@
             </b-col> -->
 
             <b-col  cols="4" class="text-right">
-                <b-button class="mr-2" variant="outline-success" @click="aprobarAgenda">Aprobar
+                <b-button class="mr-2" variant="outline-success" :disabled="isSending" @click="aprobarAgenda">Aprobar
                     <font-awesome-icon icon="check" />
                 </b-button>
 
@@ -185,7 +185,8 @@
                 destinos: [],
                 detallePunto: {},
                 no_punto: '',
-                puntos_eliminados: {}
+                puntos_eliminados: {},
+                isSending: false
             }
         },
         methods:{
@@ -206,6 +207,9 @@
                     url: process.env.VUE_APP_API_URL + 'puntos_agenda/' + this.$route.params.id,
                 })
                 .then(response => {
+
+                    console.log(response.data)
+
                     this.isLoading = !this.isLoading
                     this.puntos_agenda = response.data.puntos
                     this.puntos_eliminados = response.data.puntos_eliminados
@@ -411,6 +415,46 @@
             aprobarAgenda(){
 
                 console.log(this.$route.params.id)
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: "Al aprobar la agenda esta podrá ser enviada a los miembros del concejo!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, APROBAR',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.value) {
+                        
+                        this.isSending = !this.isSending
+
+                        let data = {
+                            id: this.$route.params.id,
+                            id_persona: 1
+                        }
+
+                        axios
+                        .post('https://udicat.muniguate.com/apps/api_concejo/public/api/aprobar_agenda', data)
+                        .then(response => {
+
+                            console.log(response.data)
+                            this.isSending = !this.isSending
+                            
+                            Swal.fire(
+                                'Excelente!',
+                                'La agenda ha sido aprobada y se le ha enviado notificación a la persona responsable!',
+                                'success'
+                            ).then( () => {
+                                this.$router.push({ name: 'agendas_analisis' })
+                            })
+
+                            // this.$router.push({ name: 'agendas_analisis' })
+
+                        })
+
+                    }
+                })
 
             }
         },

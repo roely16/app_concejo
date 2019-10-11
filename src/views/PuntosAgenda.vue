@@ -4,7 +4,7 @@
             <b-breadcrumb :items="items" v-if="!isLoading"></b-breadcrumb>
         </div>
 
-        <Listado>
+        <Listado :data="detalle_agenda">
             <template v-slot>
                 <b-row class="mb-3">
                     <b-col>

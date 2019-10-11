@@ -9,8 +9,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     accessToken: null,
-		loggingIn: false,
-		loginError: null
+	loggingIn: false,
+	loginError: null
   },
   mutations: {
     loginStart: state => state.loggingIn = true,

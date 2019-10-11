@@ -27,7 +27,7 @@
                     href: '#/home'
                 },
                 {
-                    text: 'Busqueda',
+                    text: 'Búsqueda',
                     active: true
                 }
                 ]

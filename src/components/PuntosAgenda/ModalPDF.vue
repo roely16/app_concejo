@@ -1,5 +1,5 @@
 <template>
-    <b-modal id="modal-pdf" title="Vista Previa" size="xl" hide-footer hide-header>
+    <b-modal id="modal-pdf" title="Vista Previa"  @show="getPDF" size="xl" hide-footer hide-header>
         <div id="example1"></div>
     </b-modal>      
 </template>
@@ -55,11 +55,11 @@
         },
         mounted(){
 
-            this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
+            // this.$root.$on('bv::modal::shown', (bvEvent, modalId) => {
 
-                this.getPDF()
+            //     this.getPDF()
 
-            })
+            // })
 
         }
     }

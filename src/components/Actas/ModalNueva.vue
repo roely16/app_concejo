@@ -33,7 +33,7 @@
                 <b-col cols="12">
                     <b-form-group label="Agenda" label-class="font-weight-bold">
                         <!-- <b-form-input></b-form-input> -->
-                        <b-form-select v-model="nueva_acta.id_agenda" :options="agendas" required>
+                        <b-form-select v-model="nueva_acta.id_agenda" text-field="fecha" value-field="id" :options="agendas" required>
                             <template v-slot:first>
                                 <option :value="null" disabled>-- Seleccione una opción --</option>
                             </template>
