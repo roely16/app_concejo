@@ -141,11 +141,12 @@
     import Documentos from './Documentos'
     import Audios from './Audios'
 
+
     export default {
         components: {
             ModalBitacora,
             Documentos,
-            Audios
+            Audios,
         },
         data(){
             return{
@@ -157,7 +158,7 @@
                 isSaving: false,
                 isLoading: false,
                 backup_punto_acta: '',
-                id_agenda: null
+                id_agenda: null,
             }
         },
         methods: {
@@ -316,6 +317,7 @@
         },
         mounted(){
             this.obtenerDetalle()
+
         },
         computed: {
             isChange: function(){

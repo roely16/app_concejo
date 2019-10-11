@@ -19,7 +19,7 @@
             </b-card>
         </b-col>
 
-        <b-col sm="12" lg="3">
+        <!-- <b-col sm="12" lg="3">
             <b-card
                 img-src=""
                 img-alt="Image"
@@ -36,7 +36,7 @@
                     
                 </div>
             </b-card>
-        </b-col>
+        </b-col> -->
 
         <b-col sm="12" lg="3">
             <b-card
@@ -63,5 +63,7 @@
 <script>
     export default {
         
+        
+
     }
 </script>

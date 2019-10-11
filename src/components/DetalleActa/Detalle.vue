@@ -38,7 +38,7 @@
                             <font-awesome-icon icon="save" />
                             <b-spinner v-if="isSaving" small class="ml-2"></b-spinner>
                         </b-button>
-                        <b-button variant="outline-secondary" @click="cancelarEditar">
+                        <b-button variant="outline-danger" @click="cancelarEditar">
                             Cancelar
                             <font-awesome-icon icon="times-circle" />
                         </b-button>
@@ -47,17 +47,29 @@
                     <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving">Editar 
                         <font-awesome-icon icon="edit" />
                     </b-button>
+
+                    <b-button class="mr-2" variant="outline-secondary" v-b-modal.modal-vista-previa>Vista Previa 
+                        <font-awesome-icon icon="file-pdf" />
+                    </b-button>
+
                 </b-col>
             </b-row>
         </b-card>
+
+        <VistaPrevia />
+
     </div>    
 </template>
 
 <script>
 
     import axios from 'axios'
+    import VistaPrevia from './VistaPrevia'
 
     export default {
+        components: {
+            VistaPrevia
+        },
         data(){
             return{
                 acta: {},
@@ -113,6 +125,11 @@
             },
             cancelarEditar(){
                 this.isEditing = false
+            },
+            vistaPrevia(){
+
+                console.log('vista previa')
+
             }
         },
         mounted(){
