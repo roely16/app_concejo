@@ -38,14 +38,44 @@
 
                     <b-col cols="12">
                         <b-form-group label="Punto de Acta" label-class="font-weight-bold">
-                            <b-form-textarea rows="4" v-model="detalle_punto_acta.descripcion" :disabled="!isEditing"></b-form-textarea>
+                            <!-- <b-form-textarea rows="4" v-model="detalle_punto_acta.descripcion" :disabled="!isEditing"></b-form-textarea> -->
+                            <div class="editor">
+                                    <editor-menu-bubble :editor="editor" :keep-in-bounds="keepInBounds" v-slot="{ commands, isActive, menu }">
+                                    <div
+                                        class="menububble"
+                                        :class="{ 'is-active': menu.isActive }"
+                                        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+                                    >
+
+                                        <button
+                                        class="menububble__button"
+                                        :class="{ 'is-active': isActive.bold() }"
+                                        @click="commands.bold"
+                                        >
+                                        <!-- <icon name="bold" /> -->
+                                        <font-awesome-icon icon="bold" />
+                                        </button>
+
+                                        <button
+                                        class="menububble__button"
+                                        :class="{ 'is-active': isActive.italic() }"
+                                        @click="commands.italic"
+                                        >
+                                        <!-- <icon name="italic" /> -->
+                                        <font-awesome-icon icon="italic" />
+                                        </button>
+
+                                    </div>
+                                    </editor-menu-bubble>
+                                    <editor-content class="editor__content" :editor="editor" />
+                                    </div>
                         </b-form-group>
                     </b-col>
 
                     <b-col cols="4">
 
                         <b-button-group class="mr-2" v-if="isEditing">
-                            <b-button variant="outline-success" :disabled="!isChange" @click="editarPuntoActa">
+                            <b-button variant="outline-success" @click="editarPuntoActa">
                                 Guardar
                                 <font-awesome-icon icon="save" />
                                 <b-spinner v-if="isSaving" small class="ml-2"></b-spinner>
@@ -78,17 +108,51 @@
                     </b-col>
                 </b-row>
 
-                <b-form @submit.prevent="registrarPunto" v-if="agregar_punto_acta && detalle_punto_acta == null">
+                <!-- Registro -->
+                <div  v-if="agregar_punto_acta && detalle_punto_acta == null">
                     <b-row>
+                            <b-col cols="12">
+                                
+                            </b-col>
 
                             <b-col cols="12">
                                 <b-form-group label="Punto de Acta" label-class="font-weight-bold">
-                                    <b-form-textarea rows="4" v-model="descripcion" required></b-form-textarea>
+                                    <!-- <b-form-textarea rows="4" v-model="descripcion" required></b-form-textarea> -->
+                                    <div class="editor">
+                                    <editor-menu-bubble :editor="editor" :keep-in-bounds="keepInBounds" v-slot="{ commands, isActive, menu }">
+                                    <div
+                                        class="menububble"
+                                        :class="{ 'is-active': menu.isActive }"
+                                        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+                                    >
+
+                                        <button
+                                        class="menububble__button"
+                                        :class="{ 'is-active': isActive.bold() }"
+                                        @click="commands.bold"
+                                        >
+                                        <!-- <icon name="bold" /> -->
+                                        <font-awesome-icon icon="bold" />
+                                        </button>
+
+                                        <button
+                                        class="menububble__button"
+                                        :class="{ 'is-active': isActive.italic() }"
+                                        @click="commands.italic"
+                                        >
+                                        <!-- <icon name="italic" /> -->
+                                        <font-awesome-icon icon="italic" />
+                                        </button>
+
+                                    </div>
+                                    </editor-menu-bubble>
+                                    <editor-content class="editor__content" :editor="editor" />
+                                    </div>
                                 </b-form-group>
                             </b-col>
 
                             <b-col cols="4">
-                                <b-button type="submit" class="mr-2" variant="outline-success">Guardar 
+                                <b-button @click="registrarPunto" class="mr-2" variant="outline-success">Guardar 
                                     <font-awesome-icon icon="save" />
                                 </b-button>
                                 <b-button variant="outline-secondary" @click="cancelarRegistro">Cancelar
@@ -97,7 +161,7 @@
                             </b-col>
                         
                     </b-row>
-                </b-form>
+                </div>
 
             </b-card>
 
@@ -134,19 +198,76 @@
     </div>
 </template>
 
+<style scoped>
+    .menububble.is-active {
+        opacity: 1;
+        visibility: visible;
+    }
+    .menububble {
+        position: absolute;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        z-index: 20;
+        background: #000;
+        border-radius: 5px;
+        padding: .3rem;
+        margin-bottom: .5rem;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        visibility: hidden;
+        opacity: 0;
+        -webkit-transition: opacity .2s,visibility .2s;
+        transition: opacity .2s,visibility .2s;
+    }
+    .menububble__button {
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        background: transparent;
+        border: 0;
+        color: #fff;
+        padding: .2rem .5rem;
+        margin-right: .2rem;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+</style>
+
 <script>
 
     import axios from 'axios'
     import ModalBitacora from './ModalBitacora'
     import Documentos from './Documentos'
     import Audios from './Audios'
+    import { Editor, EditorContent, EditorMenuBubble } from 'tiptap'
 
+    import {
+        Blockquote,
+        BulletList,
+        CodeBlock,
+        HardBreak,
+        Heading,
+        ListItem,
+        OrderedList,
+        TodoItem,
+        TodoList,
+        Bold,
+        Code,
+        Italic,
+        Link,
+        Strike,
+        Underline,
+        History,
+    } from 'tiptap-extensions'
 
     export default {
         components: {
             ModalBitacora,
             Documentos,
             Audios,
+            EditorContent,
+            EditorMenuBubble,
         },
         data(){
             return{
@@ -159,6 +280,29 @@
                 isLoading: false,
                 backup_punto_acta: '',
                 id_agenda: null,
+                keepInBounds: true,
+                editor: new Editor({
+                    extensions: [
+                        new Blockquote(),
+                        new BulletList(),
+                        new CodeBlock(),
+                        new HardBreak(),
+                        new Heading({ levels: [1, 2, 3] }),
+                        new ListItem(),
+                        new OrderedList(),
+                        new TodoItem(),
+                        new TodoList(),
+                        new Link(),
+                        new Bold(),
+                        new Code(),
+                        new Italic(),
+                        new Strike(),
+                        new Underline(),
+                        new History(),
+                    ],
+                    content: null,
+                    autoFocus: true
+                })
             }
         },
         methods: {
@@ -182,6 +326,8 @@
                    this.detalle_punto = response.data.punto_agenda
                    this.detalle_punto_acta = response.data.punto_acta
                    this.isLoading = !this.isLoading
+                   this.editor.setContent(response.data.punto_acta.descripcion)
+                   this.editor.focus()
 
                 })
                 .catch(error => {
@@ -193,8 +339,10 @@
             },
             registrarPunto(){
 
+                console.log(this.editor.getHTML())
+
                 let data = {
-                    descripcion: this.descripcion,
+                    descripcion: this.editor.getHTML(),
                     id_acta: this.$route.params.id,
                     id_punto_agenda: this.$route.params.id_punto
                 }
@@ -228,7 +376,7 @@
                 if (!this.isEditing) {
 
                     let data = {
-                        descripcion: this.detalle_punto_acta.descripcion,
+                        descripcion: this.editor.getHTML(),
                         id: this.detalle_punto_acta.id,
                         id_acta: this.detalle_punto_acta.id_acta,
                         id_punto_agenda: this.detalle_punto_acta.id_punto,
