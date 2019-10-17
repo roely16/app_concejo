@@ -49,15 +49,22 @@
         methods: {
             detalleActa(){
 
+                console.log(this.$route.params)
+
                 this.isLoading = !this.isLoading
 
                 axios({
                     method: 'GET',
-                    url: process.env.VUE_APP_API_URL + 'detalle_acta/' + this.$route.params.id,
+                    url: process.env.VUE_APP_API_URL + 'detalle_acta/' + this.$route.params.id + '/' + this.$route.params.id_punto,
                 })
                 .then(response => {
-                   this.isLoading = !this.isLoading
-                   this.items[2].text = "Detalle de Acta No. " + response.data.acta.no_acta + '-' + response.data.acta.year
+
+                    console.log(response.data)
+
+                    this.isLoading = !this.isLoading
+                    this.items[2].text = "Detalle de Acta No. " + response.data.acta.no_acta + '-' + response.data.acta.year
+
+                    this.items[4].text = "Detalle de Punto No. " + response.data.punto_agenda.orden
                 })
                 .catch(error => {
                     console.log(error)

@@ -48,6 +48,10 @@
                         <font-awesome-icon icon="edit" />
                     </b-button>
 
+                    <b-button class="mr-2" variant="outline-info" v-b-modal.modal-historial>Historial 
+                        <font-awesome-icon icon="list-alt" />
+                    </b-button>
+
                     <b-button class="mr-2" variant="outline-secondary" v-b-modal.modal-vista-previa>Vista Previa 
                         <font-awesome-icon icon="file-pdf" />
                     </b-button>
@@ -57,6 +61,7 @@
         </b-card>
 
         <VistaPrevia />
+        <Historial />
 
     </div>    
 </template>
@@ -65,10 +70,12 @@
 
     import axios from 'axios'
     import VistaPrevia from './VistaPrevia'
+    import Historial from './Historial'
 
     export default {
         components: {
-            VistaPrevia
+            VistaPrevia,
+            Historial
         },
         data(){
             return{

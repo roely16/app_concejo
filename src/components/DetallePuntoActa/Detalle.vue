@@ -39,36 +39,36 @@
                     <b-col cols="12">
                         <b-form-group label="Punto de Acta" label-class="font-weight-bold">
                             <!-- <b-form-textarea rows="4" v-model="detalle_punto_acta.descripcion" :disabled="!isEditing"></b-form-textarea> -->
-                            <div class="editor">
-                                    <editor-menu-bubble :editor="editor" :keep-in-bounds="keepInBounds" v-slot="{ commands, isActive, menu }">
-                                    <div
-                                        class="menububble"
-                                        :class="{ 'is-active': menu.isActive }"
-                                        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
-                                    >
+                            <b-card :bg-variant="!isEditing ? 'light' : 'default'" text-variant="dark">
+                                <div class="editor">
+                                <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+                                    <div class="menubar">
 
-                                        <button
-                                        class="menububble__button"
-                                        :class="{ 'is-active': isActive.bold() }"
-                                        @click="commands.bold"
-                                        >
-                                        <!-- <icon name="bold" /> -->
-                                        <font-awesome-icon icon="bold" />
+                                        <button class="menubar__button" :class="{ 'is-active': isActive.bold() }" @click="commands.bold">
+                                            <font-awesome-icon icon="bold" />
                                         </button>
 
-                                        <button
-                                        class="menububble__button"
-                                        :class="{ 'is-active': isActive.italic() }"
-                                        @click="commands.italic"
-                                        >
-                                        <!-- <icon name="italic" /> -->
-                                        <font-awesome-icon icon="italic" />
+                                        <button class="menubar__button" :class="{ 'is-active': isActive.italic() }" @click="commands.italic">
+                                            <font-awesome-icon icon="italic" />
                                         </button>
 
+                                        <button class="menubar__button" :class="{ 'is-active': isActive.strike() }" @click="commands.strike">
+                                            <font-awesome-icon icon="strikethrough" />
+                                        </button>
+
+                                        <button class="menubar__button" :class="{ 'is-active': isActive.underline() }" @click="commands.underline">
+                                            <font-awesome-icon icon="underline" />
+                                        </button>
+
+                                        <button class="menubar__button" :class="{ 'is-active': isActive.code() }" @click="commands.code">
+                                            <font-awesome-icon icon="code" />
+                                        </button>
                                     </div>
-                                    </editor-menu-bubble>
-                                    <editor-content class="editor__content" :editor="editor" />
-                                    </div>
+                                </editor-menu-bar>
+                                <editor-content class="editor__content" v-if="editor" :editor="editor" />
+                            </div>
+                            </b-card>
+                            
                         </b-form-group>
                     </b-col>
 
@@ -109,7 +109,7 @@
                 </b-row>
 
                 <!-- Registro -->
-                <div  v-if="agregar_punto_acta && detalle_punto_acta == null">
+                <div v-if="agregar_punto_acta && detalle_punto_acta == null">
                     <b-row>
                             <b-col cols="12">
                                 
@@ -117,42 +117,40 @@
 
                             <b-col cols="12">
                                 <b-form-group label="Punto de Acta" label-class="font-weight-bold">
-                                    <!-- <b-form-textarea rows="4" v-model="descripcion" required></b-form-textarea> -->
-                                    <div class="editor">
-                                    <editor-menu-bubble :editor="editor" :keep-in-bounds="keepInBounds" v-slot="{ commands, isActive, menu }">
-                                    <div
-                                        class="menububble"
-                                        :class="{ 'is-active': menu.isActive }"
-                                        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
-                                    >
+                                   
+                                    <b-card bg-variant="default" text-variant="dark">
+                                        <div class="editor shadow-none">
+                                            <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+                                                <div class="menubar">
+                                                    <button class="menubar__button" :class="{ 'is-active': isActive.bold() }" @click="commands.bold">
+                                                        <font-awesome-icon icon="bold" />
+                                                    </button>
 
-                                        <button
-                                        class="menububble__button"
-                                        :class="{ 'is-active': isActive.bold() }"
-                                        @click="commands.bold"
-                                        >
-                                        <!-- <icon name="bold" /> -->
-                                        <font-awesome-icon icon="bold" />
-                                        </button>
+                                                    <button class="menubar__button" :class="{ 'is-active': isActive.italic() }" @click="commands.italic">
+                                                        <font-awesome-icon icon="italic" />
+                                                    </button>
 
-                                        <button
-                                        class="menububble__button"
-                                        :class="{ 'is-active': isActive.italic() }"
-                                        @click="commands.italic"
-                                        >
-                                        <!-- <icon name="italic" /> -->
-                                        <font-awesome-icon icon="italic" />
-                                        </button>
+                                                    <button class="menubar__button" :class="{ 'is-active': isActive.strike() }" @click="commands.strike">
+                                                        <font-awesome-icon icon="strikethrough" />
+                                                    </button>
 
-                                    </div>
-                                    </editor-menu-bubble>
-                                    <editor-content class="editor__content" :editor="editor" />
-                                    </div>
+                                                    <button class="menubar__button" :class="{ 'is-active': isActive.underline() }" @click="commands.underline">
+                                                        <font-awesome-icon icon="underline" />
+                                                    </button>
+
+                                                    <button class="menubar__button" :class="{ 'is-active': isActive.code() }" @click="commands.code">
+                                                        <font-awesome-icon icon="code" />
+                                                    </button>
+                                                </div>
+                                            </editor-menu-bar>
+                                            <editor-content class="editor__content shadow-none no-border" :editor="editor" />
+                                        </div>
+                                    </b-card>
                                 </b-form-group>
                             </b-col>
 
                             <b-col cols="4">
-                                <b-button @click="registrarPunto" class="mr-2" variant="outline-success">Guardar 
+                                <b-button @click="registrarPunto" :disabled="isAdd" class="mr-2" variant="outline-success">Guardar 
                                     <font-awesome-icon icon="save" />
                                 </b-button>
                                 <b-button variant="outline-secondary" @click="cancelarRegistro">Cancelar
@@ -232,6 +230,31 @@
         border-radius: 3px;
         cursor: pointer;
     }
+    .menubar {
+        margin-bottom: 1rem;
+        -webkit-transition: visibility .2s .4s,opacity .2s .4s;
+        transition: visibility .2s .4s,opacity .2s .4s;
+    }
+    .menubar__button {
+        font-weight: 700;
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: inline-flex;
+        background: transparent;
+        border: 0;
+        color: #000;
+        padding: .2rem .5rem;
+        margin-right: .2rem;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    .form-control {
+        border: 0;
+    }
+    .no-border {
+        border: 0;
+        box-shadow: none; /* You may want to include this as bootstrap applies these styles too */
+    }
 </style>
 
 <script>
@@ -240,7 +263,7 @@
     import ModalBitacora from './ModalBitacora'
     import Documentos from './Documentos'
     import Audios from './Audios'
-    import { Editor, EditorContent, EditorMenuBubble } from 'tiptap'
+    import { Editor, EditorContent, EditorMenuBar  } from 'tiptap'
 
     import {
         Blockquote,
@@ -267,7 +290,7 @@
             Documentos,
             Audios,
             EditorContent,
-            EditorMenuBubble,
+            EditorMenuBar,
         },
         data(){
             return{
@@ -281,28 +304,7 @@
                 backup_punto_acta: '',
                 id_agenda: null,
                 keepInBounds: true,
-                editor: new Editor({
-                    extensions: [
-                        new Blockquote(),
-                        new BulletList(),
-                        new CodeBlock(),
-                        new HardBreak(),
-                        new Heading({ levels: [1, 2, 3] }),
-                        new ListItem(),
-                        new OrderedList(),
-                        new TodoItem(),
-                        new TodoList(),
-                        new Link(),
-                        new Bold(),
-                        new Code(),
-                        new Italic(),
-                        new Strike(),
-                        new Underline(),
-                        new History(),
-                    ],
-                    content: null,
-                    autoFocus: true
-                })
+                editor: null
             }
         },
         methods: {
@@ -322,12 +324,18 @@
                 })
                 .then(response => {
 
-                   console.log(response.data)
-                   this.detalle_punto = response.data.punto_agenda
-                   this.detalle_punto_acta = response.data.punto_acta
-                   this.isLoading = !this.isLoading
-                   this.editor.setContent(response.data.punto_acta.descripcion)
-                   this.editor.focus()
+                    this.detalle_punto = response.data.punto_agenda
+                    this.detalle_punto_acta = response.data.punto_acta
+                    
+                    if (response.data.punto_acta) {
+
+                        this.editor.setContent(response.data.punto_acta.descripcion)
+                        this.editor.setOptions({
+                            editable: false,
+                        })
+                    }
+                    
+                    this.isLoading = !this.isLoading
 
                 })
                 .catch(error => {
@@ -336,10 +344,12 @@
             },
             agregarPunto(){
                 this.agregar_punto_acta = true
+                this.editor.setOptions({
+                    editable: this.agregar_punto_acta,
+                })
+                this.editor.focus()
             },
             registrarPunto(){
-
-                console.log(this.editor.getHTML())
 
                 let data = {
                     descripcion: this.editor.getHTML(),
@@ -353,13 +363,14 @@
                     data: data
                 })
                 .then(response => {
-                   console.log(response.data)
-                   Swal.fire(
+
+                    Swal.fire(
                         'Excelente!',
                         'El punto de acta ha creado exitosamente!',
                         'success'
                     )
-                   this.obtenerDetalle()
+
+                    this.obtenerDetalle()
                 })
                 .catch(error => {
                     console.log(error)
@@ -372,6 +383,9 @@
             editarPuntoActa(){
 
                 this.isEditing = !this.isEditing
+                this.editor.setOptions({
+                    editable: this.isEditing 
+                })
 
                 if (!this.isEditing) {
 
@@ -412,6 +426,10 @@
 
                 this.isEditing = false
                 this.detalle_punto_acta.descripcion = this.backup_punto_acta
+
+                this.editor.setOptions({
+                    editable: this.isEditing 
+                })
 
             },
             eliminarPunto(){
@@ -464,6 +482,29 @@
             }
         },
         mounted(){
+            
+            this.editor = new Editor({
+                extensions: [
+                    new Blockquote(),
+                    new BulletList(),
+                    new CodeBlock(),
+                    new HardBreak(),
+                    new Heading({ levels: [1, 2, 3] }),
+                    new ListItem(),
+                    new OrderedList(),
+                    new TodoItem(),
+                    new TodoList(),
+                    new Link(),
+                    new Bold(),
+                    new Code(),
+                    new Italic(),
+                    new Strike(),
+                    new Underline(),
+                    new History(),
+                ],
+                editable: false
+            })
+            
             this.obtenerDetalle()
 
         },
@@ -477,6 +518,22 @@
                 }else{
 
                     return true
+                }
+
+            },
+            isAdd: function(){
+
+                let json = this.editor.getJSON()
+                let result = json.content.filter(item => item.content)
+
+                if (result.length <= 0) {
+                    
+                    return true
+
+                }else{
+
+                    return false
+
                 }
 
             }

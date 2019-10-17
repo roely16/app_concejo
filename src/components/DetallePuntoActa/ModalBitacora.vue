@@ -22,12 +22,18 @@
                     <b-card v-if="row.item.id_accion == 2">
                         <b-row class="mb-2">
                             <b-col sm="3" class="text-sm-right"><b>Original:</b></b-col>
-                            <b-col>{{ row.item.original }}</b-col>
+                            <b-col>
+                                <span v-html="row.item.original"></span>
+                                <!-- {{ row.item.original }} -->
+                            </b-col>
                         </b-row>
 
                         <b-row class="mb-2">
                             <b-col sm="3" class="text-sm-right"><b>Modificado:</b></b-col>
-                            <b-col>{{ row.item.modificado }}</b-col>
+                            <b-col>
+                                <span v-html="row.item.modificado"></span>
+                                <!-- {{ row.item.modificado }} -->
+                            </b-col>
                         </b-row>
 
                         <b-button size="sm" class="mt-2" @click="row.toggleDetails">Ocultar Detalles</b-button>
