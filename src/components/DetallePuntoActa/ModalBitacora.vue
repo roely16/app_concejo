@@ -2,7 +2,7 @@
     <b-modal size="lg" id="modal-bitacora" title="Bitácora de Punto de Acta" @show="detalleBitacora" hide-footer>
         
         <div>
-            <b-table striped hover :items="items" :fields="fields">
+            <b-table striped hover :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage" head-variant="dark">
 
                 <template slot="[accion]" scope="data">
                    <b-badge :variant="data.item.accion.color">{{ data.item.accion.nombre }}</b-badge>
@@ -50,6 +50,9 @@
                 </template>
 
             </b-table>
+
+            <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" aria-controls="my-table" align="center"></b-pagination>
+
         </div>
 
     </b-modal> 
@@ -63,7 +66,10 @@
         data(){
             return{
                 items: [],
-                fields: {}
+                fields: {},
+                currentPage: 1,
+                rows: null,
+                perPage: 10
             }
         },
         methods: {
@@ -79,6 +85,7 @@
                    console.log(response.data)
                    this.items = response.data.items,
                    this.fields = response.data.fields
+                   this.rows = this.items.length
                 })
                 .catch(error => {
                     console.log(error)

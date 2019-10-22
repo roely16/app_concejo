@@ -31,29 +31,118 @@
         <div  v-if="resultados.length > 0 && searchComplete">
 
             <b-card class="mt-4" v-for="resultado in listaResultados" :key="resultado.id" >
-                <b-row class="mb-2" >
-                    <b-col sm="2" class="text-sm-right"><b>Agenda:</b></b-col>
-                    <b-col>
-                        {{ resultado.agenda ? resultado.agenda.fecha : 'No se encuentra' }}
-                    </b-col>
-                    
-                </b-row>
-                <b-row class="mg-2">
-                    <b-col sm="2" class="text-sm-right"><b>Punto de Agenda:</b></b-col>
-                    <b-col>
-                        <!-- {{ resultado.descripcion }} -->
-                        <text-highlight :queries="busqueda">{{ resultado.descripcion }}</text-highlight>
-                    </b-col>
-                </b-row>
+
+                <div v-if="resultado.resultado_agenda">
+                    <b-row class="mb-2" >
+                        <b-col sm="2" class="text-sm-right"><b>Agenda:</b></b-col>
+                        <b-col>
+                            {{ resultado.agenda ? resultado.agenda.fecha : 'No disponible' }}
+                        </b-col>
+                        
+                    </b-row>
+                    <b-row class="mg-2">
+                        <b-col sm="2" class="text-sm-right"><b>Punto de Agenda:</b></b-col>
+                        <b-col>
+                            <!-- {{ resultado.descripcion }} -->
+                            <strong>{{ resultado.orden }}. </strong><text-highlight :queries="busqueda">{{ resultado.descripcion }}</text-highlight>
+                        </b-col>
+                    </b-row>
+
+                    <hr>
+
+                    <b-row class="mb-2" >
+                        <b-col sm="2" class="text-sm-right"><b>Acta:</b></b-col>
+                        <b-col>
+                            {{ resultado.acta ? resultado.acta.no_acta + ' - ' + resultado.acta.year : 'Pendiente' }}
+                        </b-col>
+                        
+                    </b-row>
+
+                    <b-row class="mg-2">
+                        <b-col sm="2" class="text-sm-right"><b>Punto de Acta:</b></b-col>
+                        <b-col>
+                            <span v-if="resultado.punto_acta" v-html="resultado.punto_acta.descripcion"></span>
+
+                            <span v-if="!resultado.punto_acta">Pendiente</span>
+                        </b-col>
+                    </b-row>
+
+                    <b-row class="text-center">
+                        <b-col cols="12">
+                            <b-button variant="light" v-b-tooltip.hover title="Visualizar Archivo" @click="mostrarDocumento(resultado)">
+                                <font-awesome-icon icon="file-pdf" />
+                            </b-button>
+                            <div class="text-right">
+                                <small class="text-muted ">Fuente: Agendas</small>
+                            </div>
+                        </b-col>
+                    </b-row>
+                </div>
+
+                <div v-if="resultado.resultado_acta">
+                    <b-row class="mb-2">
+                        <b-col sm="2" class="text-sm-right"><b>Acta:</b></b-col>
+                        <b-col>
+                            {{ resultado.acta ? resultado.acta.no_acta + ' - ' + resultado.acta.year : 'No disponible' }}
+                        </b-col>
+                    </b-row>
+
+                    <b-row class="mg-2">
+                        <b-col sm="2" class="text-sm-right"><b>Punto de Acta:</b></b-col>
+                        <b-col>
+                            <!-- {{ resultado.descripcion }} -->
+                            <!-- <strong>{{ resultado.orden }}. </strong><text-highlight :queries="busqueda">{{ resultado.descripcion }}</text-highlight> -->
+                            
+                            <div v-html="resultado.descripcion"></div>
+
+                            <!-- <text-highlight :queries="busqueda">
+                                {{ resultado.descripcion }}
+                            </text-highlight> -->
+
+                        </b-col>
+                    </b-row>
+
+                    <hr>
+
+                    <b-row class="mb-2" >
+                        <b-col sm="2" class="text-sm-right"><b>Agenda:</b></b-col>
+                        <b-col>
+                            {{ resultado.acta.agenda ? resultado.acta.agenda.fecha : 'No disponible' }}
+                        </b-col>
+                        
+                    </b-row>
+
+                    <b-row class="mg-2">
+                        <b-col sm="2" class="text-sm-right"><b>Punto de Agenda:</b></b-col>
+                        <b-col>
+                            <!-- <span v-if="resultado.punto_acta" v-html="resultado.punto_acta.descripcion"></span>
+
+                            <span v-if="!resultado.punto_acta">Pendiente</span> -->
+                            <strong>{{ resultado.punto_agenda.orden }}. </strong>{{ resultado.punto_agenda.descripcion }}
+                        </b-col>
+                    </b-row>
+
+                    <b-row class="text-center">
+                        <b-col cols="12">
+                            <b-button variant="light" v-b-tooltip.hover title="Visualizar Archivo" @click="mostrarDocumento(resultado)">
+                                <font-awesome-icon icon="file-pdf" />
+                            </b-button>
+                            <div class="text-right">
+                                <small class="text-muted ">Fuente: Actas</small>
+                            </div>
+                        </b-col>
+                    </b-row>
+
+                </div>
+
             </b-card>
 
             <b-row class="mt-4">
                 <b-col >
                     <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" aria-controls="my-table" align="center"></b-pagination>
+
                 </b-col>
             </b-row>
-
-            
 
         </div>
 
@@ -75,17 +164,32 @@
                 </div>
             </div>
         </div>
+
+        <VistaPrevia :id_acta="id_acta" />
+
+        <ModalPDF :id_agenda="id_agenda" />
+
     </div>
 </template>
+
+<style scoped>
+    mark {
+        background-color: yellow;
+    }
+</style>
 
 <script>
 
     import axios from 'axios'
     import TextHighlight from 'vue-text-highlight';
+    import VistaPrevia from '../DetalleActa/VistaPrevia'
+    import ModalPDF from '../PuntosAgenda/ModalPDF'
 
     export default {
         components: {
-            TextHighlight
+            TextHighlight,
+            VistaPrevia,
+            ModalPDF
         },
         data(){
             return{
@@ -95,7 +199,9 @@
                 searchComplete: false,
                 perPage: 4,
                 currentPage: 1,
-                rows: null
+                rows: null,
+                id_acta: null,
+                id_agenda: null
             }
         },
         methods: {
@@ -123,6 +229,27 @@
                 this.isSearching = false
                 this.searchComplete = false
                 this.resultados = []
+            },
+            mostrarDocumento(item){
+
+                console.log(item)
+
+                if (item.acta) {
+                    
+                    console.log('mostrar documento tipo acta')
+                    console.log(item.acta.id)
+                    this.id_acta = item.acta.id
+
+                    this.$bvModal.show('modal-vista-previa')
+
+                }else{
+
+                    console.log('mostrar documento tipo agenda')
+                    this.id_agenda = item.agenda.id
+                    this.$bvModal.show('modal-pdf')
+
+                }
+
             }
         },
         computed: {

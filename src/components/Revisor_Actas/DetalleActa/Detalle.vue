@@ -32,7 +32,7 @@
             <b-row class="mt-4">
                  <b-col>
 
-                    <b-button-group class="mr-2" v-if="isEditing || isSaving">
+                    <!-- <b-button-group class="mr-2" v-if="isEditing || isSaving">
                         <b-button variant="outline-success" :disabled="isSaving" @click="editarActa">
                             Guardar
                             <font-awesome-icon icon="save" />
@@ -46,11 +46,11 @@
 
                     <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving">Editar 
                         <font-awesome-icon icon="edit" />
-                    </b-button>
+                    </b-button> -->
 
-                    <b-button class="mr-2" variant="outline-info" v-b-modal.modal-historial>Historial 
+                    <!-- <b-button class="mr-2" variant="outline-info" v-b-modal.modal-historial>Historial 
                         <font-awesome-icon icon="list-alt" />
-                    </b-button>
+                    </b-button> -->
 
                     <b-button class="mr-2" variant="outline-secondary" v-b-modal.modal-vista-previa>Vista Previa 
                         <font-awesome-icon icon="file-pdf" />
@@ -83,8 +83,8 @@
 <script>
 
     import axios from 'axios'
-    import VistaPrevia from './VistaPrevia'
-    import Historial from './Historial'
+    import VistaPrevia from '@/components/DetalleActa/VistaPrevia'
+    import Historial from '@/components/DetalleActa/Historial'
 
     export default {
         components: {

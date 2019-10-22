@@ -34,6 +34,8 @@ import Bitacora from './views/Bitacora.vue'
 // Busqueda
 import Busqueda from './views/Busqueda.vue'
 
+import HojasContraloria from './views/HojasContraloria.vue'
+
 // Dashboard 
 import Dashboard from './views/Dashboard.vue'
 
@@ -42,6 +44,12 @@ import Dashboard from './views/Dashboard.vue'
 import Agendas_Analisis from './views/Revisor_Agendas/Agendas.vue'
 import Agenda_Analisis from './views/Revisor_Agendas/DetalleAgenda.vue'
 import PuntosAgendaAnalisis from './views/Revisor_Agendas/PuntosAgenda.vue'
+
+// Revisor de Actas
+import Actas_Revision from './views/Revisor_Actas/Actas.vue'
+import Acta_Revision from './views/Revisor_Actas/DetalleActa.vue'
+import Puntos_Acta_Revision from './views/Revisor_Actas/PuntosActa.vue'
+import Detalle_Punto_Acta_Revision from './views/Revisor_Actas/DetallePuntoActa.vue'
 
 import store from './store';
 
@@ -94,6 +102,11 @@ const router =  new Router({
 				path: '/home/busqueda',
 				component: Busqueda,
 				name: 'busqueda',
+			},
+			{
+				path: '/home/hojas_contraloria',
+				component: HojasContraloria,
+				name: 'hojas_contraloria',
 			},
 			{
 				path: '/home/dashboard',
@@ -160,6 +173,27 @@ const router =  new Router({
 				path: '/home/agendas_analisis/detalle/:id/puntos_agenda',
 				component: PuntosAgendaAnalisis,
 				name: 'puntos_agenda_analisis',
+			},
+			// Revisor de Actas
+			{
+				path: '/home/actas_revision',
+				component: Actas_Revision,
+				name: 'actas_revision'
+			},
+			{
+				path: '/home/actas_revision/detalle/:id',
+				component: Acta_Revision,
+				name: 'detalle_acta_revision'
+			},
+			{
+				path: '/home/actas_revision/detalle/:id/puntos_acta',
+				component: Puntos_Acta_Revision,
+				name: 'puntos_acta_revision',
+			},
+			{
+				path: '/home/actas_revision/detalle/:id/puntos_acta/detalle_punto/:id_punto',
+				component: Detalle_Punto_Acta_Revision,
+				name: 'detalle_punto_acta_revision'
 			},
 		]
 	},
