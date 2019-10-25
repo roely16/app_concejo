@@ -17,6 +17,7 @@ import Actas from './views/Actas.vue'
 import DetalleActa from './views/DetalleActa.vue'
 import PuntosActa from './views/PuntosActa.vue'
 import DetallePuntoActa from './views/DetallePuntoActa.vue'
+import ImpresionActas from './views/ImpresionActas.vue'
 
 //Calendario
 import Calendario from './views/Calendario.vue'
@@ -87,6 +88,11 @@ const router =  new Router({
 				path: '/home/actas/detalle/:id/puntos_acta',
 				component: PuntosActa,
 				name: 'puntos_acta'
+			},
+			{
+				path: '/home/actas/detalle/:id/impresion',
+				component: ImpresionActas,
+				name: 'impresion_acta'
 			},
 			{
 				path: '/home/actas/detalle/:id/puntos_acta/detalle_punto/:id_punto',

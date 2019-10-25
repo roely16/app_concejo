@@ -49,7 +49,7 @@
             >
 
                 <div>
-                    <b-link :to="{ name: 'asistencia', params: {id: this.$route.params.id} }">
+                    <b-link :to="{ name: 'impresion_acta', params: {id: this.$route.params.id} }">
                         <b-img  width="100" src="https://image.flaticon.com/icons/svg/1497/1497542.svg" fluid></b-img>
                     </b-link>
                     
