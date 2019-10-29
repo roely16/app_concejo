@@ -36,27 +36,14 @@
             
                 <template slot="[actions]" slot-scope="data">
                     <div class="text-right">
-                        <!-- <b-button
-                            :to="{ name: 'detalle_acta', params: { id: data.item.id } }"
-                            class="mr-2"
-                            variant="outline-success"
-                        >
-                            <font-awesome-icon icon="eye" />
-                        </b-button> -->
 
-                        <b-button v-if="!data.item.fecha_impresion" class="mr-2" variant="outline-secondary" v-b-modal.modal-impresion>
+                        <b-button class="mr-2" variant="outline-secondary" @click="modalImpresion(data.item)">
                             <font-awesome-icon icon="print" />
                         </b-button>
-
-                        <!-- <b-button class="mr-2" v-if="data.item.fecha_impresion" variant="outline-primary" v-on:click="detalleImpresion(data.item.id)">
-                            <font-awesome-icon icon="eye" />
-                        </b-button> -->
 
                         <b-button :disabled="data.item.fecha_impresion ? true : false" variant="outline-danger" v-on:click="eliminarImpresion(data.item.id)">
                             <font-awesome-icon icon="trash-alt" />
                         </b-button>
-
-                        
 
                     </div>
                 </template>
@@ -67,7 +54,7 @@
         </div>
 
         <ModalArchivo />
-        <ModalImpresion />
+        <ModalImpresion :id_impresion="id_impresion" />
 
     </div>    
 </template>
@@ -91,7 +78,8 @@
                 perPage: 100,
                 rows: null,
                 items: [],
-                fields: []
+                fields: [],
+                id_impresion: ''
             }
         },
         methods: {
@@ -139,12 +127,20 @@
             },
             detalleImpresion(){
 
+            },
+            modalImpresion(item){
+                this.id_impresion = item.id.toString()
+                this.$bvModal.show('modal-impresion')
             }
 
         },
         mounted(){
 
             this.obtenerImpresiones()
+
+            this.$root.$on("obtenerImpresiones", () => {
+				this.obtenerImpresiones();
+			});
 
         }
     }

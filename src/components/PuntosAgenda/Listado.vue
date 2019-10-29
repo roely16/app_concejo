@@ -2,7 +2,9 @@
 
     <div>
 
-        <b-row class="mb-3">
+        <slot></slot>
+
+        <b-row class="mb-3" v-if="!isLoading">
             <b-col cols="3">
                <b-input-group>
                     <b-form-input v-model="busqueda"></b-form-input>
@@ -17,21 +19,21 @@
                 </b-input-group> 
             </b-col>
             
-            <b-col cols="6" class="text-center">
+            <b-col cols="6" class="text-center" v-if="data.bitacora">
                 <b-button class="mr-2" variant="outline-secondary" @click="modalPDF" :disabled="puntos_agenda.length <= 0">Vista Previa
                     <font-awesome-icon icon="file-pdf" />
                 </b-button>
 
-                <b-button class="mr-2" variant="outline-info" @click="sendMail" :disabled="puntos_agenda.length <= 0 || data.bitacora.id_estado == 5">Aprobación                    <font-awesome-icon icon="envelope" />
+                <b-button class="mr-2" variant="outline-info" @click="sendMail" :disabled="puntos_agenda.length <= 0 || data.bitacora.id_estado == 5">Enviar a Revisión <font-awesome-icon icon="envelope" />
                 </b-button>
 
-                <b-button v-if="data.bitacora.id_estado > 2" variant="outline-info" v-b-modal.modal-concejo :disabled="data.bitacora.id_estado == 5">Enviar Concejo
+                <b-button v-if="data.bitacora.id_estado > 2" variant="outline-info" v-b-modal.modal-concejo :disabled="data.bitacora.id_estado == 5">Enviar a Concejo
                     <font-awesome-icon icon="envelope" />
                 </b-button>
 
             </b-col>
 
-            <b-col cols="3" class="text-right">
+            <b-col cols="3" class="text-right" v-if="data.bitacora">
 
                 <b-button v-if="!ordenando" :disabled="puntos_agenda.length <= 0 || data.bitacora.id_estado == 5" class="mr-2" variant="outline-success" v-on:click="orderLista()">Ordenar
                     <font-awesome-icon icon="sort" />
@@ -52,9 +54,7 @@
             </b-col>
         </b-row>
 
-        <slot></slot>
-
-        <div v-if="!isLoading">
+        <div v-if="!isLoading && data.bitacora">
             <b-list-group id="items" v-if="puntos_agenda.length > 0">
                 <b-list-group-item class="mb-2" v-for="(punto, key) in puntosFiltrados" :key="punto.id" :variant="list_variant">
                     <b-row>
@@ -79,12 +79,6 @@
                             </b-button>
                         </b-col>
                     </b-row>
-
-                    <!-- <b-row>
-                        <b-col class="text-right">
-                            info
-                        </b-col>
-                    </b-row> -->
 
                 </b-list-group-item>
             </b-list-group>
@@ -209,8 +203,6 @@
                     url: process.env.VUE_APP_API_URL + 'puntos_agenda/' + this.$route.params.id,
                 })
                 .then(response => {
-
-                    console.log(response.data)
 
                     this.isLoading = !this.isLoading
                     this.puntos_agenda = response.data.puntos

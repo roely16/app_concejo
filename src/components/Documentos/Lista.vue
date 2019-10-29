@@ -1,6 +1,8 @@
 <template>
     <div>
 
+        <slot></slot>
+
         <b-row class="mb-3">
             <b-col cols="4">
                 <b-input-group>
@@ -22,7 +24,7 @@
             </b-col>
         </b-row>
 
-        <slot></slot>
+        
 
         <div>
             <b-table :filter="busqueda" striped hover small head-variant="dark" show-empty empty-text="Aún no se han registrado documentos" :per-page="perPage" :current-page="currentPage" empty-filtered-text="No se han encontrado documentos que coincidan con su criterio de búsqueda" :items="items" :fields="fields" @filtered="onFiltered" :busy="isLoading">
@@ -38,12 +40,16 @@
                     {{ data.item.tipo_documento.nombre }}
                 </template>
 
+                 <template slot="[persona]" slot-scope="data">
+                    {{ data.item.persona.usuario.usuario.toUpperCase() }}
+                </template>
+
                 <template slot="[actions]" slot-scope="row">
                     <div class="text-right">
 
-                        <b-button class="mr-2" variant="outline-info" @click="row.toggleDetails">
+                        <!-- <b-button class="mr-2" variant="outline-info" @click="row.toggleDetails">
                             <font-awesome-icon icon="info-circle" />
-                        </b-button>
+                        </b-button> -->
 
                         <b-button class="mr-2" variant="outline-secondary" :href="row.item.link_descarga " >
                             <font-awesome-icon icon="cloud-download-alt" />
@@ -58,7 +64,7 @@
                     </div>
                 </template>
 
-                <template v-slot:row-details="row">
+                <!-- <template v-slot:row-details="row">
                     <b-card>
                         <b-row class="mb-2">
                             <b-col sm="3" class="text-sm-right"><b>Fecha:</b></b-col>
@@ -72,7 +78,7 @@
 
                         <b-button size="sm" @click="row.toggleDetails">Ocultar Detalles</b-button>
                     </b-card>
-                </template>
+                </template> -->
 
             </b-table>
 

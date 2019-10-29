@@ -77,16 +77,27 @@
                        
                         this.isSending = !this.isSending
 
+                        let usuario = JSON.parse(localStorage.getItem('usuario'))
+
                         let data =  {
                             id_acta: this.$route.params.id,
-                            destinos: this.destinos.filter(item => item.enviar_correo)
+                            destinos: this.destinos.filter(item => item.enviar_correo),
+                            id_usuario: usuario.id_persona
                         }
 
                         axios
                         .post('https://udicat.muniguate.com/apps/api_concejo/public/api/enviar_acta_revision', data)
                         .then(response => {
-                            console.log(response.data)
                             this.isSending = !this.isSending
+
+                            Swal.fire(
+                                'Excelente!',
+                                'El acta ha sido enviada por correo para su revisión!',
+                                'success'
+                            ).then(() => {
+                                this.$bvModal.hide('modal-revision')
+                            })
+
                         })
 
                     }

@@ -5,7 +5,12 @@
         <b-card>
             <b-row v-if="!isLoading">
                
-                <b-col cols="4">
+               <b-col cols="1">
+                    <b-form-group label="ID" label-class="font-weight-bold">
+                        <b-form-input v-model="agenda.id" disabled></b-form-input>
+                    </b-form-group>
+                </b-col>
+                <b-col cols="3">
                     <b-form-group label="Fecha" label-class="font-weight-bold">
                         <date-picker v-model="agenda.fecha" :config="options_date" required :disabled="!isEditing"></date-picker>
                     </b-form-group>
@@ -37,7 +42,7 @@
                         </b-button>
                     </b-button-group>
 
-                    <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving" :disabled="agenda.bitacora.id_estado == 5">Editar 
+                    <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving && agenda.bitacora" :disabled="agenda.bitacora.id_estado == 5">Editar 
                         <font-awesome-icon icon="edit" />
                     </b-button>
 
@@ -69,7 +74,7 @@
                 </b-col> -->
 
                 <b-col cols="4">
-                    <b-alert :variant=" agenda.bitacora ? agenda.bitacora.estado.color : 'secondary'" show>
+                    <b-alert :variant=" agenda.bitacora ? agenda.bitacora.estado.color : 'secondary'" :class="agenda.bitacora ? agenda.bitacora.estado.color : 'secondary'" show>
                         <b-row>
                             <b-col cols="10">
                                 <strong>Estado: </strong>{{ agenda.bitacora ? agenda.bitacora.estado.nombre : 'Cargando...' }}
@@ -99,6 +104,14 @@
     </div>
 
 </template>
+
+<style scoped>
+
+	.en_analisis{
+		background-color: rgba(255, 174, 13, 0.7)
+	}
+
+</style>
 
 <script>
 
@@ -155,8 +168,6 @@
                     url: process.env.VUE_APP_API_URL + 'detalle_agenda/' + id_agenda,
                 })
                 .then(response => {
-
-                    console.log(response.data)
 
                     // this.icono = response.data.estado.icono
                     this.agenda = response.data
@@ -251,15 +262,16 @@
 
                     if (result.value) {
 
+                        let usuario = JSON.parse(localStorage.getItem('usuario'))
+
                         let data = {
                             id_agenda: this.$route.params.id,
-                            id_usuario: 1
+                            id_usuario: usuario.id_persona
                         }
 
                         axios
                         .post( process.env.VUE_APP_API_URL + 'finalizar_agenda', data)
                         .then(response => {
-                            console.log(response.data)
 
                             Swal.fire(
                                 'Excelente!',

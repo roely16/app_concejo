@@ -1,5 +1,41 @@
 <template>
     <div>
+        
+        <!-- <b-row class="mb-3">
+            <b-col>
+                <b-card>
+                    <b-row>
+                        <b-col cols="2">
+                            <b-form-group label="ID">
+                                <h5>{{ detalle_agenda.id }}</h5>
+                            </b-form-group>
+                        </b-col>
+                        <b-col cols="3">
+                            <b-form-group
+                                label="Fecha"
+                            >
+                                <h5>{{ detalle_agenda.fecha }}</h5>
+                            </b-form-group>
+                        </b-col>
+                        <b-col cols="3">
+                            <b-form-group
+                                label="Tipo de Sesión"
+                            >
+                                <h5>{{ detalle_agenda.tipo_agenda.nombre }}</h5>
+                            </b-form-group>
+                        </b-col>
+                        <b-col>
+                            <b-form-group label="Estado">
+                                
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                </b-card>
+            </b-col>
+        </b-row> -->
+
+        <CardDetalle />
+
         <b-row class="mb-3">
             <b-col cols="4">
                 <b-input-group>
@@ -25,30 +61,7 @@
                 </b-button>
             </b-col>
         </b-row>
-
-        <b-row class="mb-3">
-            <b-col>
-                <b-card>
-                    <b-row>
-                        <b-col>
-                            <b-form-group
-                                label="Fecha"
-                            >
-                                <h5>{{ fecha_agenda }}</h5>
-                            </b-form-group>
-                        </b-col>
-                        <b-col>
-                            <b-form-group
-                                label="Tipo de Sesión"
-                            >
-                                <h5>{{ tipo_sesion }}</h5>
-                            </b-form-group>
-                        </b-col>
-                    </b-row>
-                </b-card>
-            </b-col>
-        </b-row>
-
+        
         <b-row>
             <b-col lg="4" sm="12" v-for="persona in personas" :key="persona.id">
 
@@ -129,11 +142,13 @@
     import axios from 'axios'
     import ModalAsistencia from '../Asistencia/ModalAsistencia'
     import ModalInfo from '../Asistencia/ModalInfo'
+    import CardDetalle from '@/components/DetalleAgenda/CardDetalle'
 
     export default {
         components: {
             ModalAsistencia,
-            ModalInfo
+            ModalInfo,
+            CardDetalle
         },
         props: {
             asistentes: {
@@ -150,7 +165,8 @@
                 tipo_sesion: '',
                 asistencia_congelada: null,
                 persona: {},
-                tipo: null
+                tipo: null,
+                detalle_agenda: {}
             }
         },
         methods: {
@@ -170,6 +186,7 @@
                     this.fecha_agenda = response.data.detalle_agenda.fecha
                     this.tipo_sesion = response.data.detalle_agenda.tipo_agenda.nombre
                     this.asistencia_congelada = response.data.detalle_agenda.asistencia_congelada
+                    this.detalle_agenda = response.data.detalle_agenda
                     this.isLoading = !this.isLoading
 
                 })
@@ -286,58 +303,51 @@
 
                 this.obtenerDatos()
             },
-            congelarAsistencia(){
+            async congelarAsistencia(){
 
-                Swal.fire({
+                const {value: accept}  = await Swal.fire({
                     title: '¿Está seguro que desea congelar la asistencia?',
                     text: "Una vez hecho esto no podrá modificarla!",
                     type: 'warning',
-                    inputPlaceholder: 'Escriba CONGELAR',
-                    input: 'textarea',
+                    inputPlaceholder: 'Estoy de acuerdo en congelar la asistencia.',
+                    input: 'checkbox',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Si, CONGELAR!',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
+                    confirmButtonText: 'CONGELAR',
+                    cancelButtonText: 'Cancelar',
+                    inputValidator: (result) => {
+                        return !result && 'Debe estar de acuerdo en congelar la asistencia.'
+                    }
+                })
 
-                    if (result.value == 'CONGELAR') {
-
-                        let data = {
-                            id_agenda: this.$route.params.id
-                        }
-
-                        axios({
-                            method: 'POST',
-                            url: process.env.VUE_APP_API_URL + 'congelar_asistencia',
-                            data: data
-                        })
-                        .then(response => {
-
-                            Swal.fire(
-                                'Excelente!',
-                                'La asistencia ha sido congelada exitosamente!',
-                                'success'
-                            )
-
-                            this.obtenerDatos()
-
-                        })
-                        .catch(error => {
-                            console.log(error)
-                        })
-
-                    }else if(result.value != '' && !result.dismiss){
-                        
-                        Swal.fire({
-                            type: 'error',
-                            title: 'Error',
-                            text: 'Debe escribir la palabra CONGELAR en mayúsculas',
-                        })
-
+                if (accept) {
+                    
+                    let data = {
+                        id_agenda: this.$route.params.id
                     }
 
-                })
+                    axios({
+                        method: 'POST',
+                        url: process.env.VUE_APP_API_URL + 'congelar_asistencia',
+                        data: data
+                    })
+                    .then(response => {
+
+                        Swal.fire(
+                            'Excelente!',
+                            'La asistencia ha sido congelada exitosamente!',
+                            'success'
+                        )
+
+                        this.obtenerDatos()
+
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+
+                }
 
             }
         },
@@ -347,12 +357,8 @@
 
             this.$root.$on('obtenerAsistencia', () => {
                 
-                console.log('obtener asistencia')
-
 				this.obtenerDatos()
             })
-            
-            console.log(this.personas.filter(value => !value.asistencia))
 
         },
         computed:{

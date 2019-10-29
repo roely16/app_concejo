@@ -88,7 +88,7 @@
                 </b-col> -->
 
                 <b-col cols="4">
-                    <b-alert :variant=" agenda.bitacora ? agenda.bitacora.estado.color : 'secondary'" show>
+                    <b-alert :variant=" agenda.bitacora ? agenda.bitacora.estado.color : 'secondary'" :class="agenda.bitacora ? agenda.bitacora.estado.color : 'secondary'" show>
                         <b-row>
                             <b-col cols="10">
                                 <strong>Estado: </strong>{{ agenda.bitacora ? agenda.bitacora.estado.nombre : 'Cargando...' }}
@@ -118,6 +118,14 @@
     </div>
 
 </template>
+
+<style scoped>
+
+	.en_analisis{
+		background-color: rgba(255, 174, 13, 0.7)
+	}
+
+</style>
 
 <script>
 

@@ -175,7 +175,7 @@
                     reader.readAsBinaryString(blob);
                     reader.onloadend = function(){
                         var count = reader.result.match(/\/Type[\s]*\/Page[^s]/g).length;
-                        self.paginas_pdf = 50
+                        self.paginas_pdf = count
                         self.isLoading = false
                     }
 
@@ -273,7 +273,14 @@
                         axios
                         .post(process.env.VUE_APP_API_URL +  'registrar_archivo_impresion', data)
                         .then(response => {
-                            console.log(response.data)
+                            Swal.fire(
+                                'Excelente!',
+                                'Se ha generado un nuevo archivo para impresión!',
+                                'success'
+                            ).then(()=>{
+                                this.$root.$emit('obtenerImpresiones')
+                                this.$bvModal.hide('modal-archivo')
+                            })
                         })
 
                     }

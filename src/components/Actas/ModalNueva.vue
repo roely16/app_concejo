@@ -87,7 +87,8 @@
             },
             registrarActa(){
 
-                console.log(this.nueva_acta)
+                let usuario = JSON.parse(localStorage.getItem('usuario'))
+                this.nueva_acta.id_usuario = usuario.id_persona
 
                 axios({
                     method: 'POST',
@@ -96,7 +97,6 @@
                 })
                 .then(response => {
                    
-                    console.log(response.data)
                     this.$root.$emit('obtenerActas')
 
                     this.$bvModal.hide('modal-nueva')

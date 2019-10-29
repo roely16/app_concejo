@@ -429,9 +429,11 @@
                         
                         this.isSending = !this.isSending
 
+                        let usuario = JSON.parse(localStorage.getItem('usuario'))
+
                         let data = {
                             id: this.$route.params.id,
-                            id_persona: 1
+                            id_persona: usuario.id_persona
                         }
 
                         axios

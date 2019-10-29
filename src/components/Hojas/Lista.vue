@@ -32,7 +32,7 @@
                 <template slot="[actions]" slot-scope="data">
                     <div class="text-right">
                         <b-button
-                            :to="{ name: 'detalle_acta', params: { id: data.item.id } }"
+                            :to="{ name: 'detalle_hojas_contraloria', params: { id: data.item.id } }"
                             class="mr-2"
                             variant="outline-success"
                         >

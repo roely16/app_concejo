@@ -10,18 +10,35 @@
                     <b-col>
                         <b-card>
                             <b-row>
-                                <b-col>
+                                <b-col cols="2">
+                                    <b-form-group label="ID">
+                                        <h5>{{ detalle_agenda.id }}</h5>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col cols="3">
                                     <b-form-group
                                         label="Fecha"
                                     >
                                         <h5>{{ detalle_agenda.fecha }}</h5>
                                     </b-form-group>
                                 </b-col>
-                                <b-col>
+                                <b-col cols="3">
                                     <b-form-group
                                         label="Tipo de Sesión"
                                     >
                                         <h5>{{ detalle_agenda.tipo_agenda ? detalle_agenda.tipo_agenda.nombre : 'Cargando...' }}</h5>
+                                    </b-form-group>
+                                </b-col>
+                                 <b-col cols="4">
+                                    <b-form-group
+                                        label="Estado"
+                                    >   
+                                        <h5>
+                                            <b-badge :variant="detalle_agenda.bitacora ? detalle_agenda.bitacora.estado.color : 'secondary'">{{ detalle_agenda.bitacora ? detalle_agenda.bitacora.estado.nombre : 'Cargando...' }} 
+                                                <font-awesome-icon :icon="detalle_agenda.bitacora ? detalle_agenda.bitacora.estado.icono : 'eye'" />
+                                            </b-badge>
+                                        </h5>
+                                        <!-- <h5>{{ detalle_agenda.tipo_agenda ? detalle_agenda.tipo_agenda.nombre : 'Cargando...' }}</h5> -->
                                     </b-form-group>
                                 </b-col>
                             </b-row>
@@ -37,6 +54,9 @@
     .card-body{
         padding-bottom: 0.1rem 
     }
+    .en_analisis{
+		background-color: #ffae0d 
+	}
 </style>
 
 <script>
@@ -75,6 +95,10 @@
         },
         mounted(){
             this.getData()
+
+            this.$root.$on('obtenerDetalleAgenda', () => {
+                this.getData()
+            })
         },
         methods: {
             getData(){
@@ -88,8 +112,6 @@
 
                 })
                 .then(response => {
-
-                    console.log(response.data)
 
                     // this.items[2].text = "Detalle de Acta " + response.data.numero_acta + ' - ' + response.data.year
 

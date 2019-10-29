@@ -34,7 +34,7 @@
                         href: '#/home/agenda/detalle/' + this.$route.params.id
                     },
                     {
-                        text: 'Asistecia',
+                        text: 'Asistencia',
                         active: true
                     }
                 ],

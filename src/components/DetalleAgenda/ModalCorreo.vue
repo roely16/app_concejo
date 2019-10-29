@@ -83,7 +83,7 @@
             enviarCorreo(){
 
                 Swal.fire({
-                    title: '¿Está seguro que desea enviar la agenda ha aprobación?',
+                    title: '¿Está seguro de enviar agenda para aprobación?',
                     text: "Este proceso no se puede deshacer o cancelar!",
                     type: 'warning',
                     showCancelButton: true,
@@ -96,9 +96,12 @@
                        
                         this.isSending = !this.isSending
 
+                        let usuario = JSON.parse(localStorage.getItem('usuario'))
+                        
                         let data = {
                             destinos: this.destinos.filter(value => value.enviar_correo),
-                            id_acta: this.$route.params.id
+                            id_acta: this.$route.params.id,
+                            id_usuario: usuario.id_persona
                         }
 
                         axios({
@@ -112,9 +115,13 @@
                                 'Excelente!',
                                 'La agenda ha sido enviada por correo para aprobación!',
                                 'success'
-                            )
+                            ).then( () => {
+                                
+                                this.isSending = !this.isSending
+                                this.$bvModal.hide('modal-correo')
+                                this.$root.$emit('obtenerDetalleAgenda')
 
-                            this.isSending = !this.isSending
+                            })
 
                         })
 

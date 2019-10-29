@@ -1,6 +1,8 @@
 <template>
     <div>
 
+        <slot></slot>
+
         <b-row class="mb-3">
             <b-col cols="4">
                 <b-input-group>
@@ -21,8 +23,6 @@
                 </b-button>
             </b-col>
         </b-row>
-
-        <slot></slot>
 
         <div>
             <b-table :filter="busqueda" striped small head-variant="dark" show-empty empty-text="Aún no se han registrado audios" :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage" empty-filtered-text="No se han encontrado documentos que coincidan con su criterio de búsqueda" @filtered="onFiltered" :busy="isLoading">

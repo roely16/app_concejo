@@ -22,87 +22,80 @@
       </b-col>
     </b-row>
 
-    <b-table
-      :filter="busqueda"
-      small
-      head-variant="dark"
-      hover
-      :items="items"
-      :fields="fields"
-      :busy="isLoading"
-      show-empty
-      empty-text="Aún no se han registrado agendas"
-      id="my-table"
-      :per-page="perPage"
-      :current-page="currentPage"
-      @filtered="onFiltered"
-      empty-filtered-text="No se han encontrado agendas que coincidan con su criterio de búsqueda"
-    >
-      <div slot="table-busy" class="text-center my-2">
-        <b-spinner class="align-middle"></b-spinner>
-        <div class="mt-2">
-          <strong>Cargando datos...</strong>
-        </div>
-      </div>
+    <b-table :filter="busqueda" small head-variant="dark" :items="items" :fields="fields" :busy="isLoading" show-empty empty-text="Aún no se han registrado agendas" id="my-table" :per-page="perPage" :current-page="currentPage" @filtered="onFiltered" empty-filtered-text="No se han encontrado agendas que coincidan con su criterio de búsqueda">
+		<div slot="table-busy" class="text-center my-2">
+			<b-spinner class="align-middle"></b-spinner>
+			<div class="mt-2">
+				<strong>Cargando datos...</strong>
+			</div>
+		</div>
 
-      <template
-        slot="[no_acta]"
-        slot-scope="data"
-      >{{ data.item.numero_acta }} - {{ data.item.year }}</template>
+      	<template slot="[no_acta]" slot-scope="data">
+		  {{ data.item.numero_acta }} - {{ data.item.year }}
+		</template>
 
-      <template slot="[id_tipo]" slot-scope="data">
-        <b-badge v-if="data.item.id_tipo == 1" variant="primary" style="font-size: 0.9rem">Ordinaria</b-badge>
+		<template slot="[id_tipo]" slot-scope="data">
+			<!-- <b-badge v-if="data.item.id_tipo == 1" variant="primary" style="font-size: 0.9rem">Ordinaria</b-badge>
 
-        <b-badge
-          v-if="data.item.id_tipo == 2"
-          variant="danger"
-          style="font-size: 0.9rem"
-        >Extraordinaria</b-badge>
-      </template>
+			<b-badge v-if="data.item.id_tipo == 2" variant="danger" style="font-size: 0.9rem">Extraordinaria</b-badge> -->
+			<span v-if="data.item.id_tipo == 1">Ordinaria</span>
+			<span v-if="data.item.id_tipo == 2">Extraordinaria</span>
+		</template>
 
-      <template slot="[estado]" slot-scope="data">
-        <b-badge :variant="data.item.bitacora.estado.color" style="font-size: 0.9rem">
-          {{ data.item.bitacora.estado.nombre }}
-          <font-awesome-icon :icon="data.item.bitacora.estado.icono" />
-        </b-badge>
-      </template>
+		<template slot="[estado]" slot-scope="data">
+			<b-badge :variant="data.item.bitacora.estado.color" :class="data.item.bitacora.estado.color" style="font-size: 0.9rem">
+				{{ data.item.bitacora.estado.nombre }}
+				<font-awesome-icon :icon="data.item.bitacora.estado.icono" />
+			</b-badge>
+		</template>
 
-      <template slot="[actions]" slot-scope="data">
-        <div class="text-right">
-          <b-button
-            :to="{ name: 'detalle_agenda', params: { id: data.item.id } }"
-            class="mr-2"
-            variant="outline-success"
-          >
-            <font-awesome-icon icon="eye" />
-          </b-button>
-          <b-button variant="outline-danger" v-on:click="eliminarAgenda(data.item.id)">
-            <font-awesome-icon icon="trash-alt" />
-          </b-button>
-        </div>
-      </template>
+		<template slot="[actions]" slot-scope="row">
+			<div class="text-right">
+				<b-button class="mr-2" variant="outline-secondary" @click="row.toggleDetails">
+					<font-awesome-icon icon="info-circle"></font-awesome-icon>
+				</b-button>
+				<b-button :to="{ name: 'detalle_agenda', params: { id: row.item.id } }" class="mr-2" variant="outline-success">
+					<font-awesome-icon icon="eye" />
+				</b-button>
+				<b-button variant="outline-danger" v-on:click="eliminarAgenda(row.item.id)">
+					<font-awesome-icon icon="trash-alt" />
+				</b-button>
+			</div>
+		</template>
+
+		<template v-slot:row-details="row">
+			<b-card>
+				<b-row class="mb-2">
+					<b-col sm="3" class="text-sm-right"><b>Descripción: </b></b-col>
+					<b-col>{{ row.item.descripcion }}</b-col>
+				</b-row>
+
+				<b-button size="sm" @click="row.toggleDetails">Ocultar Detalles</b-button>
+			</b-card>
+		</template>
     </b-table>
 
-    <b-row v-if="rows > 0">
-      <b-col>
-        <h5>Total de registros: {{ rows }}</h5>
-      </b-col>
-      <b-col>
-        <b-pagination
-          v-model="currentPage"
-          :total-rows="rows"
-          :per-page="perPage"
-          aria-controls="my-table"
-          v-if="items.length > perPage"
-          align="center"
-        ></b-pagination>
-      </b-col>
-      <b-col></b-col>
-    </b-row>
+		<b-row v-if="rows > 0">
+			<b-col>
+				<h5>Total de registros: {{ rows }}</h5>
+			</b-col>
+			<b-col>
+				<b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" aria-controls="my-table" v-if="items.length > perPage" align="center"></b-pagination>
+			</b-col>
+			<b-col></b-col>
+		</b-row>
 
-    <NuevaAgenda></NuevaAgenda>
-  </div>
+    	<NuevaAgenda></NuevaAgenda>
+  	</div>
 </template>
+
+<style scoped>
+
+	.en_analisis{
+		background-color: #ffae0d 
+	}
+
+</style>
 
 <script>
     import axios from "axios";

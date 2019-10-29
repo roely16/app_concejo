@@ -35,7 +35,9 @@ import Bitacora from './views/Bitacora.vue'
 // Busqueda
 import Busqueda from './views/Busqueda.vue'
 
+// Hojas de la contraloria
 import HojasContraloria from './views/HojasContraloria.vue'
+import DetalleLote from './views/DetalleLote'
 
 // Dashboard 
 import Dashboard from './views/Dashboard.vue'
@@ -113,6 +115,11 @@ const router =  new Router({
 				path: '/home/hojas_contraloria',
 				component: HojasContraloria,
 				name: 'hojas_contraloria',
+			},
+			{
+				path: '/home/hojas_contraloria/:id/detalle',
+				component: DetalleLote,
+				name: 'detalle_hojas_contraloria',
 			},
 			{
 				path: '/home/dashboard',

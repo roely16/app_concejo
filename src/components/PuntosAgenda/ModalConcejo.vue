@@ -107,9 +107,12 @@
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
 
+                    let usuario = JSON.parse(localStorage.getItem('usuario'))
+
                     let data = {
                         personas: this.items.filter(item => item.enviar),
-                        id_agenda: this.$route.params.id
+                        id_agenda: this.$route.params.id,
+                        id_usuario: usuario.id_persona
                     }
 
                     if (result.value) {

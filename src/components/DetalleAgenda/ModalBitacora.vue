@@ -4,7 +4,7 @@
             <b-table hover :items="items" :fields="fields" head-variant="dark">
                 <template slot="[estado]" slot-scope="data">
                     <!-- {{ data.item.estado }} -->
-                    <b-badge :variant="data.item.estado.color">{{ data.item.estado.nombre }} 
+                    <b-badge :variant="data.item.estado.color" :class="data.item.estado.color">{{ data.item.estado.nombre }} 
                         <font-awesome-icon :icon="data.item.estado.icono" />
                     </b-badge>
                 </template>
@@ -55,6 +55,9 @@
         padding: 0;
         list-style-type: none;
     }
+    .en_analisis{
+		background-color: #ffae0d 
+	}
 </style>
 
 <script>

@@ -3,7 +3,7 @@
     <div>
         <div v-if="!isLoading">
 
-            <b-card class="mb-3">
+            <!-- <b-card class="mb-3">
                 <b-row>
                     <b-col>
                         <b-form-group
@@ -20,8 +20,10 @@
                         </b-form-group>
                     </b-col>
                 </b-row>
-            </b-card>
+            </b-card> -->
 
+            <CardDetalle />
+            
             <b-row class="mb-3">
                 <b-col cols="4">
                     <b-input-group>
@@ -113,11 +115,13 @@
     import axios from 'axios'
     import VistaPrevia from '../DetalleActa/VistaPrevia'
     import ModalRevision from './ModalRevision'
+    import CardDetalle from '@/components/DetalleActa/CardDetalle'
 
     export default {
         components: {
             VistaPrevia,
-            ModalRevision
+            ModalRevision,
+            CardDetalle
         },
         data(){
             return{

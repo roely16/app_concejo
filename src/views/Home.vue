@@ -92,7 +92,6 @@
                 })
                 .then(response => {
 
-					console.log(response.data)
 					this.loadingMenu = !this.loadingMenu
 					this.menus = response.data
 

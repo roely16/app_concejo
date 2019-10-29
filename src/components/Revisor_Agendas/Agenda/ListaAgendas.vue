@@ -56,7 +56,7 @@
       </template>
 
       <template slot="[estado]" slot-scope="data">
-        <b-badge :variant="data.item.bitacora.estado.color" style="font-size: 0.9rem">
+        <b-badge :variant="data.item.bitacora.estado.color" :class="data.item.bitacora.estado.color" style="font-size: 0.9rem">
           {{ data.item.bitacora.estado.nombre }}
           <font-awesome-icon :icon="data.item.bitacora.estado.icono" />
         </b-badge>
@@ -95,6 +95,14 @@
 
   </div>
 </template>
+
+<style scoped>
+
+	.en_analisis{
+		background-color: #ffae0d 
+	}
+
+</style>
 
 <script>
     import axios from "axios";

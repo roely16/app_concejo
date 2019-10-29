@@ -13,7 +13,12 @@
                 <b-col cols="12" v-if="tipo == 1">
                     <b-form-group label="Hora">
                         <!-- <b-form-input type="time" v-model="hora" required></b-form-input> -->
-                        <vue-timepicker v-model="hora"></vue-timepicker>
+                        <!-- <vue-timepicker v-model="hora"></vue-timepicker> -->
+                        <vue-clock-picker
+                            mode="24" :defaultHour="defaultHour"
+                            :defaultMinute="defaultMinute"
+                        >
+                        </vue-clock-picker>
                     </b-form-group>
                 </b-col>
                 <b-col cols="12">
@@ -42,10 +47,12 @@
 
     import axios from 'axios'
     import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
+    import VueClockPicker from 'vue-clock-picker'
 
     export default {
         components: {
-            VueTimepicker 
+            VueTimepicker,
+            VueClockPicker 
         },
         props: {
             persona: {
@@ -66,7 +73,9 @@
                 ],
                 // tipo: null,
                 hora: null,
-                motivo: null
+                motivo: null,
+                defaultHour: new Date().getHours(),
+                defaultMinute: new Date().getMinutes()
             }
         },
         methods: {
