@@ -2,14 +2,14 @@
     <b-modal size="lg" id="modal-detalle" :title="'Bitácora de Punto de Agenda'" hide-footer>
         
         <div>
-            <b-table striped hover :items="data.items" :fields="data.fields">
+            <b-table responsive="sm" head-variant="dark" hover :items="data.items" :fields="data.fields">
 
                 <template slot="[accion]" scope="data">
                    <b-badge :variant="data.item.accion.color">{{ data.item.accion.nombre }}</b-badge>
                 </template>
 
                 <template slot="[persona]" scope="data">
-                   {{ data.item.persona.nombre }} {{ data.item.persona.apellido }} 
+                   {{ data.item.persona.usuario.usuario.toUpperCase() }}
                 </template>
 
                 <template slot="[show_details]" class="text-center" slot-scope="row" v-if="row.item.id_accion != 1">

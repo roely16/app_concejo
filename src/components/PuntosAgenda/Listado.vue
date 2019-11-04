@@ -414,9 +414,6 @@
                 this.$bvModal.show('modal-pdf')
             },
             sendConcejo(){
-
-
-
             }
         },
         mounted(){

@@ -54,7 +54,12 @@
                 type: Object,
                 default: null,
                 required: false
-            }
+            },
+            editURL: {
+                type: String,
+                default: 'editar_punto',
+                required: false
+            },
         },
         data(){
             return{
@@ -115,7 +120,7 @@
 
                     await axios({
                         method: 'POST',
-                        url: process.env.VUE_APP_API_URL + 'editar_punto',
+                        url: process.env.VUE_APP_API_URL + this.editURL,
                         data: data
                     })
                     .then(response => {

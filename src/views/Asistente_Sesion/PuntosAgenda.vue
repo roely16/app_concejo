@@ -3,12 +3,21 @@
         <div class="mt-4">
             <b-breadcrumb :items="items" v-if="!isLoading"></b-breadcrumb>
         </div>
+
+        <Listado />
+
     </div>
 </template>
 
 <script>
+
+    import Listado from '@/components/AsistenteSesion/PuntosAgenda/Listado'
+
     export default {
         
+        components: {
+            Listado
+        },
         data() {
             return {
                 items: [
