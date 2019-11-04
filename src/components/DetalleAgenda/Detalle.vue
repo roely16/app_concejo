@@ -5,22 +5,22 @@
         <b-card>
             <b-row v-if="!isLoading">
                
-               <b-col cols="1">
+               <b-col sm="12" md="4" lg="1">
                     <b-form-group label="ID" label-class="font-weight-bold">
                         <b-form-input v-model="agenda.id" disabled></b-form-input>
                     </b-form-group>
                 </b-col>
-                <b-col cols="3">
+                <b-col sm="12" md="4" lg="3">
                     <b-form-group label="Fecha" label-class="font-weight-bold">
                         <date-picker v-model="agenda.fecha" :config="options_date" required :disabled="!isEditing"></date-picker>
                     </b-form-group>
                 </b-col>
-                <b-col cols="4">
+                <b-col lg="4" md="4" sm="12">
                     <b-form-group label="Tipo de Sesión" label-class="font-weight-bold">
                         <b-form-select v-model="agenda.id_tipo" :options="tipos_agenda" :disabled="!isEditing"></b-form-select>
                     </b-form-group>
                 </b-col>
-                <b-col cols="4">
+                <b-col lg="4" md="12" sm="12">
                     <b-form-group label="Descripción" label-class="font-weight-bold">
                         <b-form-textarea v-model="agenda.descripcion" rows="3" max-rows="6" :disabled="!isEditing"></b-form-textarea>
                     </b-form-group>
@@ -42,38 +42,20 @@
                         </b-button>
                     </b-button-group>
 
-                    <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving && agenda.bitacora" :disabled="agenda.bitacora.id_estado == 5">Editar 
+                    <b-button class="mr-2" variant="outline-primary" @click="editarActa" v-if="!isEditing && !isSaving && agenda.bitacora && showEdit" :disabled="agenda.bitacora.id_estado == 5">Editar 
                         <font-awesome-icon icon="edit" />
                     </b-button>
 
-                    <b-button class="mr-2" variant="outline-info" v-b-modal.modal-bitacora>Historial 
+                    <b-button class="mr-2" variant="outline-info" v-if="showHistory" v-b-modal.modal-bitacora>Historial 
                         <font-awesome-icon icon="list-alt" />
                     </b-button>
 
-                    <b-button variant="outline-danger" v-if="agenda.asistencia_congelada == 'S' && agenda.bitacora.id_estado > 3" @click="finalizarAgenda" :disabled="agenda.bitacora.id_estado == 5">Finalizar 
+                    <b-button variant="outline-danger" v-if="agenda.asistencia_congelada == 'S' && agenda.bitacora.id_estado > 3 && showEnd" @click="finalizarAgenda" :disabled="agenda.bitacora.id_estado == 5">Finalizar 
                         <font-awesome-icon icon="calendar-check" />
                     </b-button>
-
-                    <!-- <b-button @click="sendMail" variant="outline-info" class="ml-2">
-                        Enviar por Correo
-                        <font-awesome-icon icon="envelope" />
-                    </b-button> -->
                 </b-col>
-                
-                <!-- <b-col class="text-right">
-                    
-                    <b-form-group
-                        id="fieldset-1"
-                        label="Estado"
-                        label-for="input-1"
-                    >
-                        <b-badge :variant="estado.color" style="font-size: 0.9rem">{{ estado.nombre }} <font-awesome-icon :icon="icono" /></b-badge>    
-                    </b-form-group>
 
-                    
-                </b-col> -->
-
-                <b-col cols="4">
+                <b-col lg="4" sm="12" md="5">
                     <b-alert :variant=" agenda.bitacora ? agenda.bitacora.estado.color : 'secondary'" :class="agenda.bitacora ? agenda.bitacora.estado.color : 'secondary'" show>
                         <b-row>
                             <b-col cols="10">
@@ -89,7 +71,7 @@
             </b-row>
 
             <b-row class="text-center" v-if="isLoading">
-                <b-col>
+                <b-col >
                     <b-spinner class="align-middle"></b-spinner>
                     <div class="mt-2">
                         <strong>Cargando datos...</strong>
@@ -97,7 +79,6 @@
                 </b-col>
             </b-row>
             
-            <!-- <ModalCorreo :destinos="destinos" /> -->
             <ModalBitacora />
 
         </b-card>   
@@ -122,6 +103,23 @@
     import ModalBitacora from './ModalBitacora'
 
     export default {
+        props: {
+            showEdit: {
+                type: Boolean,
+                required: false,
+                default: true
+            },
+            showHistory: {
+                type: Boolean,
+                required: false,
+                default: true
+            },
+            showEnd: {
+                type: Boolean,
+                required: false,
+                default: true
+            }
+        },
         components: {
             datePicker,
             ModalCorreo,
@@ -149,13 +147,6 @@
                 isLoading: false,
                 icono: '' 
             }
-        },
-        props: {
-            // agenda: {
-            //     type: Object,
-            //     default: {}
-            // },
-            // isLoading: Boolean
         },
         methods: {
             obtenerDetalle(){

@@ -2,7 +2,7 @@
   <div>
     <!-- Sección de busqueda y botón para Agregar -->
     <b-row class="mb-3">
-      <b-col cols="4">
+      <b-col sm="12" lg="4" md="6">
         <b-input-group>
           <b-form-input v-model="busqueda"></b-form-input>
 
@@ -14,7 +14,7 @@
         </b-input-group>
       </b-col>
 
-      <b-col cols="8" class="text-right">
+      <b-col cols="8" class="text-right" v-if="showAdd">
         <b-button variant="outline-primary" @click="nuevaActa">
           Nueva Agenda
           <font-awesome-icon icon="plus-circle" />
@@ -54,10 +54,10 @@
 				<b-button class="mr-2" variant="outline-secondary" @click="row.toggleDetails">
 					<font-awesome-icon icon="info-circle"></font-awesome-icon>
 				</b-button>
-				<b-button :to="{ name: 'detalle_agenda', params: { id: row.item.id } }" class="mr-2" variant="outline-success">
+				<b-button :to="{ name: detailURL, params: { id: row.item.id } }" class="mr-2" variant="outline-success">
 					<font-awesome-icon icon="eye" />
 				</b-button>
-				<b-button variant="outline-danger" v-on:click="eliminarAgenda(row.item.id)">
+				<b-button v-if="showDelete" variant="outline-danger" v-on:click="eliminarAgenda(row.item.id)">
 					<font-awesome-icon icon="trash-alt" />
 				</b-button>
 			</div>
@@ -102,6 +102,33 @@
     import NuevaAgenda from "../Agenda/NuevaAgenda";
 
 	export default {
+		props: {
+			showDelete: {
+				type: Boolean,
+				required: false,
+				default: true
+			},
+			showDetails: {
+				type: Boolean,
+				required: false,
+				default: true
+			},
+			showAdd: {
+				type: Boolean,
+				required: false,
+				default: true
+			},
+			detailURL: {
+				type: String,
+				required: false,
+				default: 'detalle_agenda'
+			},
+			dataURL: {
+				type: String,
+				required: false,
+				default: 'obtener_agendas'
+			} 
+		},
 		components: {
 			NuevaAgenda
 		},
@@ -122,7 +149,7 @@
 
 				axios({
 					method: "GET",
-					url: process.env.VUE_APP_API_URL + "obtener_agendas"
+					url: process.env.VUE_APP_API_URL + this.dataURL
 				})
 				.then(response => {
 					this.isLoading = !this.isLoading;

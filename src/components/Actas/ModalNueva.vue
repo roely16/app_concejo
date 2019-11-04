@@ -97,10 +97,15 @@
                 })
                 .then(response => {
                    
-                    this.$root.$emit('obtenerActas')
+                    Swal.fire(
+                        'Excelente!',
+                        'El acta ha sido creada exitosamente!',
+                        'success'
+                    ).then(()=>{
+                        this.$bvModal.hide('modal-nueva')
+                        this.$root.$emit('obtenerActas')
+                    })
 
-                    this.$bvModal.hide('modal-nueva')
-                  
                 })
                 .catch(error => {
                     console.log(error)

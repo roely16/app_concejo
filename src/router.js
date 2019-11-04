@@ -54,6 +54,12 @@ import Acta_Revision from './views/Revisor_Actas/DetalleActa.vue'
 import Puntos_Acta_Revision from './views/Revisor_Actas/PuntosActa.vue'
 import Detalle_Punto_Acta_Revision from './views/Revisor_Actas/DetallePuntoActa.vue'
 
+// Asistente Sesión
+import AgendasSesion from '@/views/Asistente_Sesion/Agendas.vue'
+import DetalleAgendaSesion from '@/views/Asistente_Sesion/DetalleAgenda.vue'
+import PuntosAgendaSesion from '@/views/Asistente_Sesion/PuntosAgenda.vue'
+import AsistenciaSesion from '@/views/Asistente_Sesion/Asistencia.vue'
+
 import store from './store';
 
 Vue.use(Router)
@@ -207,6 +213,27 @@ const router =  new Router({
 				path: '/home/actas_revision/detalle/:id/puntos_acta/detalle_punto/:id_punto',
 				component: Detalle_Punto_Acta_Revision,
 				name: 'detalle_punto_acta_revision'
+			},
+			// Asistente a la sesiones
+			{
+				path: '/home/agendas_sesion',
+				component: AgendasSesion,
+				name: 'agendas_sesion',
+			},
+			{
+				path: '/home/agendas_sesion/detalle/:id',
+				component: DetalleAgendaSesion,
+				name: 'detalle_agenda_sesion',
+			},
+			{
+				path: '/home/agendas_sesion/detalle/:id/puntos_agenda',
+				component: PuntosAgendaSesion,
+				name: 'puntos_agenda_sesion',
+			},
+			{
+				path: '/home/agendas_sesion/detalle/:id/asistencia',
+				component: AsistenciaSesion,
+				name: 'asistencia_sesion',
 			},
 		]
 	},

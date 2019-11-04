@@ -4,30 +4,12 @@
 
         <div v-if="!isLoading">
 
-            <b-card class="mb-3">
-                <b-row>
-                    <b-col>
-                        <b-form-group
-                            label="Agenda de Fecha"
-                        >
-                            <h5>{{ detalle_punto.agenda ? detalle_punto.agenda.fecha : 'Cargando...' }}</h5>
-                        </b-form-group>
-                    </b-col>
-                    <b-col>
-                        <b-form-group
-                            label="Tipo de Sesión"
-                        >
-                            <h5>{{ detalle_punto.agenda ? detalle_punto.agenda.tipo_agenda.nombre : 'Cargando...' }}</h5>
-                        </b-form-group>
-                    </b-col>
-                </b-row>
-            </b-card>
-
+            <CardDetalle />
+            
             <b-card>
                 <b-row>
                     <b-col cols="12">
                         <b-form-group label="Punto de Agenda" label-class="font-weight-bold">
-                            <!-- <b-form-textarea v-model="detalle_punto.descripcion" disabled></b-form-textarea> -->
                             <p class="text-justify">{{ detalle_punto.descripcion }}</p>
                         </b-form-group>
                     </b-col>
@@ -38,41 +20,40 @@
 
                     <b-col cols="12">
                         <b-form-group label="Punto de Acta" label-class="font-weight-bold">
-                            <!-- <b-form-textarea rows="4" v-model="detalle_punto_acta.descripcion" :disabled="!isEditing"></b-form-textarea> -->
                             <b-card :bg-variant="!isEditing ? 'light' : 'default'" text-variant="dark">
                                 <div class="editor">
-                                <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
-                                    <div class="menubar">
+                                    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+                                        <div class="menubar">
 
-                                        <button class="menubar__button" :class="{ 'is-active': isActive.bold() }" @click="commands.bold">
-                                            <font-awesome-icon icon="bold" />
-                                        </button>
+                                            <button class="menubar__button" :class="{ 'is-active': isActive.bold() }" @click="commands.bold">
+                                                <font-awesome-icon icon="bold" />
+                                            </button>
 
-                                        <button class="menubar__button" :class="{ 'is-active': isActive.italic() }" @click="commands.italic">
-                                            <font-awesome-icon icon="italic" />
-                                        </button>
+                                            <button class="menubar__button" :class="{ 'is-active': isActive.italic() }" @click="commands.italic">
+                                                <font-awesome-icon icon="italic" />
+                                            </button>
 
-                                        <button class="menubar__button" :class="{ 'is-active': isActive.strike() }" @click="commands.strike">
-                                            <font-awesome-icon icon="strikethrough" />
-                                        </button>
+                                            <button class="menubar__button" :class="{ 'is-active': isActive.strike() }" @click="commands.strike">
+                                                <font-awesome-icon icon="strikethrough" />
+                                            </button>
 
-                                        <button class="menubar__button" :class="{ 'is-active': isActive.underline() }" @click="commands.underline">
-                                            <font-awesome-icon icon="underline" />
-                                        </button>
+                                            <button class="menubar__button" :class="{ 'is-active': isActive.underline() }" @click="commands.underline">
+                                                <font-awesome-icon icon="underline" />
+                                            </button>
 
-                                        <button class="menubar__button" :class="{ 'is-active': isActive.code() }" @click="commands.code">
-                                            <font-awesome-icon icon="code" />
-                                        </button>
-                                    </div>
-                                </editor-menu-bar>
-                                <editor-content class="editor__content" v-if="editor" :editor="editor" />
-                            </div>
+                                            <button class="menubar__button" :class="{ 'is-active': isActive.code() }" @click="commands.code">
+                                                <font-awesome-icon icon="code" />
+                                            </button>
+                                        </div>
+                                    </editor-menu-bar>
+                                    <editor-content class="editor__content" v-if="editor" :editor="editor" />
+                                </div>
                             </b-card>
                             
                         </b-form-group>
                     </b-col>
 
-                    <b-col cols="4">
+                    <b-col cols="6">
 
                         <b-button-group class="mr-2" v-if="isEditing">
                             <b-button variant="outline-success" @click="editarPuntoActa">
@@ -89,13 +70,17 @@
                         <b-button class="mr-2" v-if="!isEditing" @click="editarPuntoActa" variant="outline-primary">Editar 
                             <font-awesome-icon icon="edit" />
                         </b-button>
-                        <b-button variant="outline-info" v-b-modal.modal-bitacora>Bitácora 
+                        <b-button variant="outline-info" @click="mostrarBitacora">Bitácora 
                             <font-awesome-icon icon="list-alt" />
                         </b-button>
+                        
                     </b-col>
-                    <b-col cols="8" class="text-right">
-                        <b-button variant="outline-danger" @click="eliminarPunto">Eliminar 
+                    <b-col cols="6" class="text-right">
+                        <b-button class="mr-2" variant="outline-danger" @click="eliminarPunto">Eliminar 
                             <font-awesome-icon icon="trash-alt" />
+                        </b-button>
+                        <b-button v-if="puntos_eliminados.length > 0" variant="danger" v-b-toggle.collapse-1>Ver Eliminados 
+                            <b-badge variant="light">{{ puntos_eliminados.length }}</b-badge>
                         </b-button>
                     </b-col>
                 </b-row>
@@ -107,6 +92,15 @@
                         </b-button>
                     </b-col>
                 </b-row>
+
+                <b-row  v-if="!agregar_punto_acta && detalle_punto_acta == null">
+                    <b-col class="text-right">
+                        <b-button v-if="puntos_eliminados.length > 0 && !agregar_punto_acta" variant="danger" v-b-toggle.collapse-1>Ver Eliminados 
+                            <b-badge variant="light">{{ puntos_eliminados.length }}</b-badge>
+                        </b-button>
+                    </b-col>
+                </b-row>
+                
 
                 <!-- Registro -->
                 <div v-if="agregar_punto_acta && detalle_punto_acta == null">
@@ -149,19 +143,54 @@
                                 </b-form-group>
                             </b-col>
 
-                            <b-col cols="4">
-                                <b-button @click="registrarPunto" :disabled="isAdd" class="mr-2" variant="outline-success">Guardar 
-                                    <font-awesome-icon icon="save" />
-                                </b-button>
-                                <b-button variant="outline-secondary" @click="cancelarRegistro">Cancelar
-                                    <font-awesome-icon icon="times-circle" />
-                                </b-button>
+                            <b-col cols="12">
+                                <b-row>
+                                    <b-col cols="6">
+                                        <b-button @click="registrarPunto" :disabled="isAdd || isSaving" class="mr-2" variant="outline-success">Guardar 
+                                            <font-awesome-icon icon="save" />
+                                        </b-button>
+                                        <b-button class="mr-2" variant="outline-secondary" @click="cancelarRegistro">Cancelar
+                                            <font-awesome-icon icon="times-circle" />
+                                        </b-button>
+                                    </b-col>
+                                    <b-col cols="6" class="text-right">
+                                        <b-button class="text-right" v-if="puntos_eliminados.length > 0 && agregar_punto_acta" variant="danger" v-b-toggle.collapse-1>Ver Eliminados 
+                                            <b-badge variant="light">{{ puntos_eliminados.length }}</b-badge>
+                                        </b-button>
+                                    </b-col>
+                                </b-row>
+                                
+                               
                             </b-col>
                         
                     </b-row>
                 </div>
 
             </b-card>
+            
+            <b-row class="mt-4 mb-4" >
+                <b-col>
+                    <b-collapse id="collapse-1" class="mt-2">
+                        <b-card border-variant="danger">
+                            <b-list-group>
+                                <b-list-group-item variant="danger" class="mb-2" v-for="punto_eliminado in puntos_eliminados" :key="punto_eliminado.id">
+                                    <b-row>
+                                        <b-col cols="10">
+                                            <div v-html="punto_eliminado.descripcion"></div>
+                                        </b-col>
+                                        <b-col cols="2" class="text-right">
+                                            <b-button size="sm" variant="outline-ligth" @click="bitacoraEliminado(punto_eliminado)">
+                                                <font-awesome-icon icon="info-circle" />
+                                            </b-button>
+                                        </b-col>
+                                    </b-row>
+                                </b-list-group-item>
+                            </b-list-group>
+                            
+                        </b-card>
+                    </b-collapse>
+                </b-col>
+            </b-row>
 
             <div class="mt-3">
                 <b-card no-body>
@@ -176,7 +205,7 @@
                 </b-card>
             </div>
 
-            <ModalBitacora :id_punto_acta="detalle_punto_acta ? detalle_punto_acta.id : null" />
+            <ModalBitacora :id_punto_acta="detalle_punto_acta ? detalle_punto_acta.id : null" :id_punto_acta_eliminado="id_punto_acta_eliminado" />
 
         </div>
 
@@ -263,6 +292,7 @@
     import ModalBitacora from './ModalBitacora'
     import Documentos from './Documentos'
     import Audios from './Audios'
+    import CardDetalle from '@/components/DetalleActa/CardDetalle'
     import { Editor, EditorContent, EditorMenuBar  } from 'tiptap'
 
     import {
@@ -291,6 +321,7 @@
             Audios,
             EditorContent,
             EditorMenuBar,
+            CardDetalle
         },
         data(){
             return{
@@ -304,7 +335,10 @@
                 backup_punto_acta: '',
                 id_agenda: null,
                 keepInBounds: true,
-                editor: null
+                editor: null,
+                puntos_eliminados: [],
+                id_punto_acta: null,
+                id_punto_acta_eliminado: null,
             }
         },
         methods: {
@@ -324,8 +358,11 @@
                 })
                 .then(response => {
 
+                    console.log(response.data)
+
                     this.detalle_punto = response.data.punto_agenda
                     this.detalle_punto_acta = response.data.punto_acta
+                    this.puntos_eliminados = response.data.puntos_eliminados
                     
                     if (response.data.punto_acta) {
 
@@ -351,10 +388,15 @@
             },
             registrarPunto(){
 
+                this.isSaving = !this.isSaving
+
+                let usuario = JSON.parse(localStorage.getItem('usuario'))
+
                 let data = {
                     descripcion: this.editor.getHTML(),
                     id_acta: this.$route.params.id,
-                    id_punto_agenda: this.$route.params.id_punto
+                    id_punto_agenda: this.$route.params.id_punto,
+                    id_usuario: usuario.id_persona
                 }
 
                 axios({
@@ -369,7 +411,8 @@
                         'El punto de acta ha creado exitosamente!',
                         'success'
                     )
-
+                    
+                    this.isSaving = !this.isSaving
                     this.obtenerDetalle()
                 })
                 .catch(error => {
@@ -389,15 +432,16 @@
 
                 if (!this.isEditing) {
 
+                    let usuario = JSON.parse(localStorage.getItem('usuario'))
+
                     let data = {
                         descripcion: this.editor.getHTML(),
                         id: this.detalle_punto_acta.id,
                         id_acta: this.detalle_punto_acta.id_acta,
                         id_punto_agenda: this.detalle_punto_acta.id_punto,
-                        original: this.backup_punto_acta
+                        original: this.backup_punto_acta,
+                        id_usuario: usuario.id_persona
                     }
-
-                    console.log(data)
 
                     axios({
                         method: 'POST',
@@ -412,12 +456,17 @@
                             'success'
                         )
 
+                        this.detalle_punto_acta.descripcion = this.editor.getHTML()
+
                     })
                     .catch(error => {
                         console.log(error)
                     })
 
                 }else{
+
+                    console.log(this.detalle_punto_acta.descripcion)
+
                     this.backup_punto_acta = this.detalle_punto_acta.descripcion
                 }
 
@@ -449,10 +498,13 @@
                     
                     if (result.value != '' && !result.dismiss) {
                         
+                        let usuario = JSON.parse(localStorage.getItem('usuario'))
+
                         let data = {
                             id_punto_acta: this.detalle_punto_acta.id,
                             descripcion: this.detalle_punto_acta.descripcion,
-                            motivo_eliminacion: result.value
+                            motivo_eliminacion: result.value,
+                            id_usuario: usuario.id_persona
                         }
 
                         axios({
@@ -461,7 +513,17 @@
                             data: data
                         })
                         .then(response => {
-                            console.log(response.data)
+
+                            this.editor.clearContent()
+                            this.agregar_punto_acta = false
+                            this.backup_punto_acta = null
+                            this.obtenerDetalle()
+
+                            Swal.fire(
+                                'Excelente!',
+                                'El Punto de Acta ha sido eliminado exitosamente!',
+                                'success'
+                            )
                         })
                         .catch(error => {
                             console.log(error)
@@ -479,6 +541,14 @@
 
                 })
 
+            },
+            bitacoraEliminado(eliminado){
+                this.id_punto_acta_eliminado = parseInt(eliminado.id)
+                this.$bvModal.show('modal-bitacora')
+            },
+            mostrarBitacora(){
+                this.id_punto_acta_eliminado = null
+                this.$bvModal.show('modal-bitacora')	
             }
         },
         mounted(){

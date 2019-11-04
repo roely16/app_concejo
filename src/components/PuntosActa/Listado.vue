@@ -3,25 +3,6 @@
     <div>
         <div v-if="!isLoading">
 
-            <!-- <b-card class="mb-3">
-                <b-row>
-                    <b-col>
-                        <b-form-group
-                            label="Agenda de Fecha"
-                        >
-                            <h5>{{ agenda.fecha ? agenda.fecha : 'Cargando...' }}</h5>
-                        </b-form-group>
-                    </b-col>
-                    <b-col>
-                        <b-form-group
-                            label="Tipo de Sesión"
-                        >
-                            <h5>{{ agenda.tipo_agenda ? agenda.tipo_agenda.nombre : 'Cargando...' }}</h5>
-                        </b-form-group>
-                    </b-col>
-                </b-row>
-            </b-card> -->
-
             <CardDetalle />
             
             <b-row class="mb-3">
@@ -71,7 +52,7 @@
             </b-row>
 
             <b-list-group>
-                <b-list-group-item :to="{ name: 'detalle_punto_acta', params: {id_punto: punto.id}}" class="mb-2" v-for="(punto) in listaPuntos" :key="punto.id" :variant="!punto.punto_acta ? 'secondary' : 'primary'">
+                <b-list-group-item :to="{ name: 'detalle_punto_acta', params: {id_punto: punto.id}}" class="mb-2" v-for="(punto) in puntos" :key="punto.id" :variant="punto.punto_acta ? punto.punto_acta.color : 'secondary'">
                     <b-row>
                         <b-col cols="1">
                             <p class="lead text-justify"><strong>{{ punto.orden }}.</strong> </p>
@@ -84,9 +65,9 @@
                 </b-list-group-item>
             </b-list-group>
 
-            <div class="mt-3">
+            <!-- <div class="mt-3">
                 <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" aria-controls="my-table" align="center"></b-pagination>
-            </div>
+            </div> -->
             
         </div>
 
@@ -148,11 +129,11 @@
 
                     console.log(response.data)
 
-                   this.puntos = response.data.agenda.puntos_agenda
-                   this.backup_puntos = response.data.agenda.puntos_agenda
-                   this.agenda = response.data.agenda
-                   this.rows = this.puntos.length
-                   this.isLoading = !this.isLoading
+                    this.puntos = response.data.agenda.puntos_agenda
+                    this.backup_puntos = response.data.agenda.puntos_agenda
+                    this.agenda = response.data.agenda
+                    this.rows = this.puntos.length
+                    this.isLoading = !this.isLoading
                 })
                 .catch(error => {
                     console.log(error)

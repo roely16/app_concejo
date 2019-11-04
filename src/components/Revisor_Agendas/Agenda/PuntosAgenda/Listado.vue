@@ -2,6 +2,8 @@
 
     <div>
 
+        <CardDetalle />
+
         <b-row class="mb-3">
             <b-col cols="4">
                <b-input-group>
@@ -59,7 +61,7 @@
             </b-col>
         </b-row>
 
-        <slot></slot>
+        <!-- <slot></slot> -->
 
         <div v-if="!isLoading">
             <b-list-group id="items" v-if="puntos_agenda.length > 0">
@@ -160,13 +162,15 @@
     // import ModalCorreo from '../DetalleAgenda/ModalCorreo'
     import ModalDetalle from '@/components/PuntosAgenda/ModalDetalle'
     import ModalPDF from '@/components/PuntosAgenda/ModalPDF'
+    import CardDetalle from '@/components/DetalleAgenda/CardDetalle'
 
     export default {
         components: {
             ModalPunto,
             // ModalCorreo,
             ModalDetalle,
-            ModalPDF
+            ModalPDF,
+            CardDetalle
         },
         data() {
             return {

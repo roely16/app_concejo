@@ -2,7 +2,9 @@
 
     <div>
 
-        <slot></slot>
+        <!-- <slot></slot> -->
+
+        <CardDetalle />
 
         <b-row class="mb-3" v-if="!isLoading">
             <b-col cols="3">
@@ -150,6 +152,7 @@
     import ModalDetalle from '../PuntosAgenda/ModalDetalle'
     import ModalPDF from '../PuntosAgenda/ModalPDF'
     import ModalConcejo from '../PuntosAgenda/ModalConcejo'
+    import CardDetalle from '@/components/DetalleAgenda/CardDetalle'
 
     export default {
         props: {
@@ -163,7 +166,8 @@
             ModalCorreo,
             ModalDetalle,
             ModalPDF,
-            ModalConcejo
+            ModalConcejo,
+            CardDetalle
         },
         data() {
             return {

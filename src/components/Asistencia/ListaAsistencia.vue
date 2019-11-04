@@ -1,43 +1,10 @@
 <template>
     <div>
         
-        <!-- <b-row class="mb-3">
-            <b-col>
-                <b-card>
-                    <b-row>
-                        <b-col cols="2">
-                            <b-form-group label="ID">
-                                <h5>{{ detalle_agenda.id }}</h5>
-                            </b-form-group>
-                        </b-col>
-                        <b-col cols="3">
-                            <b-form-group
-                                label="Fecha"
-                            >
-                                <h5>{{ detalle_agenda.fecha }}</h5>
-                            </b-form-group>
-                        </b-col>
-                        <b-col cols="3">
-                            <b-form-group
-                                label="Tipo de Sesión"
-                            >
-                                <h5>{{ detalle_agenda.tipo_agenda.nombre }}</h5>
-                            </b-form-group>
-                        </b-col>
-                        <b-col>
-                            <b-form-group label="Estado">
-                                
-                            </b-form-group>
-                        </b-col>
-                    </b-row>
-                </b-card>
-            </b-col>
-        </b-row> -->
-
         <CardDetalle />
 
-        <b-row class="mb-3">
-            <b-col cols="4">
+        <b-row >
+            <b-col cols="12" lg="4" md="6" sm="12" class="mb-3">
                 <b-input-group>
                     <b-form-input v-model="busqueda"></b-form-input>
 
@@ -50,22 +17,22 @@
                     
                 </b-input-group> 
             </b-col>
-            <b-col class="text-right">
+            <b-col class="text-right mb-3" >
 
                 <b-button class="mr-2" variant="outline-danger" :disabled="asistencia_congelada == 'S' ? true : false" @click="congelarAsistencia">{{ asistencia_congelada ? 'Congelada' : 'Congelar' }}
                     <font-awesome-icon icon="lock" />
                 </b-button>
 
-                <b-button variant="outline-primary" :disabled="asistencia_congelada == 'S' ? true : false" @click="marcarTodos">{{ todosMarcados ? 'Desmarcar Todos' : 'Marcar Todos' }}
+                <!-- <b-button variant="outline-primary" :disabled="asistencia_congelada == 'S' ? true : false" @click="marcarTodos">{{ todosMarcados ? 'Desmarcar Todos' : 'Marcar Todos' }}
                     <font-awesome-icon icon="tasks" />
-                </b-button>
+                </b-button> -->
             </b-col>
         </b-row>
         
         <b-row>
-            <b-col lg="4" sm="12" v-for="persona in personas" :key="persona.id">
+            <b-col lg="4" sm="12" md="6" v-for="persona in personas" :key="persona.id">
 
-                <b-card :to="{ name: 'home' }" :bg-variant="persona.color" text-variant="white" class="mb-4" footer-tag="footer">
+                <b-card :to="{ name: 'home' }" :bg-variant="persona.asistencia ? persona.asistencia.tipo.color : 'secondary'" text-variant="white" class="mb-4" footer-tag="footer">
 
                     <b-row style="height: 100%">
                         <b-col cols="4">
@@ -76,8 +43,8 @@
                         <b-col class="text-left" cols="8">
                             <b-row>
                                 <b-col cols="12">
-                                    <p style="padding-bottom: 0; margin-bottom: 0"><strong>{{ persona.persona[0].nombre + ' ' + persona.persona[0].apellido }}</strong></p>
-                                    <p class="font-weight-light" style="margin: 0; padding: 0">{{ persona.nombre }}</p>
+                                    <p style="padding-bottom: 0; margin-bottom: 0"><strong>{{ persona.nombre + ' ' + persona.apellido }}</strong></p>
+                                    <p class="font-weight-light" style="margin: 0; padding: 0">{{ persona.puesto.nombre }}</p>
                                 </b-col>
                                 
                             </b-row>
@@ -89,6 +56,11 @@
 
                         <b-row>
                             <b-col>
+                                <div class="text-right"  style="cursor: pointer;">
+                                    <font-awesome-icon @click="modalAsistencia(persona)" v-b-tooltip.bottom title="Historial de Asistencia" icon="info-circle" />
+                                </div>
+                            </b-col>
+                            <!-- <b-col>
                                 <div class="text-left" v-if="persona.asistencia && !asistencia_congelada" style="cursor: pointer;">
                                     <font-awesome-icon v-b-tooltip.bottom title="Eliminar" @click="marcarAsistencia(persona)" icon="undo" />
                                 </div>
@@ -101,11 +73,10 @@
                                     <font-awesome-icon v-b-tooltip.bottom title="Llegada tarde" @click="tarde(persona)" icon="clock" />
                                 </div>
 
-                                <!-- Info de la asistencia -->
                                 <div @click="info(persona)" class="text-right" style="cursor: pointer;" v-if="persona.asistencia || asistencia_congelada">
                                     <font-awesome-icon v-b-tooltip.bottom title="Información" icon="info-circle" />
                                 </div>
-                            </b-col>
+                            </b-col> -->
                         </b-row>
                         
                     </template>
@@ -118,6 +89,8 @@
         <ModalAsistencia :persona="persona" :tipo="tipo" />
 
         <ModalInfo :persona="persona"/>
+
+        <ModalDetalleAsistencia :persona="persona" />
 
     </div>
 </template>
@@ -143,12 +116,14 @@
     import ModalAsistencia from '../Asistencia/ModalAsistencia'
     import ModalInfo from '../Asistencia/ModalInfo'
     import CardDetalle from '@/components/DetalleAgenda/CardDetalle'
+    import ModalDetalleAsistencia from '@/components/Asistencia/ModalDetalle'
 
     export default {
         components: {
             ModalAsistencia,
             ModalInfo,
-            CardDetalle
+            CardDetalle,
+            ModalDetalleAsistencia
         },
         props: {
             asistentes: {
@@ -180,7 +155,7 @@
                 })
                 .then(response => {
 
-                    // console.log(response.data)
+                    console.log(response.data)
 
                     this.personas = response.data.personas
                     this.fecha_agenda = response.data.detalle_agenda.fecha
@@ -348,6 +323,12 @@
                     })
 
                 }
+
+            },
+            modalAsistencia(persona){
+
+                this.persona = persona
+                this.$bvModal.show('modal-historial-asistencia')
 
             }
         },

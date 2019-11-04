@@ -1,7 +1,7 @@
 <template>
-    <b-modal size="lg" id="modal-bitacora" title="Bitácora de Punto de Acta" @show="detalleBitacora" hide-footer>
+    <b-modal size="lg" id="modal-bitacora" :title="id_punto_acta_eliminado ? 'Bitácora de Punto de Acta Eliminado' : 'Bitácora de Punto de Acta'" @shown="detalleBitacora" hide-footer>
         
-        <div>
+        <div v-if="!isLoading">
             <b-table striped hover :items="items" :fields="fields" :per-page="perPage" :current-page="currentPage" head-variant="dark">
 
                 <template slot="[accion]" scope="data">
@@ -9,7 +9,7 @@
                 </template>
 
                 <template slot="[persona]" scope="data">
-                   {{ data.item.persona.nombre }} {{ data.item.persona.apellido }} 
+                   {{ data.item.persona.usuario.usuario.toUpperCase() }}
                 </template>
 
                 <template slot="[show_details]" class="text-center" slot-scope="row" v-if="row.item.id_accion != 1">
@@ -51,7 +51,7 @@
 
             </b-table>
 
-            <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" aria-controls="my-table" align="center"></b-pagination>
+            <b-pagination v-if="rows > perPage" v-model="currentPage" :total-rows="rows" :per-page="perPage" aria-controls="my-table" align="center"></b-pagination>
 
         </div>
 
@@ -69,23 +69,33 @@
                 fields: {},
                 currentPage: 1,
                 rows: null,
-                perPage: 10
+                perPage: 10,
+                isLoading: false
             }
         },
         methods: {
             detalleBitacora(){
 
-                console.log(this.id_punto_acta)
+                this.isLoading = !this.isLoading
 
-                 axios({
+                let id_punto = null
+
+                if (this.id_punto_acta_eliminado) {
+                    id_punto = this.id_punto_acta_eliminado
+                }else{
+                    id_punto = this.id_punto_acta
+                }
+
+                axios({
                     method: 'GET',
-                    url: process.env.VUE_APP_API_URL + 'bitacora_punto_acta/' + this.id_punto_acta
+                    url: process.env.VUE_APP_API_URL + 'bitacora_punto_acta/' + id_punto
                 })
                 .then(response => {
-                   console.log(response.data)
                    this.items = response.data.items,
                    this.fields = response.data.fields
                    this.rows = this.items.length
+                   this.currentPage = 1
+                   this.isLoading = !this.isLoading
                 })
                 .catch(error => {
                     console.log(error)
@@ -97,6 +107,11 @@
             id_punto_acta: {
                 type: Number,
                 default: null
+            },
+            id_punto_acta_eliminado: {
+                type: Number,
+                default: null,
+                required: false
             }
         }
     }

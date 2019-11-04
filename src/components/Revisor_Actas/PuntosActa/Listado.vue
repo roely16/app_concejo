@@ -3,25 +3,8 @@
     <div>
         <div v-if="!isLoading">
 
-            <b-card class="mb-3">
-                <b-row>
-                    <b-col>
-                        <b-form-group
-                            label="Agenda de Fecha"
-                        >
-                            <h5>{{ agenda.fecha ? agenda.fecha : 'Cargando...' }}</h5>
-                        </b-form-group>
-                    </b-col>
-                    <b-col>
-                        <b-form-group
-                            label="Tipo de Sesión"
-                        >
-                            <h5>{{ agenda.tipo_agenda ? agenda.tipo_agenda.nombre : 'Cargando...' }}</h5>
-                        </b-form-group>
-                    </b-col>
-                </b-row>
-            </b-card>
-
+            <CardDetalle />
+    
             <b-row class="mb-3" align-v="center">
                 <b-col cols="4">
                     <b-input-group>
@@ -64,7 +47,7 @@
                             <b-dropdown-item href="#" @click="mostrarListos">Aprobados <b-badge variant="success">{{ listos }}</b-badge></b-dropdown-item>
                         </b-dropdown>
                     </div> -->
-                    <b-badge variant="secondary"class="mr-1" @click="mostrarTodos" style="cursor: pointer;">Todos {{ backup_puntos.length }}</b-badge>
+                    <b-badge variant="secondary" class="mr-1" @click="mostrarTodos" style="cursor: pointer;">Todos {{ backup_puntos.length }}</b-badge>
                     <b-badge variant="danger" class="mr-1" @click="mostrarPendientes" style="cursor: pointer;">Pendientes {{ pendientes }}</b-badge>
                     <b-badge variant="success" @click="mostrarListos" style="cursor: pointer;">Revisados {{ listos }}</b-badge>
                 </b-col>
@@ -72,7 +55,7 @@
             </b-row>
 
             <b-list-group>
-                <b-list-group-item :to="{ name: 'detalle_punto_acta_revision', params: {id_punto: punto.id}}" class="mb-2" v-for="(punto) in listaPuntos" :key="punto.id" :variant="punto.punto_acta.bitacora.id_accion == 4 ? 'success' : 'secondary'">
+                <b-list-group-item :to="{ name: 'detalle_punto_acta_revision', params: {id_punto: punto.id}}" class="mb-2" v-for="(punto) in puntos" :key="punto.id" :variant="punto.punto_acta.bitacora.id_accion == 4 ? 'success' : 'secondary'">
                     <b-row>
                         <b-col cols="1">
                             <p class="lead text-justify"><strong>{{ punto.orden }}.</strong> </p>
@@ -85,7 +68,7 @@
                 </b-list-group-item>
             </b-list-group>
 
-            <b-row align-v="center">
+            <!-- <b-row align-v="center">
                 <b-col></b-col>
                 <b-col>
                     <div class="mt-3">
@@ -93,9 +76,8 @@
                     </div>
                 </b-col>
                 <b-col class="text-right">
-                    <!-- <small>Mostrando: <strong>Pendientes</strong></small> -->
                 </b-col>
-            </b-row>
+            </b-row> -->
             
         </div>
 
@@ -123,11 +105,13 @@
 
     import axios from 'axios'
     import VistaPrevia from '@/components/DetalleActa/VistaPrevia'
+    import CardDetalle from '@/components/DetalleActa/CardDetalle'
     // import ModalRevision from './ModalRevision'
 
     export default {
         components: {
             VistaPrevia,
+            CardDetalle
             // ModalRevision
         },
         data(){

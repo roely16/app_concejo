@@ -4,24 +4,7 @@
 
         <div v-if="!isLoading">
 
-            <b-card class="mb-3">
-                <b-row>
-                    <b-col>
-                        <b-form-group
-                            label="Agenda de Fecha"
-                        >
-                            <h5>{{ detalle_punto.agenda ? detalle_punto.agenda.fecha : 'Cargando...' }}</h5>
-                        </b-form-group>
-                    </b-col>
-                    <b-col>
-                        <b-form-group
-                            label="Tipo de Sesión"
-                        >
-                            <h5>{{ detalle_punto.agenda ? detalle_punto.agenda.tipo_agenda.nombre : 'Cargando...' }}</h5>
-                        </b-form-group>
-                    </b-col>
-                </b-row>
-            </b-card>
+            <CardDetalle />
 
             <b-card>
                 <b-row>
@@ -39,7 +22,7 @@
                     <b-col cols="12">
                         <b-form-group label="Punto de Acta" label-class="font-weight-bold">
                             <!-- <b-form-textarea rows="4" v-model="detalle_punto_acta.descripcion" :disabled="!isEditing"></b-form-textarea> -->
-                            <b-card :bg-variant="!isEditing ? 'light' : 'default'" text-variant="dark">
+                            <b-card :bg-variant="!isEditing ? 'light' : 'default'" text-variant="dark" :border-variant="detalle_punto_acta.bitacora.id_accion == 4 ? 'success' : ''">
                                 <div class="editor">
                                 <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
                                     <div class="menubar">
@@ -93,11 +76,18 @@
                             <font-awesome-icon icon="list-alt" />
                         </b-button> -->
                     </b-col>
-                    <b-col cols="8" class="text-right">
-                        <b-button variant="outline-success" @click="aprobarPunto">Revisado 
+
+                    <b-col cols="8" class="text-right" >
+                        <b-button variant="outline-success" @click="aprobarPunto" v-if="detalle_punto_acta.bitacora.id_accion != 4">Revisado
                             <font-awesome-icon icon="check" />
                         </b-button>
+
+                        <b-badge variant="success" v-if="detalle_punto_acta.bitacora.id_accion == 4">Revisado 
+                            <font-awesome-icon icon="check-double" />
+                        </b-badge>
+
                     </b-col>
+                    
                 </b-row>
 
                 <b-row align-h="center" v-if="!agregar_punto_acta && detalle_punto_acta == null">
@@ -264,6 +254,7 @@
     import Documentos from '@/components/DetallePuntoActa/Documentos'
     import Audios from '@/components/DetallePuntoActa/Audios'
     import { Editor, EditorContent, EditorMenuBar  } from 'tiptap'
+    import CardDetalle from '@/components/DetalleActa/CardDetalle'
 
     import {
         Blockquote,
@@ -291,6 +282,7 @@
             Audios,
             EditorContent,
             EditorMenuBar,
+            CardDetalle
         },
         data(){
             return{
@@ -402,8 +394,6 @@
                         id_usuario: usuario.id_persona
                     }
 
-                    console.log(data)
-
                     axios({
                         method: 'POST',
                         url: process.env.VUE_APP_API_URL + 'editar_punto_acta',
@@ -415,7 +405,10 @@
                             'Excelente!',
                             'El punto de acta ha sido editado exitosamente!',
                             'success'
-                        )
+                        ).then(()=>{
+                            this.detalle_punto_acta.descripcion = this.editor.getHTML()
+                            this.obtenerDetalle()
+                        })
 
                     })
                     .catch(error => {
@@ -516,7 +509,9 @@
                                 'Excelente!',
                                 'El punto de acta ha sido marcado como revisado!',
                                 'success'
-                            )
+                            ).then(()=>{
+                                this.obtenerDetalle()
+                            })
 
                         })
 

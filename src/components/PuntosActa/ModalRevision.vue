@@ -95,6 +95,7 @@
                                 'El acta ha sido enviada por correo para su revisión!',
                                 'success'
                             ).then(() => {
+                                this.$root.$emit('recargarDetalleActa')
                                 this.$bvModal.hide('modal-revision')
                             })
 

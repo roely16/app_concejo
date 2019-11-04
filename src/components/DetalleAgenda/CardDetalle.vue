@@ -3,26 +3,27 @@
         <b-col>
             <b-card>
                 <b-row>
-                    <b-col cols="2">
+                    <b-col cols="6" sm="4" md="2" lg="2">
                         <b-form-group label="ID">
                             <h5>{{ detalle_agenda.id }}</h5>
                         </b-form-group>
                     </b-col>
-                    <b-col cols="3">
+                
+                    <b-col cols="6" sm="8" md="3" lg="3">
                         <b-form-group
                             label="Fecha"
                         >
                             <h5>{{ detalle_agenda.fecha }}</h5>
                         </b-form-group>
                     </b-col>
-                    <b-col cols="3">
+                    <b-col cols="6" sm="6" md="3" lg="3">
                         <b-form-group
                             label="Tipo de Sesión"
                         >
                             <h5>{{ detalle_agenda.tipo_agenda ? detalle_agenda.tipo_agenda.nombre : 'Cargando...' }}</h5>
                         </b-form-group>
                     </b-col>
-                    <b-col cols="4">
+                    <b-col cols="6" sm="4" md="4" lg="4">
                         <b-form-group label="Estado">   
                             <h5>
                                 <b-badge :variant="detalle_agenda.bitacora ? detalle_agenda.bitacora.estado.color : 'secondary'">{{ detalle_agenda.bitacora ? detalle_agenda.bitacora.estado.nombre : 'Cargando...' }} 
@@ -75,6 +76,10 @@
         mounted(){
 
             this.obtenerDetalle()
+
+            this.$root.$on("recargarDetalleAgenda", () => {
+				this.obtenerDetalle();
+            });
 
         }
     }

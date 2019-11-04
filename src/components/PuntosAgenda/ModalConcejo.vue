@@ -134,6 +134,9 @@
                                 'success'
                             ).then(()=>{
 
+                                this.$bvModal.hide('modal-concejo')
+                                this.$root.$emit('recargarDetalleAgenda')
+
                             })
 
                         })
