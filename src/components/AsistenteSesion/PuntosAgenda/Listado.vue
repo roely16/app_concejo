@@ -4,7 +4,7 @@
 
         <CardDetalle />
 
-        <div v-if="puntos.length == 0">
+        <div v-if="puntos.length == 0 && !isLoading">
             <b-card class="text-center">
                 <h5 class="text-danger mb-4">No se han encontrado los puntos de la agenda.</h5>
                 <b-button size="lg" variant="outline-primary" @click="copiarPuntos">Copiar Puntos 
@@ -17,7 +17,7 @@
             <b-row>
                 <b-col cols="12" lg="4" md="6" class="mb-3">
                     <b-input-group>
-                        <b-form-input v-model="busqueda"></b-form-input>
+                        <b-form-input v-model="busqueda" autocomplete="off"></b-form-input>
 
                         <b-input-group-append>
                             <b-button variant="outline-secondary" disabled>
@@ -31,7 +31,7 @@
 
                 <b-col cols="12" lg="6" md="6" class="text-right mb-3">
                     
-                    <b-button v-if="!ordenando" v-on:click="ordenarLista()" class="mr-2" variant="outline-success">Ordenar
+                    <b-button v-if="!ordenando" v-on:click="ordenarLista()" class="mr-2" variant="outline-success"  :disabled="isLoading">Ordenar
                         <font-awesome-icon icon="sort" />
                     </b-button>
 
@@ -48,17 +48,24 @@
             </b-row>
 
             <!-- Lista de Puntos -->
-            <div>
+            <div v-if="!isLoading">
                 <b-list-group id="items">
-                    <b-list-group-item class="mb-2" v-for="(punto, key) in puntos" :key="punto.id" :variant="list_variant">
+                    <b-list-group-item class="mb-2" v-for="(punto, key) in puntosFiltrados" :key="punto.id" :variant="list_variant">
                         <b-row>
-                            <b-col cols="1">
+                            <b-col cols="1">                                
                                 <p class="lead text-justify">{{ ++key }}. </p>
                             </b-col>
-                            <b-col cols="11" lg="9" md="8">
+                            <b-col cols="11" lg="11" md="11">
                                 <p class="lead text-justify">{{ punto.descripcion }}</p>
                             </b-col>
-                            <b-col cols="12" lg="2" md="3" class="text-right">
+                            
+                        </b-row>
+
+                        <b-row>
+                            <b-col cols="2" lg="2" md="3" class="text-left my-handle">
+                                <font-awesome-icon size="lg" v-if="ordenando" icon="arrows-alt" />
+                            </b-col>
+                            <b-col cols="10" lg="10" md="9" class="text-right">
                                 
                                 <b-button size="sm" class="mr-1" variant="outline-secondary" @click="modalInfo(punto)">
                                     <font-awesome-icon icon="info-circle" />
@@ -77,36 +84,53 @@
                     </b-list-group-item>
                 </b-list-group>
             </div>
+            
+            <div v-if="isLoading" class="text-center mt-4">
 
-            <b-row class="mt-4 mb-4" v-if="puntos_eliminados.length > 0">
-            <b-col>
-                <b-button v-b-toggle.collapse-1 variant="danger">
-                    Mostrar Eliminados <b-badge variant="light">{{ puntos_eliminados.length }}</b-badge>
-                </b-button>
+                <b-spinner class="align-middle"></b-spinner>
+                <div class="mt-2">
+                    <strong>Cargando datos...</strong>
+                </div>
 
-                <b-collapse id="collapse-1" class="mt-2">
-                    <b-card
-                        border-variant="danger"
-                    >
-                        <b-list-group>
-                            <b-list-group-item variant="danger" class="mb-2" v-for="punto_eliminado in puntos_eliminados" :key="punto_eliminado.id">
-                                <b-row>
-                                    <b-col cols="10">
-                                        <p class="lead text-justify">{{ punto_eliminado.descripcion }}</p>
-                                    </b-col>
-                                    <b-col cols="2" class="text-right">
-                                        <b-button size="sm" variant="outline-ligth" @click="modalInfo(punto_eliminado)">
-                                            <font-awesome-icon icon="info-circle" />
-                                        </b-button>
-                                    </b-col>
-                                </b-row>
-                            </b-list-group-item>
-                        </b-list-group>
-                        
-                    </b-card>
-                </b-collapse>
-            </b-col>
-        </b-row>
+            </div>
+
+            <div v-if="busqueda != '' && puntosFiltrados.length == 0" class="text-center mt-4 mb-4">
+                <h5 class="text-danger">No se han encontrado resultados que coincidan con su busqueda.
+                    <br> 
+                    <font-awesome-icon size="lg" icon="search" class="mt-4" />
+                </h5>
+                
+            </div>
+
+            <b-row class="mt-4 mb-4" v-if="puntos_eliminados.length > 0 && !isLoading">
+                <b-col>
+                    <b-button v-b-toggle.collapse-1 variant="danger">
+                        Mostrar Eliminados <b-badge variant="light">{{ puntos_eliminados.length }}</b-badge>
+                    </b-button>
+
+                    <b-collapse id="collapse-1" class="mt-2">
+                        <b-card
+                            border-variant="danger"
+                        >
+                            <b-list-group>
+                                <b-list-group-item variant="danger" class="mb-2" v-for="punto_eliminado in puntos_eliminados" :key="punto_eliminado.id">
+                                    <b-row>
+                                        <b-col cols="10">
+                                            <p class="lead text-justify">{{ punto_eliminado.descripcion }}</p>
+                                        </b-col>
+                                        <b-col cols="2" class="text-right">
+                                            <b-button size="sm" variant="outline-ligth" @click="modalInfo(punto_eliminado)">
+                                                <font-awesome-icon icon="info-circle" />
+                                            </b-button>
+                                        </b-col>
+                                    </b-row>
+                                </b-list-group-item>
+                            </b-list-group>
+                            
+                        </b-card>
+                    </b-collapse>
+                </b-col>
+            </b-row>
         
         </div>
 
@@ -118,13 +142,26 @@
     
 </template>
 
+<style scoped>
+    .highlighted {
+        background-color: #9AB6F1;
+    }
+    .my-handle {
+        cursor: move;
+        cursor: -webkit-grabbing;
+    }
+    .blue-background-class {
+        opacity: 0.4;
+    }
+</style>
+
 <script>
 
     import axios from 'axios'
     import CardDetalle from '@/components/DetalleAgenda/CardDetalle'
     import ModalDetalle from '@/components/PuntosAgenda/ModalDetalle'
     import ModalPunto from '@/components/PuntosAgenda/ModalPunto'
-    import Sortable from 'sortablejs/modular/sortable.core.esm';
+    import  Sortable from 'sortablejs/modular/sortable.core.esm.js';
 
     export default {
         components: {
@@ -135,7 +172,7 @@
         data(){
             return{
                 puntos: [],
-                busqueda: null,
+                busqueda: '',
                 detallePunto: {},
                 no_punto: '',
                 title_modal: null,
@@ -145,18 +182,21 @@
                 ordenando: false,
                 list_variant: '',
                 backupLista: null,
-                lista_ordenada: null
+                lista_ordenada: null,
+                isLoading: false
             }
         },
         methods: {
             obtenerDatos(){
 
+                this.isLoading = !this.isLoading
+
                 axios
                 .get(process.env.VUE_APP_API_URL + 'puntos_agenda_sesion/' + this.$route.params.id)
                 .then(response => {
-                    console.log(response.data)
                     this.puntos = response.data.puntos
                     this.puntos_eliminados = response.data.puntos_eliminados
+                    this.isLoading = !this.isLoading
                 })
 
             },
@@ -231,12 +271,12 @@
             },
             modalEditarPunto(punto){
 
-                console.log(punto)
+                // console.log(this.puntos.indexOf(punto))
 
                 this.title_modal = "Editar Punto de Agenda"
                 this.modalEdit = true
                 this.punto_agenda = punto
-                this.ultimo_punto = parseInt(punto.orden)
+                this.ultimo_punto = parseInt(this.puntos.indexOf(punto) + 1)
                 this.$bvModal.show('modal-punto')   
                   
             },
@@ -254,7 +294,7 @@
                     var self = this
 
                     this.lista_ordenada = new Sortable(el, {
-                        // handle: '.handle',
+                        handle: ".my-handle",
                         animation: 150,
                         ghostClass: 'blue-background-class',
 
@@ -361,6 +401,22 @@
 				this.obtenerDatos()
             })
 
+        },
+        computed: {
+            puntosFiltrados: function(){
+
+                if (!this.isLoading) {
+                    
+                    return this.puntos.filter(punto => {
+                   
+                        return punto.descripcion.toLowerCase().includes(this.busqueda.toLowerCase())
+
+                    })
+
+                }
+                
+
+            }
         }
 
     }

@@ -17,7 +17,7 @@
 
         <b-row align-h="center" v-if="!nuevo_registro">
             <b-col cols="6">
-                <b-button block variant="outline-primary" @click="mostrarForm">Nuevo Registro
+                <b-button block variant="outline-primary" @click="mostrarForm" :disabled="asistencia_congelada">Nuevo Registro
                     <font-awesome-icon icon="plus-circle" />
                 </b-button>
             </b-col>
@@ -44,7 +44,7 @@
                                 </b-form-radio>
                             </b-col>
                         </b-row>
-                        <b-row>
+                        <b-row class="mb-3">
                             <b-col>
                                 <b-form-radio v-model="reporte_asistencia.tipo" name="some-radios" value="3">
                                     <b-badge variant="danger">Ausentó
@@ -60,17 +60,26 @@
                                 </b-form-radio>
                             </b-col>
                         </b-row>
+                        <b-row>
+                            <b-col>
+                                <b-form-radio v-model="reporte_asistencia.tipo" name="some-radios" value="5">
+                                    <b-badge variant="primary">Retornó
+                                        <font-awesome-icon icon="undo" />
+                                    </b-badge>
+                                </b-form-radio>
+                            </b-col>
+                        </b-row>
                         
                     </b-form-group>
                 </b-col>
 
-                <b-col lg="6" md="12" v-if="reporte_asistencia.tipo == 2 || reporte_asistencia.tipo == 4">
+                <b-col lg="6" md="12" v-if="reporte_asistencia.tipo == 2 || reporte_asistencia.tipo == 4 || reporte_asistencia.tipo == 5">
                     <b-form-group label="Hora" label-class="font-weight-bold">
                         <vue-clock-picker mode="24" :defaultHour="hour" :defaultMinute="minute" :onTimeChange="timeChangeHandler"></vue-clock-picker>
                     </b-form-group>
                 </b-col>
 
-                <b-col lg="6" md="12" v-if="reporte_asistencia.tipo != 1 && reporte_asistencia.tipo != null">
+                <b-col lg="6" md="12" v-if="reporte_asistencia.tipo != 1 && reporte_asistencia.tipo != null && reporte_asistencia.tipo != 5">
                     <b-form-group label="Motivo" label-class="font-weight-bold">
                         <b-form-textarea
                             v-model="reporte_asistencia.motivo" rows="3" max-rows="6"></b-form-textarea>
@@ -112,7 +121,7 @@
                         <b-button size="sm" class="mr-2" variant="outline-secondary" @click="row.toggleDetails">
                             <font-awesome-icon icon="info-circle"></font-awesome-icon>
                         </b-button>
-                        <b-button size="sm" variant="outline-danger">
+                        <b-button size="sm" variant="outline-danger" @click="eliminarRegistro(row.item)" :disabled="asistencia_congelada">
                             <font-awesome-icon icon="trash-alt" />
                         </b-button>
                 
@@ -123,17 +132,17 @@
                     <b-card>
 
                         <b-row class="mb-2" v-if="row.item.motivo">
-                            <b-col sm="3" class="text-sm-right"><b>Motivo: </b></b-col>
+                            <b-col sm="3" md="4" class="text-sm-right"><b>Motivo: </b></b-col>
                             <b-col>{{ row.item.motivo }}</b-col>
                         </b-row>
 
                          <b-row class="mb-2">
-                            <b-col sm="3" class="text-sm-right"><b>Fecha de Registro: </b></b-col>
+                            <b-col sm="3"  md="4" class="text-sm-right"><b>Fecha de Registro: </b></b-col>
                             <b-col>{{ row.item.fecha_registro }}</b-col>
                         </b-row>
 
                          <b-row class="mb-2">
-                            <b-col sm="3" class="text-sm-right"><b>Registrado Por: </b></b-col>
+                            <b-col sm="3"  md="4" class="text-sm-right"><b>Registrado Por: </b></b-col>
                             <b-col>{{ row.item.persona_registra ? row.item.persona_registra.usuario.usuario.toUpperCase() : 'Cargando...' }}</b-col>
                         </b-row>
 
@@ -157,6 +166,11 @@
                 type: Object,
                 default: null
             },
+            asistencia_congelada: {
+                type: Boolean,
+                default: false,
+                required: false
+            }
         },
         components: {
             VueClockPicker
@@ -185,6 +199,11 @@
         methods: {
             reset(){
 
+                console.log(this.asistencia_congelada)
+
+                this.hour = new Date().getHours()
+                this.minute = new Date().getMinutes()
+
                 this.isLoading = !this.isLoading
 
                 this.reporte_asistencia = {
@@ -202,7 +221,6 @@
                 axios
                 .post(process.env.VUE_APP_API_URL + 'detalle_asistencia', data)
                 .then(response => {
-                    console.log(response.data)
                     this.items = response.data.items
                     this.fields= response.data.fields
                     this.isLoading = !this.isLoading
@@ -217,7 +235,7 @@
 
                 this.isSaving = !this.isSaving
 
-                if (this.reporte_asistencia.tipo == 2 || this.reporte_asistencia.tipo == 4) {
+                if (this.reporte_asistencia.tipo == 2 || this.reporte_asistencia.tipo == 4 || this.reporte_asistencia.tipo == 5) {
                     
                     this.reporte_asistencia.hora = this.hour + ':' + this.minute
 
@@ -249,7 +267,42 @@
             timeChangeHandler(time){
 
                 this.hour = time.hour
-                this.minute = time.minute
+
+                if (time.minute == 0) {
+                    this.minute = '00'
+                }else{
+                    this.minute = time.minute
+                }
+
+                
+
+            },
+            eliminarRegistro(item){
+
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: "Una vez eliminado no se podrá recuperar!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, ELIMINAR',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+
+                    if (result.value) {
+                        axios
+                        .get(process.env.VUE_APP_API_URL + 'eliminar_registro_asistencia/' + item.id)
+                        .then(response => {
+                            console.log(response.data)
+
+                            this.reset()
+                            this.$root.$emit('obtenerAsistencia')
+                            
+                        })
+                    }
+
+                })
 
             }
         },

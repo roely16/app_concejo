@@ -1,6 +1,6 @@
 <template>
     <b-row class="mt-4" v-if="!isLoading">
-        <b-col sm="12" lg="3">
+        <b-col sm="12" lg="3" md="6">
             <b-card
                 img-src=""
                 img-alt="Image"
@@ -19,7 +19,7 @@
             </b-card>
         </b-col>
 
-        <b-col sm="12" lg="3">
+        <b-col sm="12" lg="3" md="6">
             <b-card
                 img-src=""
                 img-alt="Image"

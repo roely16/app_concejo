@@ -90,7 +90,7 @@
 
         <ModalInfo :persona="persona"/>
 
-        <ModalDetalleAsistencia :persona="persona" />
+        <ModalDetalleAsistencia :persona="persona" :asistencia_congelada="asistencia_congelada == 'S' ? true : false" />
 
     </div>
 </template>
@@ -155,14 +155,14 @@
                 })
                 .then(response => {
 
-                    console.log(response.data)
-
                     this.personas = response.data.personas
                     this.fecha_agenda = response.data.detalle_agenda.fecha
                     this.tipo_sesion = response.data.detalle_agenda.tipo_agenda.nombre
                     this.asistencia_congelada = response.data.detalle_agenda.asistencia_congelada
                     this.detalle_agenda = response.data.detalle_agenda
                     this.isLoading = !this.isLoading
+
+                    console.log(this.asistencia_congelada)
 
                 })
                 .catch(error => {

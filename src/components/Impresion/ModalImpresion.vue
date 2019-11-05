@@ -154,7 +154,7 @@
 
                 axios({
                     method: 'GET',
-                    url: process.env.VUE_APP_API_URL + 'archivo_imprimir/' + 22,
+                    url: process.env.VUE_APP_API_URL + 'archivo_imprimir/' + this.id_impresion,
                     responseType: 'arraybuffer'
                 })
                 .then(response => {

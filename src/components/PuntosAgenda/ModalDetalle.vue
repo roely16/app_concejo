@@ -21,12 +21,12 @@
                 <template v-slot:row-details="row">
                     <b-card v-if="row.item.id_accion == 2">
                         <b-row class="mb-2">
-                            <b-col sm="3" class="text-sm-right"><b>Original:</b></b-col>
+                            <b-col sm="3" md="4" lg="3" class="text-sm-right"><b>Original:</b></b-col>
                             <b-col>{{ row.item.original }}</b-col>
                         </b-row>
 
                         <b-row class="mb-2">
-                            <b-col sm="3" class="text-sm-right"><b>Modificado:</b></b-col>
+                            <b-col sm="3" md="4" lg="3" class="text-sm-right"><b>Modificado:</b></b-col>
                             <b-col>{{ row.item.modificado }}</b-col>
                         </b-row>
 
@@ -35,7 +35,7 @@
 
                      <b-card v-if="row.item.id_accion == 3">
                         <b-row class="mb-2">
-                            <b-col sm="3" class="text-sm-right"><b>Motivo:</b></b-col>
+                            <b-col sm="3" md="4" lg="3" class="text-sm-right"><b>Motivo:</b></b-col>
                             <b-col>{{ row.item.motivo_eliminacion }}</b-col>
                         </b-row>
 
