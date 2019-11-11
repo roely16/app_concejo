@@ -161,7 +161,7 @@
     import CardDetalle from '@/components/DetalleAgenda/CardDetalle'
     import ModalDetalle from '@/components/PuntosAgenda/ModalDetalle'
     import ModalPunto from '@/components/PuntosAgenda/ModalPunto'
-    import  Sortable from 'sortablejs/modular/sortable.core.esm.js';
+    import Sortable from 'sortablejs/modular/sortable.core.esm.js';
 
     export default {
         components: {

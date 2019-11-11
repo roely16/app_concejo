@@ -151,11 +151,13 @@
             },
             registrarDocumento(){
 
+                this.isSaving = !this.isSaving
+
                 let usuario = JSON.parse(localStorage.getItem('usuario'))
 
                 let formData = new FormData()
                 formData.append('file', this.documento.archivo)
-                formData.append('tipo', this.documento.tipo)
+                formData.append('id_tipo', this.documento.id_tipo)
                 formData.append('autor', this.documento.autor)
                 formData.append('descripcion', this.documento.descripcion)
                 formData.append('id_agenda', this.$route.params.id)
@@ -171,6 +173,10 @@
                 })
                 .then(response => {
                     
+                    this.isSaving = !this.isSaving
+                    
+                    console.log(response.data)
+
                     this.$root.$emit('obtenerDocumentos')
 
                     Swal.fire(
