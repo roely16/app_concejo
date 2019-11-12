@@ -31,6 +31,28 @@ import 'vue2-timepicker/dist/VueTimepicker.css'
 
 Vue.use(VueTimepicker)
 
+// const $ = require('jquery')
+
+// import datePicker from 'vue-bootstrap-datetimepicker';
+// import 'bootstrap/dist/css/bootstrap.css';
+// import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
+
+// $.extend(true, $.fn.datetimepicker.defaults, {
+//   icons: {
+//     time: 'far fa-clock',
+//     date: 'far fa-calendar',
+//     up: 'fas fa-arrow-up',
+//     down: 'fas fa-arrow-down',
+//     previous: 'fas fa-chevron-left',
+//     next: 'fas fa-chevron-right',
+//     today: 'fas fa-calendar-check',
+//     clear: 'far fa-trash-alt',
+//     close: 'far fa-times-circle'
+//   }
+// });
+
+// Vue.use(datePicker);
+
 new Vue({
   router,
   store,

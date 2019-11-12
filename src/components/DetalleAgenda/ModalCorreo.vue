@@ -119,7 +119,7 @@
                                 
                                 this.isSending = !this.isSending
                                 this.$bvModal.hide('modal-correo')
-                                this.$root.$emit('obtenerDetalleAgenda')
+                                this.$root.$emit('recargarDetalleAgenda')
 
                             })
 

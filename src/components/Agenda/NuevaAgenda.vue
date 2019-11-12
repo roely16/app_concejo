@@ -162,26 +162,24 @@
             this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
 
                 this.resetModal()
-                // this.isLoading = !this.isLoading
-
-                // Realiza la petición para obtener los tipos de actas y el correlativo correspondiente
-
-                // axios({
-                //     method: 'GET',
-                //     url: process.env.VUE_APP_API_URL + 'datos_modal_acta',
-                // })
-                // .then(response => {
-                    
-                //     this.isLoading = !this.isLoading
-                //     this.nueva_agenda.no_agenda = response.data.numero_acta.numero
-                //     this.nueva_agenda.year = response.data.numero_acta.year
-                    
-                // })
-                // .catch(error => {
-                //     console.log(error)
-                // })
 
             })
+
+            const $ = require('jquery')
+            
+            $.extend(true, $.fn.datetimepicker.defaults, {
+                icons: {
+                    time: 'far fa-clock',
+                    date: 'far fa-calendar',
+                    up: 'fas fa-arrow-up',
+                    down: 'fas fa-arrow-down',
+                    previous: 'fas fa-chevron-left',
+                    next: 'fas fa-chevron-right',
+                    today: 'fas fa-calendar-check',
+                    clear: 'far fa-trash-alt',
+                    close: 'far fa-times-circle'
+                }
+            });
             
         }
     }

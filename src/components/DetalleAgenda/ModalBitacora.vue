@@ -1,7 +1,7 @@
 <template>
     <b-modal id="modal-bitacora" size="lg" title="Historial" @show="show" hide-footer>
         <div>
-            <b-table hover :items="items" :fields="fields" head-variant="dark">
+            <b-table hover :items="items" :fields="fields" head-variant="dark" :per-page="perPage" :current-page="currentPage">
                 <template slot="[estado]" slot-scope="data">
                     <!-- {{ data.item.estado }} -->
                     <b-badge :variant="data.item.estado.color" :class="data.item.estado.color">{{ data.item.estado.nombre }} 
@@ -37,6 +37,7 @@
                             <b-col>
                                 <ul class="lista-destinos">
                                     <li v-for="historial in row.item.historial_correos" :key="historial.id">{{ historial.persona.nombre }} {{ historial.persona.apellido }} - <b-badge variant="secondary">{{ historial.persona.puesto.nombre }}</b-badge></li>
+                                    
                                 </ul>
                             </b-col>
                         </b-row>
@@ -46,6 +47,10 @@
                     </b-card>
                 </template>
             </b-table>
+
+            <div class="overflow-auto" v-if="rows > perPage">
+                <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage" aria-controls="my-table" align="center"></b-pagination>
+            </div>
         </div>
     </b-modal>
 </template>
@@ -68,7 +73,10 @@
         data(){
             return{
                 items: [],
-                fields: []
+                fields: [],
+                currentPage: 1,
+                rows: null,
+                perPage: 10
             }
         },
         methods: {
@@ -77,13 +85,14 @@
                 axios
                 .get(process.env.VUE_APP_API_URL + 'bitacora_agenda/' + this.$route.params.id)
                 .then(response =>  {
-                    console.log(response.data)
                     this.items = response.data.items
                     this.fields = response.data.fields
 
                     this.items.forEach(element => {
                         element.link_descarga = process.env.VUE_APP_API_URL + 'descargar_archivo_correo_agenda/' + element.id
                     });
+
+                    this.rows = this.items.length
                 })
 
             }
