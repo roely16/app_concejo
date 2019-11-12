@@ -37,8 +37,9 @@
                             <b-col sm="3" class="text-sm-right"><b>Destinos:</b></b-col>
                             <b-col>
                                 <ul class="lista-destinos">
-                                    <li v-for="historial in row.item.historial_correos" :key="historial.id">{{ historial.persona.nombre }} {{ historial.persona.apellido }} - 
-                                        <b-badge variant="secondary">{{ historial.persona.rol.nombre }}</b-badge>
+                                    <li v-for="historial in row.item.historial_correos" :key="historial.id">
+                                        {{ historial.persona_s.nombre }} {{ historial.persona_s.apellido }} - 
+                                        <b-badge variant="secondary">{{ historial.persona_s.rol.nombre }}</b-badge>
                                     </li>
                                 </ul>
                             </b-col>

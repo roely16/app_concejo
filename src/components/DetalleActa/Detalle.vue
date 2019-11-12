@@ -18,7 +18,7 @@
                     <b-form-group label="Agenda" label-class="font-weight-bold">
                         <!-- <b-form-input type="number" v-model="detalle.id_agenda" required :disabled="!isEditing"
                         ></b-form-input> -->
-                        <b-form-select v-model="detalle.id_agenda" :options="agendas" text-field="fecha" value-field="id" :disabled="!isEditing" required></b-form-select>
+                        <b-form-select v-model="detalle.id_agenda" :options="agendas" text-field="fecha" value-field="id" disabled required></b-form-select>
                     </b-form-group>
                 </b-col>
                 <b-col cols="4">

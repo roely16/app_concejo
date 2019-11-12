@@ -30,7 +30,7 @@
         </b-row>
         
         <b-row>
-            <b-col lg="4" sm="12" md="6" v-for="persona in personas" :key="persona.id">
+            <b-col lg="4" sm="12" md="6" v-for="persona in asistentesFiltrados" :key="persona.id">
 
                 <b-card :to="{ name: 'home' }" :bg-variant="persona.asistencia ? persona.asistencia.tipo.color : 'secondary'" text-variant="white" class="mb-4" footer-tag="footer">
 
@@ -86,6 +86,12 @@
             </b-col>
         </b-row>
 
+        <b-row class="mt-3" v-if="asistentesFiltrados.length == 0">
+            <b-col>
+                <h5 class="text-danger text-center">No se han encontrado personas que coincidan con su criterio de búsqueda.</h5>
+            </b-col>
+        </b-row>
+
         <ModalAsistencia :persona="persona" :tipo="tipo" />
 
         <ModalInfo :persona="persona"/>
@@ -134,7 +140,7 @@
         data(){
             return{
                 personas: [],
-                busqueda: null,
+                busqueda: '',
                 isLoading: false,
                 fecha_agenda: '',
                 tipo_sesion: '',
@@ -162,8 +168,8 @@
                     this.detalle_agenda = response.data.detalle_agenda
                     this.isLoading = !this.isLoading
 
-                    console.log(this.asistencia_congelada)
-
+                    console.log(response.data);
+                    
                 })
                 .catch(error => {
                     console.log(error)
@@ -358,6 +364,15 @@
 
                     return true
                 }
+
+            },
+            asistentesFiltrados: function(){
+
+                return this.personas.filter(persona => {
+                   
+                    return persona.nombre.toLowerCase().includes(this.busqueda.toLowerCase()) || persona.apellido.toLowerCase().includes(this.busqueda.toLowerCase()) || persona.puesto.nombre.toLowerCase().includes(this.busqueda.toLowerCase())
+
+                })
 
             }
         }

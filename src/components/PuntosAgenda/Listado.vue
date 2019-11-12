@@ -90,6 +90,15 @@
             </div>
         </div>
         
+        <!-- Si no se ha encontrado nada al buscar -->
+        <div v-if="puntosFiltrados.length == 0">
+            <b-row class="mt-3">
+                <b-col>
+                    <h5 class="text-danger text-center">No se ha encontrado ningún punto de agenda que coincida con su criterio de búsqueda.</h5>
+                </b-col>
+            </b-row>
+        </div>
+
         <div v-if="isLoading" class="text-center mt-4">
 
             <b-spinner class="align-middle"></b-spinner>

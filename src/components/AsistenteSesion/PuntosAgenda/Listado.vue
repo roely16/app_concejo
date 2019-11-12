@@ -4,7 +4,7 @@
 
         <CardDetalle />
 
-        <div v-if="puntos.length == 0 && !isLoading">
+        <div v-if="puntos.length <= 0 && !isLoading">
             <b-card class="text-center">
                 <h5 class="text-danger mb-4">No se han encontrado los puntos de la agenda.</h5>
                 <b-button size="lg" variant="outline-primary" @click="copiarPuntos">Copiar Puntos 

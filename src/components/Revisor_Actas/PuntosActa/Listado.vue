@@ -55,7 +55,7 @@
             </b-row>
 
             <b-list-group>
-                <b-list-group-item :to="{ name: 'detalle_punto_acta_revision', params: {id_punto: punto.id}}" class="mb-2" v-for="(punto) in puntos" :key="punto.id" :variant="punto.punto_acta.bitacora.id_accion == 4 ? 'success' : 'secondary'">
+                <b-list-group-item :to="{ name: 'detalle_punto_acta_revision', params: {id_punto: punto.id}}" class="mb-2" v-for="(punto) in puntosFiltrados" :key="punto.id" :variant="punto.punto_acta.bitacora.id_accion == 4 ? 'success' : 'secondary'">
                     <b-row>
                         <b-col cols="1">
                             <p class="lead text-justify"><strong>{{ punto.orden }}.</strong> </p>
@@ -67,6 +67,15 @@
 
                 </b-list-group-item>
             </b-list-group>
+
+            <!-- Si no se ha encontrado nada al buscar -->
+            <div v-if="puntosFiltrados.length == 0">
+                <b-row class="mt-3">
+                    <b-col>
+                        <h5 class="text-danger text-center">No se ha encontrado ningún punto que coincida con su criterio de búsqueda.</h5>
+                    </b-col>
+                </b-row>
+            </div>
 
             <!-- <b-row align-v="center">
                 <b-col></b-col>
@@ -120,10 +129,11 @@
                 backup_puntos: [],
                 agenda: {},
                 isLoading: false,
-                busqueda: null,
+                busqueda: '',
                 currentPage: 1,
                 rows: null,
-                perPage: 3
+                perPage: 3,
+                isSending: false
             }
         },
         methods: {
@@ -169,9 +179,9 @@
                 this.rows = listos.length
 
             },
-            aprobarActa(){
+            async aprobarActa(){
 
-                Swal.fire({
+                let result =  await Swal.fire({
                     title: '¿Está seguro?',
                     text: "Una vez aprobada se notificará a la persona responsable!",
                     type: 'warning',
@@ -179,39 +189,81 @@
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Si, APROBAR',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.value) {
-                        
+                    cancelButtonText: 'Cancelar',
+                    showLoaderOnConfirm: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    preConfirm: () => {
+
                         let usuario = JSON.parse(localStorage.getItem('usuario'))
 
                         let data = {
-
                             id_acta: this.$route.params.id,
                             id_usuario: usuario.id_persona
-
                         }
 
-                        axios
-                        .post(process.env.VUE_APP_API_URL + 'aprobar_acta', data)
+                        return axios
+                        .post('https://udicat.muniguate.com/apps/api_concejo/public/api/aprobar_acta', data)
                         .then(response => {
 
-                            console.log(response.data)
+                            // Swal.fire(
+                            //     'Excelente!',
+                            //     'El acta ha sido aprobada!',
+                            //     'success'
+                            // ).then( () => {
 
-                            Swal.fire(
-                                'Excelente!',
-                                'El acta ha sido aprobada!',
-                                'success'
-                            ).then( () => {
+                            //     this.$router.push({ name: 'actas_revision' })
 
-                                this.$router.push({ name: 'actas_revision' })
-
-                            })
+                            // })
 
                         })
 
                     }
                 })
+
+                if (result.value) {
+                    
+                    Swal.fire(
+                        'Excelente!',
+                        'El acta ha sido aprobada!',
+                        'success'
+                    ).then( () => {
+
+                        this.$router.push({ name: 'actas_revision' })
+
+                    })
+                    
+                }
+                // .then((result) => {
+                //     if (result.value) {
+                        
+                //         let usuario = JSON.parse(localStorage.getItem('usuario'))
+
+                //         let data = {
+
+                //             id_acta: this.$route.params.id,
+                //             id_usuario: usuario.id_persona
+
+                //         }
+
+                //         axios
+                //         .post('https://udicat.muniguate.com/apps/api_concejo/public/api/aprobar_acta', data)
+                //         .then(response => {
+
+                //             Swal.fire(
+                //                 'Excelente!',
+                //                 'El acta ha sido aprobada!',
+                //                 'success'
+                //             ).then( () => {
+
+                //                 this.$router.push({ name: 'actas_revision' })
+
+                //             })
+
+                //         })
+
+                //     }
+                // })
 
             }
         },
@@ -233,6 +285,14 @@
                 let listos = this.backup_puntos.filter(item => item.punto_acta.bitacora.id_accion == 4)
 
                 return listos.length    
+            },
+            puntosFiltrados: function(){
+
+                return this.puntos.filter(punto => {
+                   
+                    return punto.descripcion.toLowerCase().includes(this.busqueda.toLowerCase()) 
+                })
+
             }
         },
         mounted(){
