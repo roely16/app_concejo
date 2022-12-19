@@ -1,4 +1,6 @@
-# app_consejo
+# Aplicación Concejo Municipal
+
+Aplicación desarrollada con el objetivo de mejorar el control de las reuniones del concejo municipal y la redacción de actas. 
 
 ## Project setup
 ```
